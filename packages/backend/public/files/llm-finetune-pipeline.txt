@@ -1,0 +1,74 @@
+==================================================================
+  LLM FINE-TUNING PIPELINE v2.0
+  by AI Architect | End-to-End Training Framework
+==================================================================
+
+DIRECTORY STRUCTURE:
+---------------------
+
+/notebooks
+  01_data_preparation.ipynb    - Clean, format, and split datasets
+  02_tokenization.ipynb        - Tokenize with model-specific tokenizer
+  03_training.ipynb             - LoRA fine-tuning with Hugging Face
+  04_evaluation.ipynb           - Benchmark against base model
+  05_deployment.ipynb           - Export and serve with vLLM
+
+/scripts
+  prepare_dataset.py           - CLI tool for dataset formatting
+  train.py                     - Training script with W&B logging
+  evaluate.py                  - Automated evaluation suite
+  serve.py                     - FastAPI inference server
+  merge_lora.py                - Merge LoRA weights into base model
+
+/configs
+  training_config.yaml         - Hyperparameters and model settings
+  eval_config.yaml             - Evaluation benchmarks and metrics
+  serving_config.yaml          - Inference server configuration
+
+SUPPORTED MODELS:
+------------------
+- Llama 3.1 (8B, 70B)
+- Mistral 7B / Mixtral 8x7B
+- Phi-3 (mini, small, medium)
+- Gemma 2 (2B, 9B, 27B)
+- Qwen 2.5 (7B, 72B)
+
+TRAINING FEATURES:
+-------------------
+- LoRA / QLoRA with configurable rank (4-128)
+- 4-bit quantization via bitsandbytes
+- Gradient checkpointing for memory efficiency
+- DeepSpeed ZeRO Stage 2/3 support
+- Weights & Biases experiment tracking
+- Automatic checkpoint saving and resumption
+- Mixed precision (bf16/fp16) training
+- Cosine learning rate scheduler with warmup
+
+DATA FORMAT:
+-------------
+Input data should be in JSONL format:
+
+  {"messages": [
+    {"role": "system", "content": "You are a helpful coding assistant."},
+    {"role": "user", "content": "Write a Python function to sort a list."},
+    {"role": "assistant", "content": "def sort_list(items):\n    return sorted(items)"}
+  ]}
+
+QUICK START:
+-------------
+  pip install -r requirements.txt
+  python scripts/prepare_dataset.py --input data/raw.jsonl --output data/train.jsonl
+  python scripts/train.py --config configs/training_config.yaml
+  python scripts/evaluate.py --model outputs/checkpoint-final
+  python scripts/serve.py --model outputs/merged
+
+HARDWARE REQUIREMENTS:
+-----------------------
+  7B model:  1x A100 40GB (or 2x RTX 4090 with DeepSpeed)
+  13B model: 1x A100 80GB
+  70B model: 4x A100 80GB (with ZeRO Stage 3)
+  QLoRA:     Reduces memory by ~60% (7B fits on RTX 3090)
+
+==================================================================
+  License: Apache 2.0 | Version: 2.0
+==================================================================
