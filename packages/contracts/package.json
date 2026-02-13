@@ -1,0 +1,22 @@
+{
+  "name": "@superpage/contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for SuperPage x402 - MockUSDC and test tokens",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy:skale": "npx tsx scripts/deploy-musdc.ts",
+    "deploy:erc8004": "npx tsx scripts/deploy-erc8004.ts",
+    "mint": "npx tsx scripts/mint-musdc.ts",
+    "clean": "hardhat clean"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "hardhat": "^3.0.0",
+    "tsx": "^4.19.0"
+  }
+}
