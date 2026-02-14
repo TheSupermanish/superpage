@@ -13,7 +13,7 @@
 
 **SF Agentic Commerce x402 Hackathon 2025**
 
-[Live Demo](http://20.168.79.130) · [Demo Video](#) · [Documentation](#documentation)
+[Live Demo](http://20.14.73.96/) · [Demo Video](#) · [Documentation](#documentation)
 
 </div>
 
@@ -951,9 +951,9 @@ Every transaction logged with:
 - **ERC-8004 Standard**: https://eips.ethereum.org/EIPS/eip-8004
 
 ### This Project
-- **Live Demo**: http://20.168.79.130
+- **Live Demo**: http://20.14.73.96/
 - **GitHub**: https://github.com/TheSupermanish/superpay-x402-eth
-- **Demo Video**: [Coming Soon]
+- **Demo Video**: https://www.youtube.com/watch?v=0C6vKTYaP7Y
 
 ---
 
@@ -972,6 +972,5 @@ MIT License - see LICENSE file for details
 Built for SF Agentic Commerce x402 Hackathon 2025
 Powered by SKALE BITE V2 Sandbox (Zero Gas Fees)
 
-**Team**: Beyond (Solo Builder)
 
 </div>
