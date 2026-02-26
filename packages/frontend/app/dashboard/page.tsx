@@ -183,7 +183,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-sp-blue" />
       </div>
     );
   }
@@ -209,9 +209,10 @@ export default function DashboardPage() {
   return (
     <div className="w-full space-y-6 md:space-y-8">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl min-h-[180px] md:min-h-[220px] flex flex-col justify-end p-6 md:p-8 bg-primary group">
+      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl min-h-[180px] md:min-h-[220px] flex flex-col justify-end p-6 md:p-8 bg-gradient-to-br from-sp-blue via-sp-pink to-sp-gold group">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.15),transparent_60%)]" />
         {stats && stats.totalEarnings > 0 && (
-          <div className="absolute top-4 right-4 bg-primary-foreground/20 backdrop-blur-md border border-primary-foreground/30 rounded-full px-4 py-2 flex items-center gap-2 text-primary-foreground">
+          <div className="absolute top-4 right-4 bg-white/15 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 flex items-center gap-2 text-white">
             <TrendingUp className="h-4 w-4" />
             <span className="text-xs font-bold">
               {stats.todayEarnings > 0
@@ -221,10 +222,10 @@ export default function DashboardPage() {
           </div>
         )}
         <div className="relative z-10 flex flex-col gap-1">
-          <p className="text-primary-foreground/80 text-sm font-medium uppercase tracking-wider">Financial Overview</p>
-          <h2 className="text-primary-foreground text-3xl md:text-4xl font-bold tracking-tight">Welcome back!</h2>
-          <p className="text-primary-foreground/70 text-sm md:text-base max-w-lg mt-1">
-            Your earnings today: <span className="text-primary-foreground font-bold">{formatUSDC(stats?.todayEarnings || 0)}</span>. Keep growing!
+          <p className="text-white/80 text-sm font-medium uppercase tracking-wider">Financial Overview</p>
+          <h2 className="text-white text-3xl md:text-4xl font-bold tracking-tight">Welcome back!</h2>
+          <p className="text-white/70 text-sm md:text-base max-w-lg mt-1">
+            Your earnings today: <span className="text-white font-bold">{formatUSDC(stats?.todayEarnings || 0)}</span>. Keep growing!
           </p>
         </div>
       </div>
@@ -234,7 +235,7 @@ export default function DashboardPage() {
         {/* Total Portfolio Value */}
         <div className="lg:col-span-4 flex flex-col">
           <div className="flex-1 bg-card rounded-2xl p-6 md:p-8 shadow-sm border border-border flex flex-col justify-between relative overflow-hidden group">
-            <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-500"></div>
+            <div className="absolute -right-10 -top-10 w-40 h-40 bg-sp-blue/10 rounded-full blur-3xl group-hover:bg-sp-blue/20 transition-all duration-500"></div>
             <div className="flex flex-col gap-4 relative z-10">
               <div className="flex items-center justify-between">
                 <p className="text-muted-foreground font-medium">Total Earnings</p>
@@ -246,9 +247,9 @@ export default function DashboardPage() {
                 </h3>
                 {stats && stats.totalEarnings > 0 && (
                   <div className="flex items-center gap-2 mt-2">
-                    <div className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded-lg">
-                      <TrendingUp className="h-4 w-4 text-primary" />
-                      <span className="text-primary text-sm font-bold">
+                    <div className="flex items-center gap-1 bg-sp-blue/10 px-2 py-1 rounded-lg">
+                      <TrendingUp className="h-4 w-4 text-sp-blue" />
+                      <span className="text-sp-blue text-sm font-bold">
                         {stats.todayEarnings > 0
                           ? `+${((stats.todayEarnings / stats.totalEarnings) * 100).toFixed(1)}%`
                           : "0%"}
@@ -261,12 +262,12 @@ export default function DashboardPage() {
             </div>
             <div className="mt-8 flex gap-3">
               <Link href="/dashboard/resources/new" className="flex-1">
-                <button className="w-full bg-primary text-primary-foreground h-10 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/10">
+                <button className="w-full bg-sp-blue text-white h-10 rounded-lg text-sm font-bold hover:bg-sp-blue/90 transition-colors shadow-lg shadow-sp-blue/20">
                   New Resource
                 </button>
               </Link>
               <Link href="/dashboard/analytics" className="flex-1">
-                <button className="w-full bg-transparent border border-primary/30 text-primary h-10 rounded-lg text-sm font-bold hover:bg-primary/5 transition-colors">
+                <button className="w-full bg-transparent border border-sp-coral/30 text-sp-coral h-10 rounded-lg text-sm font-bold hover:bg-sp-coral/5 transition-colors">
                   View More
                 </button>
               </Link>
@@ -277,8 +278,8 @@ export default function DashboardPage() {
         {/* Quick Action Cards */}
         <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link href="/dashboard/resources">
-            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-              <div className="size-14 rounded-2xl bg-primary/10 group-hover:bg-primary text-primary group-hover:text-primary-foreground flex items-center justify-center transition-colors duration-300">
+            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-sp-blue/40 hover:shadow-lg hover:shadow-sp-blue/10 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-sp-blue/10 group-hover:bg-sp-blue text-sp-blue group-hover:text-white flex items-center justify-center transition-colors duration-300">
                 <Layers className="h-7 w-7" />
               </div>
               <div className="text-center">
@@ -289,8 +290,8 @@ export default function DashboardPage() {
           </Link>
 
           <Link href="/dashboard/orders">
-            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-              <div className="size-14 rounded-2xl bg-primary/10 group-hover:bg-primary text-primary group-hover:text-primary-foreground flex items-center justify-center transition-colors duration-300">
+            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-sp-gold/40 hover:shadow-lg hover:shadow-sp-gold/10 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-sp-gold/10 group-hover:bg-sp-gold text-sp-gold group-hover:text-white flex items-center justify-center transition-colors duration-300">
                 <Activity className="h-7 w-7" />
               </div>
               <div className="text-center">
@@ -301,8 +302,8 @@ export default function DashboardPage() {
           </Link>
 
           <Link href="/dashboard/analytics">
-            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-              <div className="size-14 rounded-2xl bg-primary/10 group-hover:bg-primary text-primary group-hover:text-primary-foreground flex items-center justify-center transition-colors duration-300">
+            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-sp-coral/40 hover:shadow-lg hover:shadow-sp-coral/10 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-sp-coral/10 group-hover:bg-sp-coral text-sp-coral group-hover:text-white flex items-center justify-center transition-colors duration-300">
                 <TrendingUp className="h-7 w-7" />
               </div>
               <div className="text-center">
@@ -315,8 +316,8 @@ export default function DashboardPage() {
           </Link>
 
           <Link href="/dashboard/stores">
-            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-primary hover:shadow-lg hover:shadow-primary/10 transition-all duration-300">
-              <div className="size-14 rounded-2xl bg-primary/10 group-hover:bg-primary text-primary group-hover:text-primary-foreground flex items-center justify-center transition-colors duration-300">
+            <button className="group w-full flex flex-col items-center justify-center gap-4 p-6 bg-card rounded-2xl border border-border hover:border-sp-pink/40 hover:shadow-lg hover:shadow-sp-pink/10 transition-all duration-300">
+              <div className="size-14 rounded-2xl bg-sp-pink/10 group-hover:bg-sp-pink text-sp-pink group-hover:text-white flex items-center justify-center transition-colors duration-300">
                 <Plus className="h-7 w-7" />
               </div>
               <div className="text-center">
@@ -344,8 +345,8 @@ export default function DashboardPage() {
                   disabled={chartLoading}
                   className={`px-3 py-1 text-xs font-bold rounded-md transition-colors ${
                     chartPeriod === "30"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-primary"
+                      ? "bg-sp-blue text-white shadow-sm"
+                      : "text-muted-foreground hover:text-sp-blue"
                   } ${chartLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   30D
@@ -355,8 +356,8 @@ export default function DashboardPage() {
                   disabled={chartLoading}
                   className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
                     chartPeriod === "90"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-primary"
+                      ? "bg-sp-blue text-white shadow-sm"
+                      : "text-muted-foreground hover:text-sp-blue"
                   } ${chartLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   3M
@@ -366,8 +367,8 @@ export default function DashboardPage() {
                   disabled={chartLoading}
                   className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
                     chartPeriod === "365"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-primary"
+                      ? "bg-sp-blue text-white shadow-sm"
+                      : "text-muted-foreground hover:text-sp-blue"
                   } ${chartLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   1Y
@@ -377,8 +378,8 @@ export default function DashboardPage() {
                   disabled={chartLoading}
                   className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
                     chartPeriod === "all"
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-primary"
+                      ? "bg-sp-blue text-white shadow-sm"
+                      : "text-muted-foreground hover:text-sp-blue"
                   } ${chartLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   All
@@ -387,15 +388,15 @@ export default function DashboardPage() {
             </div>
             {chartLoading ? (
               <div className="flex items-center justify-center h-[240px]">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <Loader2 className="h-6 w-6 animate-spin text-sp-blue" />
               </div>
             ) : chartData?.chartData && chartData.chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height={240}>
                 <LineChart data={chartData.chartData}>
                   <defs>
                     <linearGradient id="chartGradientGreen" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#16a34a" stopOpacity={0.3} />
-                      <stop offset="100%" stopColor="#16a34a" stopOpacity={0} />
+                      <stop offset="0%" stopColor="#5B8FB9" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#5B8FB9" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb20" />
@@ -419,7 +420,7 @@ export default function DashboardPage() {
                   <Line
                     type="monotone"
                     dataKey="earnings"
-                    stroke="#16a34a"
+                    stroke="#5B8FB9"
                     strokeWidth={3}
                     dot={false}
                     fill="url(#chartGradientGreen)"
@@ -440,7 +441,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-bold text-lg text-foreground">Recent Activity</h3>
               <Link href="/dashboard/analytics">
-                <button className="text-xs font-bold bg-muted px-3 py-1 rounded-full text-primary hover:bg-primary/10 transition-colors">
+                <button className="text-xs font-bold bg-muted px-3 py-1 rounded-full text-sp-blue hover:bg-sp-blue/10 transition-colors">
                   View History
                 </button>
               </Link>
@@ -450,7 +451,7 @@ export default function DashboardPage() {
                 {transactions.slice(0, 5).map((tx) => (
                   <div key={tx.id} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3">
-                      <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-colors">
+                      <div className="size-10 rounded-full bg-sp-blue/10 flex items-center justify-center text-sp-blue transition-colors">
                         <DollarSign className="h-5 w-5" />
                       </div>
                       <div className="flex flex-col">
@@ -464,7 +465,7 @@ export default function DashboardPage() {
                       href={getTxUrl(tx.signature)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary"
+                      className="text-muted-foreground hover:text-sp-blue"
                     >
                       <ArrowUpRight className="h-4 w-4" />
                     </a>
@@ -488,9 +489,9 @@ export default function DashboardPage() {
             {Object.entries(stats.byType).map(([type, data]) => (
               <div
                 key={type}
-                className="p-4 rounded-lg bg-muted border border-border hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer group"
+                className="p-4 rounded-lg bg-muted border border-border hover:border-sp-blue/30 hover:bg-sp-blue/5 transition-all cursor-pointer group"
               >
-                <div className="text-sm font-medium text-muted-foreground capitalize mb-2 group-hover:text-primary">
+                <div className="text-sm font-medium text-muted-foreground capitalize mb-2 group-hover:text-sp-blue">
                   {type}
                 </div>
                 <div className="text-xl font-bold text-foreground">
