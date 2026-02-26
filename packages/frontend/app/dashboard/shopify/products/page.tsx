@@ -232,7 +232,7 @@ export default function ShopifyProductsPage() {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+          <Loader2 className="h-12 w-12 text-sp-pink animate-spin mb-4" />
           <p className="text-muted-foreground">Loading products from Shopify...</p>
         </div>
       ) : (
@@ -263,7 +263,7 @@ export default function ShopifyProductsPage() {
             <Button
               onClick={handleImport}
               disabled={importing || selectedProducts.size === 0}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-sp-pink hover:bg-sp-pink/90"
             >
               {importing ? (
                 <>
@@ -307,8 +307,8 @@ export default function ShopifyProductsPage() {
                   key={product.id}
                   className={`bg-card border transition-all cursor-pointer ${
                     selectedProducts.has(product.id)
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/30"
+                      ? "border-sp-pink bg-sp-pink/5"
+                      : "border-border hover:border-sp-pink/30"
                   }`}
                   onClick={() => toggleProduct(product.id)}
                 >
@@ -347,7 +347,7 @@ export default function ShopifyProductsPage() {
                           {product.variants.length !== 1 ? "s" : ""}
                         </p>
                         {product.variants[0] && (
-                          <p className="text-sm text-primary mt-1 font-medium">
+                          <p className="text-sm text-sp-pink mt-1 font-medium">
                             ${product.variants[0].price}
                           </p>
                         )}

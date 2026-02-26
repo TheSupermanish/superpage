@@ -208,19 +208,19 @@ export default function StoresPage() {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             Connected Stores
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground mt-1">
             Manage your Shopify stores and import products
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/10 flex items-center gap-2"
+          className="bg-sp-pink hover:bg-sp-pink/90 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-sp-pink/10 flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
           Connect Store
@@ -246,14 +246,14 @@ export default function StoresPage() {
 
       {/* Success Alert */}
       {success && (
-        <div className="mb-6 bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-start gap-3">
-          <ShoppingBag className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+        <div className="mb-6 bg-sp-pink/10 border border-sp-pink/20 rounded-xl p-4 flex items-start gap-3">
+          <ShoppingBag className="h-5 w-5 text-sp-pink flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <p className="text-primary font-semibold">{success}</p>
+            <p className="text-sp-pink font-semibold">{success}</p>
           </div>
           <button
             onClick={() => setSuccess(null)}
-            className="text-primary hover:text-primary/80 transition-colors"
+            className="text-sp-pink hover:text-sp-pink/80 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -310,13 +310,13 @@ export default function StoresPage() {
       {/* Stores List */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+          <Loader2 className="h-12 w-12 text-sp-pink animate-spin mb-4" />
           <p className="text-muted-foreground">Loading stores...</p>
         </div>
       ) : stores.length === 0 ? (
         <div className="text-center py-20">
-          <div className="h-20 w-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <ShoppingBag className="h-10 w-10 text-primary" />
+          <div className="h-20 w-20 rounded-2xl bg-sp-pink/10 flex items-center justify-center mx-auto mb-4">
+            <ShoppingBag className="h-10 w-10 text-sp-pink" />
           </div>
           <h3 className="text-xl font-bold text-foreground mb-2">
             No stores connected yet
@@ -324,7 +324,7 @@ export default function StoresPage() {
           <p className="text-muted-foreground mb-4">Connect your first Shopify store to get started</p>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-primary/10 flex items-center gap-2 mx-auto"
+            className="bg-sp-pink hover:bg-sp-pink/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg shadow-sp-pink/10 flex items-center gap-2 mx-auto"
           >
             <Plus className="h-4 w-4" />
             Connect Store
@@ -335,11 +335,11 @@ export default function StoresPage() {
           {stores.map((store) => (
             <div
               key={store._id}
-              className="bg-card border border-border hover:border-primary/30 transition-all rounded-2xl p-6 group"
+              className="bg-card border border-border hover:border-sp-pink/30 transition-all rounded-2xl p-6 group"
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className="h-14 w-14 rounded-xl bg-primary/10 group-hover:bg-primary flex items-center justify-center flex-shrink-0 transition-colors">
-                  <ShoppingBag className="h-7 w-7 text-primary group-hover:text-primary-foreground transition-colors" />
+                <div className="h-14 w-14 rounded-xl bg-sp-pink/10 group-hover:bg-sp-pink flex items-center justify-center flex-shrink-0 transition-colors">
+                  <ShoppingBag className="h-7 w-7 text-sp-pink group-hover:text-white transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-foreground text-lg mb-1 truncate">
@@ -361,7 +361,7 @@ export default function StoresPage() {
                       `/dashboard/shopify/products?store_id=${encodeURIComponent(store.id)}&store_name=${encodeURIComponent(store.name)}&shop_domain=${encodeURIComponent(store.shopDomain)}`
                     )
                   }
-                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-4 py-2 text-sm font-bold transition-colors shadow-lg shadow-primary/10 flex items-center justify-center gap-2"
+                  className="flex-1 bg-sp-pink hover:bg-sp-pink/90 text-white rounded-xl px-4 py-2 text-sm font-bold transition-colors shadow-lg shadow-sp-pink/10 flex items-center justify-center gap-2"
                 >
                   <Package className="h-4 w-4" />
                   Import Products
@@ -374,7 +374,7 @@ export default function StoresPage() {
                     }
                   }}
                   disabled={!store.url && !store.shopDomain}
-                  className="p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 rounded-xl border border-border text-muted-foreground hover:text-sp-pink hover:border-sp-pink/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Open store in new tab"
                 >
                   <ExternalLink className="h-4 w-4" />
@@ -398,18 +398,18 @@ export default function StoresPage() {
 
       {/* Products Section */}
       {stores.length > 0 && (
-        <div className="mt-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-1">Store Products</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-bold text-foreground">Store Products</h2>
+              <p className="text-muted-foreground mt-1">
                 View and manage products from your connected stores
               </p>
             </div>
           </div>
 
           {/* Filters */}
-          <div className="bg-card border border-border rounded-2xl p-4 mb-6">
+          <div className="bg-card border border-border rounded-2xl p-4">
             <div className="flex flex-col sm:flex-row gap-4">
               {/* Store Filter */}
               <div className="flex-1">
@@ -421,7 +421,7 @@ export default function StoresPage() {
                   <select
                     value={selectedStoreId || ""}
                     onChange={(e) => setSelectedStoreId(e.target.value || null)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-foreground focus:outline-none focus:border-sp-pink focus:ring-2 focus:ring-sp-pink/20"
                   >
                     <option value="">All Stores</option>
                     {stores.map((store) => (
@@ -445,7 +445,7 @@ export default function StoresPage() {
                     placeholder="Search by name or description..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    className="w-full pl-10 pr-4 py-2.5 bg-background border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-sp-pink focus:ring-2 focus:ring-sp-pink/20"
                   />
                 </div>
               </div>
@@ -455,7 +455,7 @@ export default function StoresPage() {
           {/* Products List */}
           {productsLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+              <Loader2 className="h-12 w-12 text-sp-pink animate-spin mb-4" />
               <p className="text-muted-foreground">Loading products...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
@@ -475,7 +475,7 @@ export default function StoresPage() {
               {filteredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-card border border-border hover:border-primary/30 transition-all rounded-2xl p-4 group"
+                  className="bg-card border border-border hover:border-sp-pink/30 transition-all rounded-2xl p-4 group"
                 >
                   {product.image && (
                     <div className="aspect-square rounded-xl overflow-hidden mb-3 bg-muted">
@@ -501,13 +501,13 @@ export default function StoresPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-lg font-bold text-primary">
+                      <p className="text-lg font-bold text-sp-pink">
                         {product.price} {product.currency}
                       </p>
                       {product.inventory !== null && (
                         <p className="text-xs text-muted-foreground">
                           {product.inventory > 0 ? (
-                            <span className="text-primary">{product.inventory} in stock</span>
+                            <span className="text-sp-pink">{product.inventory} in stock</span>
                           ) : (
                             <span className="text-red-400">Out of stock</span>
                           )}
@@ -533,7 +533,7 @@ export default function StoresPage() {
                             href={adminUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors"
+                            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-sp-pink hover:border-sp-pink/30 transition-colors"
                             title="Edit in Shopify Admin"
                           >
                             <Pencil className="h-4 w-4" />
@@ -548,7 +548,7 @@ export default function StoresPage() {
                             href={`https://${store.shopDomain}/products/${product.metadata.handle}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors"
+                            className="p-2 rounded-lg border border-border text-muted-foreground hover:text-sp-pink hover:border-sp-pink/30 transition-colors"
                             title="View on Shopify store"
                           >
                             <ExternalLink className="h-4 w-4" />
