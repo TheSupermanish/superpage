@@ -29,17 +29,17 @@ interface DashboardLayoutProps {
 }
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/resources", label: "Resources", icon: Wallet },
-  { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/dashboard/stores", label: "Stores", icon: Users },
-  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/dashboard/settings", label: "Settings", icon: Settings },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, activeBg: "bg-sp-blue", activeText: "text-white", activeShad: "shadow-sp-blue/20", hoverBg: "hover:bg-sp-blue/10", hoverText: "hover:text-sp-blue" },
+  { href: "/dashboard/resources", label: "Resources", icon: Wallet, activeBg: "bg-sp-gold", activeText: "text-white", activeShad: "shadow-sp-gold/20", hoverBg: "hover:bg-sp-gold/10", hoverText: "hover:text-sp-gold" },
+  { href: "/dashboard/orders", label: "Orders", icon: ShoppingCart, activeBg: "bg-sp-coral", activeText: "text-white", activeShad: "shadow-sp-coral/20", hoverBg: "hover:bg-sp-coral/10", hoverText: "hover:text-sp-coral" },
+  { href: "/dashboard/stores", label: "Stores", icon: Users, activeBg: "bg-sp-pink", activeText: "text-white", activeShad: "shadow-sp-pink/20", hoverBg: "hover:bg-sp-pink/10", hoverText: "hover:text-sp-pink" },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3, activeBg: "bg-sp-blue", activeText: "text-white", activeShad: "shadow-sp-blue/20", hoverBg: "hover:bg-sp-blue/10", hoverText: "hover:text-sp-blue" },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings, activeBg: "bg-muted", activeText: "text-foreground", activeShad: "", hoverBg: "hover:bg-muted/80", hoverText: "hover:text-foreground" },
 ];
 
 const secondaryNavItems = [
-  { href: "/explore", label: "Explore", icon: Compass },
-  { href: "/docs", label: "Docs", icon: BookOpen },
+  { href: "/explore", label: "Explore", icon: Compass, activeBg: "bg-sp-pink", activeText: "text-white", activeShad: "shadow-sp-pink/20", hoverBg: "hover:bg-sp-pink/10", hoverText: "hover:text-sp-pink" },
+  { href: "/docs", label: "Docs", icon: BookOpen, activeBg: "bg-sp-gold", activeText: "text-white", activeShad: "shadow-sp-gold/20", hoverBg: "hover:bg-sp-gold/10", hoverText: "hover:text-sp-gold" },
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -89,8 +89,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={cn(
                     "flex items-center gap-4 px-4 py-3 rounded-xl transition-all",
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10"
-                      : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                      ? `${item.activeBg} ${item.activeText} shadow-lg ${item.activeShad}`
+                      : `text-muted-foreground ${item.hoverBg} ${item.hoverText}`
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -117,8 +117,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={cn(
                     "flex items-center gap-4 px-4 py-3 rounded-xl transition-all",
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/10"
-                      : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                      ? `${item.activeBg} ${item.activeText} shadow-lg ${item.activeShad}`
+                      : `text-muted-foreground ${item.hoverBg} ${item.hoverText}`
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -134,9 +134,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* User Profile & Logout */}
         <div className="flex flex-col gap-4">
           <div className="p-4 rounded-xl bg-card border border-border flex items-center gap-3">
-            <div className="size-10 rounded-full bg-primary/20 ring-2 ring-primary/20 flex items-center justify-center text-primary font-bold">
-              {creator?.username?.charAt(0).toUpperCase() || "U"}
-            </div>
+            <img
+              src={creator?.avatarUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${creator?.username || creator?.walletAddress || "user"}`}
+              alt={creator?.username || "User"}
+              className="w-10 h-10 rounded-full bg-muted ring-2 ring-primary/20 shrink-0 object-cover"
+            />
             <div className="flex flex-col overflow-hidden flex-1">
               <p className="font-bold text-sm truncate">{creator?.username || "User"}</p>
               <p className="text-xs text-muted-foreground truncate">{creator?.walletAddress?.slice(0, 4)}...{creator?.walletAddress?.slice(-4)}</p>
@@ -160,10 +162,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between p-4 bg-background sticky top-0 z-20 border-b border-border">
           <div className="flex items-center gap-2">
-            <div className="size-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-              <DollarSign className="h-5 w-5" />
-            </div>
-            <span className="font-bold text-lg">x402</span>
+            <img src="/logo.png" alt="SuperPage" className="h-8 w-auto" />
           </div>
           <button
             className="p-2 rounded-lg bg-muted"
@@ -188,8 +187,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     className={cn(
                       "flex items-center gap-4 px-4 py-3 rounded-xl transition-all",
                       isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                        ? `${item.activeBg} ${item.activeText}`
+                        : `text-muted-foreground ${item.hoverBg} ${item.hoverText}`
                     )}
                   >
                     <item.icon className="h-5 w-5" />
@@ -212,8 +211,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     className={cn(
                       "flex items-center gap-4 px-4 py-3 rounded-xl transition-all",
                       isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                        ? `${item.activeBg} ${item.activeText}`
+                        : `text-muted-foreground ${item.hoverBg} ${item.hoverText}`
                     )}
                   >
                     <item.icon className="h-5 w-5" />
