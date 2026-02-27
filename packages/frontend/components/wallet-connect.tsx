@@ -12,8 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Wallet, LogOut, User, Loader2, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
-export function WalletConnect() {
+interface WalletConnectProps {
+  compact?: boolean;
+}
+
+const btnClass = (compact?: boolean) =>
+  compact
+    ? "shimmer-btn px-5 py-2 rounded-full text-sm font-bold text-white transition-all flex items-center gap-2"
+    : "shimmer-btn px-8 py-4 rounded-full text-lg font-bold text-white transition-all flex items-center gap-2";
+
+export function WalletConnect({ compact }: WalletConnectProps = {}) {
   const [mounted, setMounted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,12 +38,15 @@ export function WalletConnect() {
 
   if (!mounted) {
     return (
-      <button className="px-6 py-2.5 rounded-full text-sm font-bold bg-primary text-primary-foreground hover:scale-105 transition-all shadow-lg shadow-primary/10 flex items-center gap-2">
+      <button className={btnClass(compact)}>
         <Wallet className="h-4 w-4" />
         <span>Connect Wallet</span>
       </button>
     );
   }
+
+  const avatarUrl = creator?.avatarUrl
+    || `https://api.dicebear.com/7.x/shapes/svg?seed=${creator?.name || address || "user"}`;
 
   // Format wallet address
   const formatAddress = (addr: string | undefined) => {
@@ -46,7 +59,7 @@ export function WalletConnect() {
     return (
       <button
         onClick={openConnectModal}
-        className="px-6 py-2.5 rounded-full text-sm font-bold bg-primary text-primary-foreground hover:scale-105 transition-all shadow-lg shadow-primary/10 flex items-center gap-2"
+        className={btnClass(compact)}
       >
         <Wallet className="h-4 w-4" />
         <span>Connect Wallet</span>
@@ -54,8 +67,7 @@ export function WalletConnect() {
     );
   }
 
-  // Connected but not authenticated - show connect wallet button
-  // This allows user to choose a different wallet or sign in with current one
+  // Connected but not authenticated - show sign in button
   if (isConnected && !isAuthenticated) {
     const handleConnect = async () => {
       if (isLoading) return;
@@ -68,7 +80,6 @@ export function WalletConnect() {
         if (msg.includes("Backend server") || msg.includes("Failed to fetch")) {
           setError("Backend offline");
         } else if (msg.includes("User rejected") || msg.includes("denied")) {
-          // User cancelled wallet signing — keep wallet connected, just reset
           setError(null);
         } else {
           setError(msg.length > 30 ? msg.slice(0, 30) + "..." : msg);
@@ -89,7 +100,7 @@ export function WalletConnect() {
         <button
           onClick={handleConnect}
           disabled={isLoading}
-          className="px-6 py-2.5 rounded-full text-sm font-bold bg-primary text-primary-foreground hover:scale-105 transition-all shadow-lg shadow-primary/10 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`${btnClass(compact)} disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {isLoading ? (
             <>
@@ -112,20 +123,33 @@ export function WalletConnect() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="gap-2 border-border hover:bg-muted hover:border-border px-4 py-2 rounded-full border transition-all flex items-center">
-          <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shadow-lg shadow-primary/10">
-            {creator?.name?.charAt(0).toUpperCase() || "?"}
-          </div>
+          <Image
+            src={avatarUrl}
+            alt={creator?.name || "User"}
+            width={28}
+            height={28}
+            className="rounded-full bg-muted shadow-lg shadow-primary/10"
+          />
           <span className="hidden sm:inline font-medium">
             {creator?.name || formatAddress(address)}
           </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 bg-card border-border">
-        <div className="px-2 py-2">
-          <p className="text-sm font-semibold text-foreground">{creator?.name}</p>
-          <p className="text-xs text-muted-foreground font-mono mt-0.5">
-            {formatAddress(address)}
-          </p>
+        <div className="px-2 py-2 flex items-center gap-3">
+          <Image
+            src={avatarUrl}
+            alt={creator?.name || "User"}
+            width={40}
+            height={40}
+            className="rounded-full bg-muted shrink-0"
+          />
+          <div>
+            <p className="text-sm font-semibold text-foreground">{creator?.name}</p>
+            <p className="text-xs text-muted-foreground font-mono mt-0.5">
+              {formatAddress(address)}
+            </p>
+          </div>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

@@ -11,24 +11,24 @@ import "@rainbow-me/rainbowkit/styles.css";
 // Create query client
 const queryClient = new QueryClient();
 
-// All supported chains - Cronos first since it's the default
+// All supported chains - Base first since it's the default
 const supportedChains = [
-  biteV2Sandbox,    // x402 payment chain
-  cronosTestnet,    // Default testnet
-  cronos,           // Cronos mainnet
-  mainnet,          // Ethereum mainnet
+  baseSepolia,      // Default testnet (x402 payment chain)
   base,             // Base mainnet
+  mainnet,          // Ethereum mainnet
   sepolia,          // Ethereum testnet
-  baseSepolia,      // Base testnet
   polygon,          // Polygon mainnet
   arbitrum,         // Arbitrum mainnet
   optimism,         // Optimism mainnet
+  biteV2Sandbox,    // SKALE testnet
+  cronosTestnet,    // Cronos testnet
+  cronos,           // Cronos mainnet
   mantleSepolia,    // Mantle testnet
 ] as const;
 
 // Configure wagmi with RainbowKit
 const config = getDefaultConfig({
-  appName: "x402 Protocol",
+  appName: "SuperPage",
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "YOUR_PROJECT_ID",
   chains: supportedChains,
   ssr: false,
@@ -44,11 +44,11 @@ export function EthereumWalletProviderInner({ children }: EthereumWalletProvider
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: "#7c3aed", // Purple accent
+            accentColor: "#5B8FB9", // SuperPage blue from logo
             accentColorForeground: "white",
             borderRadius: "medium",
           })}
-          initialChain={cronosTestnet}
+          initialChain={baseSepolia}
         >
           {children}
         </RainbowKitProvider>
