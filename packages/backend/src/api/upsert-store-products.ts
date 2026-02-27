@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StoreProduct, Store } from "../models/index.js";
+import { StoreProduct, Store, findStoreById } from "../models/index.js";
 import { ProductInput } from "../types";
 
 export async function handleUpsertStoreProducts(req: Request, res: Response) {
@@ -19,7 +19,7 @@ export async function handleUpsertStoreProducts(req: Request, res: Response) {
     // Get the actual store.id field to ensure consistent product association
     let actualStoreId = storeId;
     try {
-      const store = await Store.findOne({ id: storeId }).lean() || await Store.findById(storeId).lean();
+      const store = await findStoreById(storeId);
       if (store) {
         actualStoreId = store.id;
       }

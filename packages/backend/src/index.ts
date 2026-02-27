@@ -307,10 +307,10 @@ async function startServer() {
     // Connect to MongoDB
     await connectDB();
 
-    // Migrate stale store networks to BITE V2
+    // Migrate stale store networks to configured chain
     try {
       const { Store } = await import("./models/Store.js");
-      const target = process.env.X402_CHAIN || "bite-v2-sandbox";
+      const target = process.env.X402_CHAIN || "base-sepolia";
       const result = await Store.updateMany(
         { networks: { $nin: [target] } },
         { $set: { networks: [target] } }

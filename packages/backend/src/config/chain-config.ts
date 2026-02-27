@@ -11,7 +11,7 @@
 // ============================================================
 
 /** Default network used when none is specified (env override: X402_CHAIN) */
-export const DEFAULT_NETWORK: NetworkId = (process.env.X402_CHAIN as NetworkId) || "bite-v2-sandbox";
+export const DEFAULT_NETWORK: NetworkId = (process.env.X402_CHAIN as NetworkId) || "base-sepolia";
 
 /** Default payment asset */
 export const DEFAULT_ASSET = "USDC";

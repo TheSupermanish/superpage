@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StoreProduct, Store } from "../models/index.js";
+import { StoreProduct, Store, findStoreById } from "../models/index.js";
 import { Product } from "../types";
 import { normalizePriceString } from "../utils/utils";
 
@@ -79,7 +79,7 @@ export async function handleListStoreProducts(req: Request, res: Response) {
     // First try to find the actual store to get its id field
     let actualStoreId = storeId;
     try {
-      const store = await Store.findOne({ id: storeId }).lean() || await Store.findById(storeId).lean();
+      const store = await findStoreById(storeId);
       if (store) {
         actualStoreId = store.id;
       }

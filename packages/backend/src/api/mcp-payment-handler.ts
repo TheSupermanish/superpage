@@ -77,7 +77,7 @@ async function initializeMCPPaymentServer(): Promise<any> {
       network: z
         .string()
         .optional()
-        .describe("Network ID (e.g. bite-v2-sandbox, base, mainnet). Defaults to configured network."),
+        .describe("Network ID (e.g. base-sepolia, bite-v2-sandbox, base, mainnet). Defaults to configured network."),
       token: z
         .string()
         .optional()
@@ -190,7 +190,7 @@ export async function handleMCPPaymentRequest(req: Request, res: Response) {
               },
               network: {
                 type: "string",
-                description: "Network ID (e.g. bite-v2-sandbox, base, mainnet)",
+                description: "Network ID (e.g. base-sepolia, bite-v2-sandbox, base, mainnet)",
               },
               token: {
                 type: "string",

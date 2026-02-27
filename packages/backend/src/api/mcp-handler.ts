@@ -103,7 +103,7 @@ async function initializeMCPServer(): Promise<McpServer> {
         transactionHash: z.string().describe("EVM transaction hash (0x...)"),
         network: z
           .string()
-          .describe("Network ID where transaction was executed (e.g. bite-v2-sandbox, base)"),
+          .describe("Network ID where transaction was executed (e.g. base-sepolia, bite-v2-sandbox, base)"),
         chainId: z.number().optional().describe("Chain ID of the network"),
         timestamp: z.number().describe("Unix timestamp of payment"),
       }),
@@ -257,7 +257,7 @@ export async function handleMCPRequest(req: Request, res: Response) {
                 type: "object",
                 properties: {
                   transactionHash: { type: "string", description: "EVM transaction hash (0x...)" },
-                  network: { type: "string", description: "Network ID (e.g. bite-v2-sandbox, base, mainnet)" },
+                  network: { type: "string", description: "Network ID (e.g. base-sepolia, bite-v2-sandbox, base, mainnet)" },
                   chainId: { type: "number", description: "Chain ID" },
                   timestamp: { type: "number", description: "Unix timestamp" },
                 },

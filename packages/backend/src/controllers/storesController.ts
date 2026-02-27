@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Store, StoreProduct } from "../models/index.js";
+import { Store, StoreProduct, findStoreById } from "../models/index.js";
 import { ApiResponse } from "../middleware/response.js";
 import { asyncHandler, AppError } from "../middleware/errorHandler.js";
 import { AuthenticatedRequest } from "../api/wallet-auth.js";
@@ -111,7 +111,7 @@ export const deleteStore = asyncHandler(async (req: AuthenticatedRequest, res: R
   }
 
   // Find the store
-  const store = await Store.findById(storeId);
+  const store = await findStoreById(storeId);
   if (!store) {
     throw new AppError("Store not found", 404);
   }
@@ -125,7 +125,7 @@ export const deleteStore = asyncHandler(async (req: AuthenticatedRequest, res: R
   await StoreProduct.deleteMany({ storeId: store.id });
 
   // Delete the store
-  await Store.findByIdAndDelete(storeId);
+  await Store.deleteOne({ _id: store._id });
 
   console.log(`✅ Deleted store: ${store.name} (${storeId})`);
 

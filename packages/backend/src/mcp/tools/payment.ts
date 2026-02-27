@@ -62,7 +62,7 @@ const makePaymentTool = defineTool({
   inputSchema: z.object({
     recipientAddress: z.string().describe("EVM wallet address to send tokens to (0x...)"),
     amount: z.string().describe("Amount in base units (e.g., 10000 for 0.01 USDC with 6 decimals)"),
-    network: z.string().optional().describe("Network ID (e.g. bite-v2-sandbox, base, mainnet). Defaults to configured network."),
+    network: z.string().optional().describe("Network ID (e.g. base-sepolia, bite-v2-sandbox, base, mainnet). Defaults to configured network."),
     token: z.string().optional().describe("Token symbol: USDC, ETH, etc. Defaults to configured currency."),
   }),
   handler: async ({ recipientAddress, amount, network: networkArg, token: tokenArg }) => {

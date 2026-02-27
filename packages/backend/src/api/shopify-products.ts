@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ShopifyProduct, ShopifyVariant } from "../types";
-import { Store } from "../models/index.js";
+import { Store, findStoreById } from "../models/index.js";
 
 export async function handleShopifyProducts(req: Request, res: Response) {
   try {
@@ -15,17 +15,7 @@ export async function handleShopifyProducts(req: Request, res: Response) {
 
     // If storeId is provided, fetch store details from database
     if (storeId) {
-      // Try to find by id first, then by _id (MongoDB ObjectId)
-      let store = await Store.findOne({ id: storeId }).lean();
-      
-      if (!store) {
-        // Try finding by MongoDB _id
-        try {
-          store = await Store.findById(storeId).lean();
-        } catch (err) {
-          // Invalid ObjectId format, continue
-        }
-      }
+      const store = await findStoreById(storeId);
 
       if (!store) {
         return res.status(404).json({

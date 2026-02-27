@@ -37,6 +37,6 @@ async function initializeX402Server() {
 export { initializeX402Server };
 
 export const x402Config = {
-  network: (process.env.X402_NETWORK || process.env.X402_CHAIN || "bite-v2-sandbox") as string,
+  network: (process.env.X402_NETWORK || process.env.X402_CHAIN || "base-sepolia") as string,
   recipientAddress: process.env.X402_RECIPIENT_ADDRESS || process.env.ETH_RECIPIENT_ADDRESS || "",
 };

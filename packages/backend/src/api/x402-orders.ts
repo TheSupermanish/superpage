@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Order, Store } from "../models/index.js";
+import { Order, Store, findStoreById } from "../models/index.js";
 import { AuthenticatedRequest } from "./wallet-auth.js";
 
 export type OrderType = {
@@ -133,10 +133,10 @@ export async function handleGetStoreOrdersProtected(req: AuthenticatedRequest, r
     }
 
     // Verify the store belongs to this creator
-    const store = await Store.findOne({ 
-      $or: [{ id: storeId }, { _id: storeId }],
-      creatorId 
-    }).lean();
+    const store = await findStoreById(storeId);
+    if (store && store.creatorId?.toString() !== creatorId) {
+      return res.status(403).json({ error: "Store not found or you don't have access to it" });
+    }
 
     if (!store) {
       return res.status(403).json({ 
