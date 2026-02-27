@@ -1,0 +1,18 @@
+{
+  "agent": {
+    "model": "anthropic/claude-sonnet-4-20250514"
+  },
+  "mcpServers": {
+    "superpage-x402": {
+      "command": "node",
+      "args": ["./packages/mcp-client/superpage-x402.js"],
+      "env": {
+        "SUPERPAGE_SERVER": "http://localhost:3001",
+        "X402_CHAIN": "base",
+        "X402_CURRENCY": "USDC",
+        "MAX_AUTO_PAYMENT": "10.00"
+      },
+      "status": "active"
+    }
+  }
+}

@@ -273,8 +273,8 @@ export async function handleListPublicResources(req: AuthenticatedRequest, res: 
   try {
     const { type, limit, offset, search } = req.query;
 
-    const limitNum = Math.min(parseInt(limit as string) || 50, 100);
-    const offsetNum = parseInt(offset as string) || 0;
+    const limitNum = Math.max(1, Math.min(parseInt(limit as string) || 50, 100));
+    const offsetNum = Math.max(0, parseInt(offset as string) || 0);
 
     const filter: any = {
       isActive: true,
@@ -285,7 +285,8 @@ export async function handleListPublicResources(req: AuthenticatedRequest, res: 
     }
 
     if (search) {
-      filter.name = { $regex: search, $options: 'i' };
+      const escapedSearch = (search as string).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.name = { $regex: escapedSearch, $options: 'i' };
     }
 
     const resources = await Resource.find(filter)

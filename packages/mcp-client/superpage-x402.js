@@ -172,10 +172,24 @@ const TOKEN_ADDRESSES = {
   cronos: {
     USDC: "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59",
   },
+  base: {
+    USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  },
+  "base-sepolia": {
+    USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+  },
+  polygon: {
+    USDC: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+  },
+  arbitrum: {
+    USDC: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  },
+  optimism: {
+    USDC: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  },
   "bite-v2-sandbox": {
     USDC: "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
   },
-  // Add other networks as needed
 };
 
 // Resolve token contract address

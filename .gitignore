@@ -5,10 +5,13 @@ build
 *.log
 .DS_Store
 .env
+.env.*
+!.env.*.example
 .env.local
 .env.*.local
 # pnpm-lock.yaml  # committed for Docker builds
-.env
+*.backup
+*.bak
 .idea
 
 # Auto Claude data directory
