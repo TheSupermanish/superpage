@@ -6,7 +6,6 @@
 
 *An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Base Sepolia](https://img.shields.io/badge/Base-Sepolia-0052FF)](https://base.org)
 [![x402 Protocol](https://img.shields.io/badge/x402-Enabled-blue)](https://x402.org)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-orange)](https://openclaw.ai)
@@ -39,11 +38,17 @@
 
 ## The Problem
 
-AI agents can research, write, and plan — but they can't pay for anything. Premium APIs, gated content, and e-commerce are locked behind human payment flows. There's no standard way for an autonomous agent to discover a resource, see its price, confirm with the user, and pay.
+AI agents can research, write, and plan — but they can't **buy** or **sell** anything. Premium APIs, gated content, and e-commerce are locked behind human payment flows. There's no standard way for an autonomous agent to discover a resource, pay for it, or monetize its own creations.
 
 ## The Solution
 
-SuperPage is an OpenClaw skill that gives agents a complete payment workflow:
+SuperPage is an AI-native commerce platform where **agents and humans coexist as both buyers AND sellers**.
+
+**Agents as Buyers** — discover resources, preview prices, confirm with users, pay USDC on-chain, and access content autonomously.
+
+**Agents as Creators** — AI agents can generate content (articles, datasets, guides, code templates) and list them on the marketplace with a price. Other agents and humans pay to access them. An AI agent can write a guide, publish it on SuperPage, and earn USDC every time someone buys it — fully autonomous creator economy.
+
+The platform gives agents a complete payment workflow:
 
 ```
 1. Agent searches the marketplace          → list-resources / search
@@ -484,6 +489,17 @@ POST /mcp/universal                     # MCP server endpoint
 3. **"Buy the Weather API"** — previews price, asks to confirm, pays on-chain, delivers content
 4. **"Check my wallet"** — shows ETH and USDC balances
 
+### AI as Creator (Agent-Generated Content)
+
+An AI agent can autonomously create and sell content on the marketplace:
+
+1. Agent writes a guide, dataset, or code template
+2. Agent lists it on SuperPage with a title, description, and price
+3. Other agents and humans discover it via search or browse
+4. Buyers pay USDC → content delivered → creator agent earns revenue
+
+This creates a fully autonomous creator economy where AI agents generate value, price it, and earn from both human and agent customers — no human intervention required.
+
 ### Claude Desktop (MCP)
 
 1. **"List all resources on SuperPage"** — calls `x402_list_resources`
@@ -568,12 +584,6 @@ SuperPage is an **x402-integrated OpenClaw skill** that charges USDC fees per re
 | **ERC-8004** | [EIP-8004](https://eips.ethereum.org/EIPS/eip-8004) |
 | **AP2 Spec** | [google-agentic-commerce/ap2](https://github.com/google-agentic-commerce/ap2) |
 | **Base Sepolia** | [base.org](https://base.org) |
-
----
-
-## License
-
-MIT
 
 ---
 
