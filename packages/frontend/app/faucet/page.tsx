@@ -114,7 +114,7 @@ export default function FaucetPage() {
     <div className="min-h-screen bg-background text-foreground">
       <PublicNavbar />
 
-      <div className="max-w-xl mx-auto px-4 py-16">
+      <div className="max-w-xl mx-auto px-4 pt-28 pb-16">
         {/* Header */}
         <div className="text-center mb-10">
           <div className="size-16 rounded-2xl bg-primary/15 flex items-center justify-center mx-auto mb-4">

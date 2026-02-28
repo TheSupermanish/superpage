@@ -30,6 +30,8 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       items: [
         { href: "/docs/ai-agents", label: "AI Agent Payments", icon: "smart_toy" },
         { href: "/docs/mcp", label: "MCP Server", icon: "settings" },
+        { href: "/docs/skills", label: "Skills Reference", icon: "psychology" },
+        { href: "/docs/openclaw", label: "OpenClaw Setup", icon: "extension" },
       ],
     },
   ];
@@ -37,11 +39,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   const isActive = (href: string) => pathname === href;
 
   return (
-    <div className="flex flex-col h-screen w-full bg-background text-foreground overflow-hidden">
+    <div className="min-h-screen w-full bg-background text-foreground">
       <PublicNavbar />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="max-w-7xl mx-auto w-full flex pt-32 px-4 sm:px-6 lg:px-8">
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-40 flex flex-col w-72 h-full border-r border-border bg-background p-6 overflow-y-auto no-scrollbar transition-transform duration-300`}>
+        <aside className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 fixed lg:sticky top-32 bottom-0 lg:bottom-auto left-0 lg:left-auto z-40 flex-shrink-0 flex flex-col w-72 lg:h-[calc(100vh-8rem)] bg-background p-6 overflow-y-auto no-scrollbar transition-transform duration-300`}>
         <div className="flex flex-col gap-8">
           <nav className="flex flex-col gap-8">
             {navSections.map((section, idx) => (
@@ -94,7 +96,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       )}
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-y-auto no-scrollbar relative bg-background">
+      <main className="flex-1 min-w-0">
         {/* Mobile Menu Button */}
         <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border p-4 lg:hidden">
           <button
@@ -104,7 +106,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             <span className="material-symbols-outlined text-xl">menu</span>
           </button>
         </div>
-        <div className="flex-1 max-w-4xl mx-auto w-full px-4 md:px-8 py-8">{children}</div>
+        <div className="w-full px-4 md:px-8 py-8">{children}</div>
       </main>
       </div>
     </div>
