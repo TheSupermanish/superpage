@@ -6,20 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function GettingStartedPage() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-background/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 max-w-7xl flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-primary">
-            x402
-          </Link>
-          <Link href="/docs">
-            <Button variant="outline">← Back to Docs</Button>
-          </Link>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div>
+      <div>
         <h1 className="text-4xl font-bold mb-8 text-primary">
           Getting Started with x402
         </h1>
