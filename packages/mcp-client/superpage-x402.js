@@ -529,6 +529,56 @@ const TOOLS = [
       required: ["orderId"],
     },
   },
+  {
+    name: "x402_list_orders",
+    description:
+      "List all completed orders for a store. Shows order IDs, amounts, status, and payment details.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        storeId: {
+          type: "string",
+          description: "Store ID (e.g., shopify/store-name). Get from x402_list_stores.",
+        },
+      },
+      required: ["storeId"],
+    },
+  },
+  {
+    name: "x402_list_order_intents",
+    description:
+      "List pending (unpaid) order intents for a store. These are checkouts that were started but not yet paid.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        storeId: {
+          type: "string",
+          description: "Store ID (e.g., shopify/store-name). Get from x402_list_stores.",
+        },
+      },
+      required: ["storeId"],
+    },
+  },
+  {
+    name: "x402_search_resources",
+    description:
+      "Search resources by keyword across name and description. Filter by type (api, file, article). Returns matching resources with prices and URLs.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          description: "Search keyword (e.g., 'weather', 'typescript', 'AI')",
+        },
+        type: {
+          type: "string",
+          enum: ["api", "file", "article"],
+          description: "Filter by resource type (optional)",
+        },
+      },
+      required: ["query"],
+    },
+  },
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -556,6 +606,12 @@ async function handleTool(name, args) {
         return await sendToken(args.to, args.amount, args.memo);
       case "x402_order_status":
         return await getOrderStatus(args.orderId);
+      case "x402_list_orders":
+        return await listOrders(args.storeId);
+      case "x402_list_order_intents":
+        return await listOrderIntents(args.storeId);
+      case "x402_search_resources":
+        return await searchResources(args.query, args.type);
       default:
         return { error: `Unknown tool: ${name}` };
     }
@@ -1178,6 +1234,113 @@ async function makePayment(recipientAddress, amountBaseUnits) {
     log(`Payment error: ${err.message}`);
     return { success: false, error: err.message };
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ORDERS: List completed orders for a store
+// ─────────────────────────────────────────────────────────────────────────────
+async function listOrders(storeId) {
+  const res = await fetch(`${SERVER_URL}/x402/stores/${encodeURIComponent(storeId)}/orders`);
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return { error: err.error || `Failed to list orders: ${res.status}` };
+  }
+
+  const data = await res.json();
+  const orders = data.orders || data.data?.orders || [];
+
+  return {
+    storeId,
+    orders: orders.map((o) => ({
+      id: o.orderId || o._id,
+      shopifyOrderId: o.shopifyOrderId,
+      status: o.status,
+      total: o.total || o.amounts?.total,
+      currency: o.currency || CURRENCY,
+      email: o.email,
+      txHash: o.transactionHash || o.txHash,
+      explorer: o.transactionHash ? getExplorerUrl(o.transactionHash) : null,
+      createdAt: o.createdAt,
+      items: o.items,
+    })),
+    count: orders.length,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ORDERS: List pending order intents for a store
+// ─────────────────────────────────────────────────────────────────────────────
+async function listOrderIntents(storeId) {
+  const res = await fetch(`${SERVER_URL}/x402/stores/${encodeURIComponent(storeId)}/order-intents`);
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return { error: err.error || `Failed to list order intents: ${res.status}` };
+  }
+
+  const data = await res.json();
+  const intents = data.orderIntents || data.data?.orderIntents || [];
+
+  return {
+    storeId,
+    orderIntents: intents.map((oi) => ({
+      id: oi.orderIntentId || oi._id,
+      status: oi.status,
+      total: oi.total || oi.amounts?.total,
+      currency: oi.currency || CURRENCY,
+      email: oi.email,
+      expiresAt: oi.expiresAt,
+      createdAt: oi.createdAt,
+      items: oi.items,
+    })),
+    count: intents.length,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DISCOVERY: Search resources by keyword
+// ─────────────────────────────────────────────────────────────────────────────
+async function searchResources(query, type) {
+  let url = `${SERVER_URL}/x402/resources?limit=50`;
+  if (type) {
+    url += `&type=${type}`;
+  }
+
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    return { error: err.error || `Failed to search resources: ${res.status}` };
+  }
+
+  const data = await res.json();
+  const q = query.toLowerCase();
+
+  const matched = (data.resources || []).filter((r) =>
+    r.name?.toLowerCase().includes(q) ||
+    r.description?.toLowerCase().includes(q) ||
+    r.slug?.toLowerCase().includes(q)
+  );
+
+  return {
+    query,
+    type: type || "all",
+    resources: matched.map((r) => ({
+      id: r.id,
+      slug: r.slug,
+      type: r.type,
+      name: r.name,
+      description: r.description,
+      price: r.priceUsdc,
+      priceFormatted: `${r.priceUsdc} ${CURRENCY}`,
+      url: `${SERVER_URL}${r.endpoint}`,
+      creator: r.creator,
+    })),
+    count: matched.length,
+    currency: CURRENCY,
+    network: NETWORK,
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
