@@ -5,20 +5,36 @@ import { useAccount, useWriteContract } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useEnsureNetwork } from "./use-network-switch";
 import { createPublicClient, http, parseAbi } from "viem";
-import { biteV2Sandbox } from "@/lib/chains";
+import { getDefaultChain, getDefaultChainId, CHAIN_BY_NAME } from "@/lib/chains";
+import { getNetwork } from "@/lib/chain-config";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-const BITE_CHAIN_ID = 103698795;
-const USDC_ADDRESS = "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8" as const;
+// USDC addresses per network
+const USDC_ADDRESSES: Record<string, `0x${string}`> = {
+  "base-sepolia": "0xa059e27967e5a573a14a62c706ebd1be75333f9a",
+  "base": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "mainnet": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  "polygon": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+  "arbitrum": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+  "optimism": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+  "sepolia": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+  "bite-v2-sandbox": "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
+};
+
+// Resolve current chain config
+const CURRENT_NETWORK = getNetwork();
+const CURRENT_CHAIN_ID = getDefaultChainId();
+const CURRENT_CHAIN = getDefaultChain();
+const USDC_ADDRESS = USDC_ADDRESSES[CURRENT_NETWORK] || USDC_ADDRESSES["base-sepolia"];
 
 const ERC20_ABI = parseAbi([
   "function transfer(address to, uint256 amount) returns (bool)",
 ]);
 
-// Standalone viem client for tx receipt polling (avoids wagmi config export)
-const biteClient = createPublicClient({
-  chain: biteV2Sandbox,
+// Standalone viem client for tx receipt polling
+const paymentClient = createPublicClient({
+  chain: CURRENT_CHAIN,
   transport: http(),
 });
 
@@ -82,8 +98,8 @@ export interface CheckoutResult {
 function buildPaymentHeader(txHash: string) {
   return JSON.stringify({
     transactionHash: txHash,
-    network: "bite-v2-sandbox",
-    chainId: BITE_CHAIN_ID,
+    network: CURRENT_NETWORK,
+    chainId: CURRENT_CHAIN_ID,
     timestamp: Date.now(),
   });
 }
@@ -132,7 +148,7 @@ function friendlyError(err: any): string {
 
   // Chain not added to wallet
   if (err.code === 4902)
-    return "BITE V2 network not found in your wallet. Please add it and try again.";
+    return `${CURRENT_CHAIN.name} network not found in your wallet. Please add it and try again.`;
 
   // Explicit message we threw (reverted, network switch, etc.)
   if (err.message?.startsWith("Transaction reverted"))
@@ -143,7 +159,7 @@ function friendlyError(err: any): string {
   // Wagmi / viem short messages
   const short: string = err.shortMessage || "";
   if (/insufficient funds/i.test(short) || /insufficient funds/i.test(err.message || ""))
-    return "Insufficient USDC balance. Make sure you have enough tokens on BITE V2.";
+    return `Insufficient USDC balance. Make sure you have enough tokens on ${CURRENT_CHAIN.name}.`;
   if (/user rejected/i.test(short))
     return "You rejected the transaction in your wallet.";
   if (/connector not connected/i.test(short))
@@ -180,7 +196,7 @@ export function useX402Payment() {
 
   const { isConnected, address } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const { ensureCorrectNetwork } = useEnsureNetwork(BITE_CHAIN_ID);
+  const { ensureCorrectNetwork } = useEnsureNetwork(CURRENT_CHAIN_ID);
   const { writeContractAsync } = useWriteContract();
 
   const reset = useCallback(() => {
@@ -191,26 +207,30 @@ export function useX402Payment() {
 
   const sendPayment = useCallback(
     async (requirements: PaymentRequirements): Promise<string> => {
-      // Switch to SKALE
+      // Switch to the correct network
       setStatus("switching-network");
       const switched = await ensureCorrectNetwork();
-      if (!switched) throw new Error("Please switch to BITE V2 Sandbox network");
+      if (!switched) throw new Error(`Please switch to ${CURRENT_CHAIN.name} network`);
+
+      // Determine USDC address — use from requirements chain or current default
+      const reqNetwork = requirements.network || CURRENT_NETWORK;
+      const usdcAddr = USDC_ADDRESSES[reqNetwork] || USDC_ADDRESS;
 
       // Send ERC-20 transfer
       setStatus("awaiting-approval");
       const hash = await writeContractAsync({
         abi: ERC20_ABI,
-        address: USDC_ADDRESS,
+        address: usdcAddr,
         functionName: "transfer",
         args: [requirements.recipient as `0x${string}`, BigInt(requirements.amount)],
-        chainId: BITE_CHAIN_ID,
+        chainId: requirements.chainId || CURRENT_CHAIN_ID,
       });
 
       setTxHash(hash);
       setStatus("confirming-tx");
 
       // Wait for confirmation and check status
-      const receipt = await biteClient.waitForTransactionReceipt({ hash, confirmations: 1 });
+      const receipt = await paymentClient.waitForTransactionReceipt({ hash, confirmations: 1 });
 
       if (receipt.status === "reverted") {
         throw new Error(

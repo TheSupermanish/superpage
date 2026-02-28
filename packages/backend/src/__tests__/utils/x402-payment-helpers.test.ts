@@ -216,8 +216,8 @@ describe("parsePaymentHeader", () => {
       network: "unknown-net",
     });
     const parsed = parsePaymentHeader(header);
-    // Falls back to DEFAULT_NETWORK chain ID (bite-v2-sandbox = 103698795)
-    expect(parsed.chainId).toBe(103698795);
+    // Falls back to DEFAULT_NETWORK chain ID (base-sepolia = 84532)
+    expect(parsed.chainId).toBe(84532);
   });
 
   it("should throw for invalid JSON", () => {

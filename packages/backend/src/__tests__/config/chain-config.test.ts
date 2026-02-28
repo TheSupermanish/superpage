@@ -169,14 +169,14 @@ describe("getChainConfig", () => {
     process.env = originalEnv;
   });
 
-  it("should default to bite-v2-sandbox", () => {
+  it("should default to base-sepolia", () => {
     delete process.env.X402_CHAIN;
     delete process.env.X402_CURRENCY;
     delete process.env.X402_TOKEN_ADDRESS;
     delete process.env.X402_TOKEN_DECIMALS;
     const config = getChainConfig();
-    expect(config.network).toBe("bite-v2-sandbox");
-    expect(config.chainId).toBe(103698795);
+    expect(config.network).toBe("base-sepolia");
+    expect(config.chainId).toBe(84532);
     expect(config.isTestnet).toBe(true);
   });
 
@@ -190,7 +190,7 @@ describe("getChainConfig", () => {
   it("should fall back for unknown network", () => {
     process.env.X402_CHAIN = "nonexistent";
     const config = getChainConfig();
-    expect(config.network).toBe("bite-v2-sandbox");
+    expect(config.network).toBe("base-sepolia");
   });
 
   it("should respect X402_CURRENCY env var", () => {

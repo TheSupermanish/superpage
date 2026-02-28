@@ -218,7 +218,7 @@ export const TOKEN_ADDRESSES: Record<Network, Record<Exclude<TokenType, "ETH" | 
     DAI: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb" as Address,
   },
   "base-sepolia": {
-    USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Circle USDC on Base Sepolia
+    USDC: "0xa059e27967e5a573a14a62c706ebd1be75333f9a", // SuperPage mUSDC on Base Sepolia
     USDT: "0x0000000000000000000000000000000000000000" as Address,
     DAI: "0x0000000000000000000000000000000000000000" as Address,
   },

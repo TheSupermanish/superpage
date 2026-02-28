@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/auth-provider";
+import Image from "next/image";
 import { Loader2, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
 
 export default function OnboardingPage() {
@@ -115,8 +116,8 @@ export default function OnboardingPage() {
         {/* Logo/Icon */}
         <div className="flex justify-center mb-8">
           <div className="relative">
-            <div className="size-20 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/10">
-              <span className="text-primary-foreground font-bold text-3xl">x</span>
+            <div className="size-20 rounded-2xl bg-primary/10 flex items-center justify-center shadow-lg shadow-primary/10">
+              <Image src="/logo.png" alt="SuperPage" width={48} height={48} className="h-12 w-auto" />
             </div>
             <div className="absolute -top-2 -right-2 size-8 bg-primary rounded-full flex items-center justify-center">
               <Sparkles className="text-primary-foreground" size={16} />

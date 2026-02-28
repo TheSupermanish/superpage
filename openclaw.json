@@ -8,11 +8,22 @@
       "args": ["./packages/mcp-client/superpage-x402.js"],
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
+        "WALLET_PRIVATE_KEY": "0x201674fb0bc10056417779cc65588acbabdd25e4dff9776e8258406205681847",
         "X402_CHAIN": "base",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       },
       "status": "active"
+    }
+  },
+  "skills": {
+    "entries": {
+      "moltbook-poster": {
+        "enabled": true,
+        "env": {
+          "MOLTBOOK_API_KEY": "moltbook_sk_MISgVNWF5axwAJUgKfuSptyHkLlHTXFe"
+        }
+      }
     }
   }
 }

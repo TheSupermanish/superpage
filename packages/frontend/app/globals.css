@@ -137,6 +137,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -194,23 +197,23 @@
 }
 
 @keyframes coin-float-1 {
-  0%, 100% { transform: translateY(0) rotate(-15deg) scale(1); }
-  50% { transform: translateY(-30px) rotate(-5deg) scale(1.05); }
+  0%, 100% { transform: translateY(0) rotate(-12deg); }
+  50% { transform: translateY(-18px) rotate(-6deg); }
 }
 
 @keyframes coin-float-2 {
-  0%, 100% { transform: translateY(0) rotate(20deg) scale(0.9); }
-  50% { transform: translateY(-20px) rotate(10deg) scale(0.95); }
+  0%, 100% { transform: translateY(0) rotate(15deg); }
+  50% { transform: translateY(-14px) rotate(8deg); }
 }
 
 @keyframes coin-float-3 {
-  0%, 100% { transform: translateY(0) rotate(-25deg) scale(1.1); }
-  50% { transform: translateY(-40px) rotate(-15deg) scale(1.15); }
+  0%, 100% { transform: translateY(0) rotate(-20deg); }
+  50% { transform: translateY(-22px) rotate(-12deg); }
 }
 
 @keyframes coin-float-4 {
-  0%, 100% { transform: translateY(0) rotate(10deg) scale(0.85); }
-  50% { transform: translateY(-25px) rotate(25deg) scale(0.9); }
+  0%, 100% { transform: translateY(0) rotate(8deg); }
+  50% { transform: translateY(-16px) rotate(18deg); }
 }
 
 @keyframes slide-in-right {
@@ -300,11 +303,11 @@
 .animate-fade-in-up-4 { animation-delay: 0.4s; }
 .animate-fade-in-up-5 { animation-delay: 0.5s; }
 
-/* Flying coins */
-.coin-float-1 { animation: coin-float-1 5s ease-in-out infinite; }
-.coin-float-2 { animation: coin-float-2 6s ease-in-out infinite 0.5s; }
-.coin-float-3 { animation: coin-float-3 7s ease-in-out infinite 1s; }
-.coin-float-4 { animation: coin-float-4 5.5s ease-in-out infinite 1.5s; }
+/* Flying coins — smooth GPU-accelerated */
+.coin-float-1 { animation: coin-float-1 7s cubic-bezier(0.45, 0, 0.55, 1) infinite; will-change: transform; }
+.coin-float-2 { animation: coin-float-2 8s cubic-bezier(0.45, 0, 0.55, 1) infinite 1s; will-change: transform; }
+.coin-float-3 { animation: coin-float-3 9s cubic-bezier(0.45, 0, 0.55, 1) infinite 2s; will-change: transform; }
+.coin-float-4 { animation: coin-float-4 7.5s cubic-bezier(0.45, 0, 0.55, 1) infinite 0.5s; will-change: transform; }
 
 /* Marquee */
 .marquee-track {
