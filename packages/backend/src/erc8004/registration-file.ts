@@ -59,5 +59,5 @@ export function handleRegistrationFile(req: Request, res: Response) {
 
   res.setHeader("Content-Type", "application/json");
   res.setHeader("Cache-Control", "public, max-age=3600");
-  return res.json(registrationFile);
+  return res.send(JSON.stringify(registrationFile, null, 2));
 }

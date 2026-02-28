@@ -54,6 +54,20 @@ export async function handleCheckout(req: Request, res: Response) {
 
     console.log(`[${requestId}] ✓ Basic validation passed`);
 
+    // Normalize: accept productId, variantId, or id
+    for (const it of items) {
+      if (!it.productId && (it.variantId || it.id)) {
+        it.productId = it.variantId || it.id;
+      }
+      if (!it.productId) {
+        console.error(`[${requestId}] ❌ Missing productId in item:`, it);
+        return res.status(400).json({
+          error:
+            "Each item must include a productId (variant ID). Use browse-products to find product IDs first.",
+        });
+      }
+    }
+
     // MongoDB - using models directly
 
     // Load store for currency and basic validation

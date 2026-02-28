@@ -82,7 +82,7 @@ export default function CreatorsPage() {
       <PublicNavbar />
 
       {/* Hero */}
-      <section className="relative pt-12 pb-8 px-6 border-b border-border">
+      <section className="relative pt-28 pb-8 px-6 border-b border-border">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-6xl">
           <h1 className="text-4xl font-bold mb-2 text-foreground">Discover Creators</h1>

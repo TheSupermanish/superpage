@@ -161,5 +161,5 @@ export function handleAgentCard(req: Request, res: Response) {
 
   res.setHeader("Content-Type", "application/json");
   res.setHeader("Cache-Control", "public, max-age=3600"); // 1 hour cache
-  return res.json(card);
+  return res.send(JSON.stringify(card, null, 2));
 }

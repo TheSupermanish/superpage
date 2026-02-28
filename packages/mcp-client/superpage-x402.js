@@ -396,14 +396,17 @@ const TOOLS = [
             properties: {
               productId: {
                 type: "string",
-                description: "Product variant ID (from x402_browse_products)",
+                description: "Product variant ID (the 'id' or 'variantId' field from x402_browse_products, e.g. 'gid://shopify/ProductVariant/12345')",
+              },
+              variantId: {
+                type: "string",
+                description: "Alias for productId — you can use either field",
               },
               quantity: {
                 type: "number",
                 description: "Quantity to purchase (default: 1)",
               },
             },
-            required: ["productId"],
           },
         },
         email: {
@@ -792,10 +795,11 @@ async function fullCheckout({ storeId, items, email, shippingAddress }) {
   log(`Starting checkout for ${items.length} item(s) in store ${storeId}`);
 
   // Build checkout payload
+  // Accept productId, variantId, or id — agents may use any of these
   const checkoutPayload = {
     storeId,
     items: items.map((i) => ({
-      productId: i.productId,
+      productId: i.productId || i.variantId || i.id,
       quantity: i.quantity || 1,
     })),
     email,
@@ -918,7 +922,7 @@ async function fullCheckout({ storeId, items, email, shippingAddress }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // UNIVERSAL: x402 HTTP Request with configurable currency
 // ─────────────────────────────────────────────────────────────────────────────
-async function x402Request({ url, method = "GET", headers = {}, body, maxPayment }) {
+async function x402Request({ url, method = "GET", headers = {}, body, maxPayment, preview = false }) {
   const maxPay = parseFloat(maxPayment) || MAX_AUTO_PAYMENT;
 
   // Append wallet address to URL so backend can check prior payment
@@ -984,6 +988,24 @@ async function x402Request({ url, method = "GET", headers = {}, body, maxPayment
       error: "Payment recipient not specified in 402 response",
       status: 402,
       paymentRequired: paymentReq,
+    };
+  }
+
+  // Preview mode: return price info without paying
+  if (preview) {
+    return {
+      status: 402,
+      preview: true,
+      paid: false,
+      resource: url,
+      price: {
+        amount: amountToken,
+        currency: CURRENCY,
+        raw: paymentReq.amount,
+      },
+      recipient,
+      network: NETWORK,
+      message: `This resource costs ${amountToken} ${CURRENCY}. Run 'request' with the same URL to pay and access it.`,
     };
   }
 
@@ -1361,6 +1383,7 @@ const CLI_COMMANDS = {
   "list-orders": "x402_list_orders",
   "list-order-intents": "x402_list_order_intents",
   "discover": "x402_discover",
+  "preview": "x402_request",
 };
 
 const cliCommand = process.argv[2];
@@ -1394,6 +1417,11 @@ if (cliCommand && CLI_COMMANDS[cliCommand]) {
     }
   }
 
+  // Auto-inject preview flag for the preview command
+  if (cliCommand === "preview") {
+    args.preview = true;
+  }
+
   (async () => {
     try {
       const result = await handleTool(toolName, args);
@@ -1415,6 +1443,7 @@ Commands:
   list-stores             List connected Shopify stores
   browse-products         Browse products in a store
   request                 Access a paid resource (auto-pays if 402)
+  preview                 Check resource price without paying
   buy                     Full checkout flow for store products
   wallet                  Check wallet balance
   send                    Send USDC to a wallet address
@@ -1456,11 +1485,12 @@ Environment:
 
       switch (method) {
         case "initialize":
+          const clientVersion = params?.protocolVersion || "2024-11-05";
           response = {
             jsonrpc: "2.0",
             id,
             result: {
-              protocolVersion: "2024-11-05",
+              protocolVersion: clientVersion,
               capabilities: { tools: {} },
               serverInfo: {
                 name: "superpage-x402",

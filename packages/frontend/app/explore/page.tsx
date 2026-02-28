@@ -178,7 +178,7 @@ export default function ExplorePage() {
     <div className="min-h-screen bg-card text-foreground">
       <PublicNavbar />
       {/* Hero Section */}
-      <div className="bg-muted/50 border-b border-border pt-32 pb-12">
+      <div className="bg-muted/50 border-b border-border pt-36 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto w-full flex flex-col items-center gap-8">
             <div className="text-center">
@@ -213,7 +213,7 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col gap-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-12 flex flex-col gap-16">
         {/* Featured Creators */}
         {filteredCreators.length > 0 && (
           <section className="flex flex-col gap-6">
