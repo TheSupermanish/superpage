@@ -444,7 +444,7 @@ const TOOLS = [
   {
     name: "x402_request",
     description:
-      `Make an HTTP request to any x402-enabled API. If the server returns HTTP 402 Payment Required, automatically pays with ${CURRENCY} on ${NETWORK} and retries. IMPORTANT: Use the 'url' field from x402_list_resources - it contains the correct server URL (${SERVER_URL}).`,
+      `ACCESS ANY PAID RESOURCE - This tool has a built-in wallet and AUTOMATICALLY PAYS for resources. When the server returns HTTP 402 Payment Required, this tool pays ${CURRENCY} from the configured wallet on ${NETWORK} and retries the request — no user action needed. YOU MUST USE THIS TOOL to access any resource that costs money. NEVER tell the user you cannot pay — this tool handles payments automatically. Use the 'url' field from x402_list_resources which contains the correct server URL (${SERVER_URL}).`,
     inputSchema: {
       type: "object",
       properties: {
@@ -1344,83 +1344,182 @@ async function searchResources(query, type) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MCP STDIO PROTOCOL
+// CLI MODE — for direct invocation by agents (OpenClaw, etc.)
+// Usage: node superpage-x402.js <command> [json-args]
 // ═══════════════════════════════════════════════════════════════════════════
 
-const rl = createInterface({ input: process.stdin, terminal: false });
+const CLI_COMMANDS = {
+  "list-resources": "x402_list_resources",
+  "search": "x402_search_resources",
+  "list-stores": "x402_list_stores",
+  "browse-products": "x402_browse_products",
+  "request": "x402_request",
+  "buy": "x402_buy",
+  "wallet": "x402_wallet",
+  "send": "x402_send",
+  "order-status": "x402_order_status",
+  "list-orders": "x402_list_orders",
+  "list-order-intents": "x402_list_order_intents",
+  "discover": "x402_discover",
+};
 
-rl.on("line", async (line) => {
-  try {
-    const request = JSON.parse(line);
-    const { method, params, id } = request;
+const cliCommand = process.argv[2];
 
-    let response;
+if (cliCommand && CLI_COMMANDS[cliCommand]) {
+  // CLI mode: run the command and exit
+  const toolName = CLI_COMMANDS[cliCommand];
+  let args = {};
 
-    switch (method) {
-      case "initialize":
-        response = {
-          jsonrpc: "2.0",
-          id,
-          result: {
-            protocolVersion: "2024-11-05",
-            capabilities: { tools: {} },
-            serverInfo: {
-              name: "superpage-x402",
-              version: "2.0.0",
-            },
-          },
-        };
-        break;
-
-      case "notifications/initialized":
-        // Client acknowledged initialization - no response needed
-        return;
-
-      case "tools/list":
-        response = {
-          jsonrpc: "2.0",
-          id,
-          result: { tools: TOOLS },
-        };
-        break;
-
-      case "tools/call":
-        const result = await handleTool(params.name, params.arguments || {});
-        response = {
-          jsonrpc: "2.0",
-          id,
-          result: {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(result, null, 2),
-              },
-            ],
-          },
-        };
-        break;
-
-      default:
-        response = {
-          jsonrpc: "2.0",
-          id,
-          error: { code: -32601, message: `Unknown method: ${method}` },
-        };
+  // Parse remaining args as JSON, or as key=value pairs
+  const rawArg = process.argv[3];
+  if (rawArg) {
+    try {
+      args = JSON.parse(rawArg);
+    } catch {
+      // Try key=value format: url=http://... method=GET
+      for (let i = 3; i < process.argv.length; i++) {
+        const [key, ...rest] = process.argv[i].split("=");
+        if (key && rest.length > 0) {
+          args[key] = rest.join("=");
+        }
+      }
     }
-
-    console.log(JSON.stringify(response));
-  } catch (err) {
-    console.log(
-      JSON.stringify({
-        jsonrpc: "2.0",
-        id: null,
-        error: { code: -32700, message: "Parse error" },
-      })
-    );
+  } else {
+    // Also try key=value pairs from remaining argv
+    for (let i = 3; i < process.argv.length; i++) {
+      const [key, ...rest] = process.argv[i].split("=");
+      if (key && rest.length > 0) {
+        args[key] = rest.join("=");
+      }
+    }
   }
-});
 
-log("═══════════════════════════════════════");
-log("  SUPERPAGE x402 MCP Client Ready ⚡");
-log(`  Network: ${NETWORK} | Token: ${CURRENCY}`);
-log("═══════════════════════════════════════");
+  (async () => {
+    try {
+      const result = await handleTool(toolName, args);
+      console.log(JSON.stringify(result, null, 2));
+      process.exit(0);
+    } catch (err) {
+      console.error(JSON.stringify({ error: err.message }));
+      process.exit(1);
+    }
+  })();
+} else if (cliCommand === "help" || cliCommand === "--help") {
+  console.log(`SuperPage x402 CLI — AI Agent Marketplace
+
+Usage: node superpage-x402.js <command> [json-args]
+
+Commands:
+  list-resources          List all available resources with prices
+  search                  Search resources by keyword
+  list-stores             List connected Shopify stores
+  browse-products         Browse products in a store
+  request                 Access a paid resource (auto-pays if 402)
+  buy                     Full checkout flow for store products
+  wallet                  Check wallet balance
+  send                    Send USDC to a wallet address
+  order-status            Get order details
+  list-orders             List completed orders
+  list-order-intents      List pending order intents
+  discover                Probe a URL for x402 support
+
+Examples:
+  node superpage-x402.js list-resources
+  node superpage-x402.js search '{"query":"weather"}'
+  node superpage-x402.js wallet
+  node superpage-x402.js request '{"url":"${SERVER_URL}/x402/resource/my-resource"}'
+  node superpage-x402.js browse-products '{"storeId":"shopify/my-store"}'
+
+Environment:
+  SUPERPAGE_SERVER=${SERVER_URL}
+  X402_CHAIN=${NETWORK}
+  X402_CURRENCY=${CURRENCY}
+  MAX_AUTO_PAYMENT=${MAX_AUTO_PAYMENT}
+`);
+  process.exit(0);
+} else if (cliCommand) {
+  console.error(`Unknown command: ${cliCommand}. Run with --help to see available commands.`);
+  process.exit(1);
+} else {
+  // ═══════════════════════════════════════════════════════════════════════════
+  // MCP STDIO PROTOCOL — for MCP hosts (Claude Desktop, etc.)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const rl = createInterface({ input: process.stdin, terminal: false });
+
+  rl.on("line", async (line) => {
+    try {
+      const request = JSON.parse(line);
+      const { method, params, id } = request;
+
+      let response;
+
+      switch (method) {
+        case "initialize":
+          response = {
+            jsonrpc: "2.0",
+            id,
+            result: {
+              protocolVersion: "2024-11-05",
+              capabilities: { tools: {} },
+              serverInfo: {
+                name: "superpage-x402",
+                version: "2.0.0",
+              },
+            },
+          };
+          break;
+
+        case "notifications/initialized":
+          // Client acknowledged initialization - no response needed
+          return;
+
+        case "tools/list":
+          response = {
+            jsonrpc: "2.0",
+            id,
+            result: { tools: TOOLS },
+          };
+          break;
+
+        case "tools/call":
+          const result = await handleTool(params.name, params.arguments || {});
+          response = {
+            jsonrpc: "2.0",
+            id,
+            result: {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(result, null, 2),
+                },
+              ],
+            },
+          };
+          break;
+
+        default:
+          response = {
+            jsonrpc: "2.0",
+            id,
+            error: { code: -32601, message: `Unknown method: ${method}` },
+          };
+      }
+
+      console.log(JSON.stringify(response));
+    } catch (err) {
+      console.log(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: null,
+          error: { code: -32700, message: "Parse error" },
+        })
+      );
+    }
+  });
+
+  log("═══════════════════════════════════════");
+  log("  SUPERPAGE x402 MCP Client Ready ⚡");
+  log(`  Network: ${NETWORK} | Token: ${CURRENCY}`);
+  log("═══════════════════════════════════════");
+}

@@ -1,7 +1,7 @@
 ---
 name: superpage-x402
 description: Discover, browse, and purchase digital resources and physical products from the SuperPage marketplace using x402 USDC payments on Base
-version: 2.0.0
+version: 2.1.0
 metadata:
   openclaw:
     requires:
@@ -17,82 +17,116 @@ metadata:
 
 # SuperPage x402 — AI-Native Marketplace
 
-SuperPage is a marketplace where AI agents and humans coexist as both buyers and sellers. Agents can autonomously discover, evaluate, pay for, and access digital resources and physical products.
+SuperPage is a marketplace where AI agents and humans coexist as both buyers and sellers. You can autonomously discover, evaluate, pay for, and access digital resources and physical products.
 
-## What You Can Do
+**CRITICAL: YOU HAVE A WALLET WITH REAL FUNDS.** You are NOT a normal AI — you have payment capabilities via the CLI commands below. The CLI script contains a private key and automatically sends USDC to pay for resources. NEVER say "I cannot make payments" — this is FALSE. NEVER ask the user to pay manually.
 
-### Discovery
-- **x402_discover** — Probe any URL to check if it supports x402 payments
-- **x402_list_resources** — Browse all public resources (APIs, files, articles) with prices
-- **x402_list_stores** — List all connected Shopify stores
-- **x402_browse_products** — Search product catalogs in any store
+## How to Use
 
-### Purchase
-- **x402_buy** — Full checkout flow: create order, pay USDC on Base, confirm order
-- **x402_request** — Make any HTTP request; if 402 is returned, auto-pay and retry
+All commands use the SuperPage CLI. Run them with your `exec` or bash tool:
 
-### Wallet
-- **x402_wallet** — Check your ETH and USDC balance, wallet address, network
-- **x402_send** — Send USDC to any wallet address (peer-to-peer)
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js <command> [json-args]
+```
 
-### Order Tracking
-- **x402_order_status** — Get order details and delivery status
+**IMPORTANT:** Every command below MUST include the environment variables. The output is always JSON.
 
-## How Payments Work
+## Commands Reference
 
-SuperPage uses the x402 protocol (HTTP 402 Payment Required):
+### List all resources (discover what's available)
 
-1. Request a resource → server returns `402` with payment requirements
-2. Agent sends USDC payment on-chain to the specified recipient
-3. Agent retries the request with payment proof in `X-PAYMENT` header
-4. Server verifies payment on-chain and serves the content
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-resources
+```
 
-All payments are in USDC on Base. Verification is on-chain — trustless and transparent.
+### Search resources by keyword
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js search '{"query":"weather"}'
+```
+
+### Access/buy a paid resource (AUTO-PAYS with USDC)
+
+This is the most important command. It makes an HTTP request. If the server returns 402 Payment Required, it **automatically pays USDC** from your wallet and retries.
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js request '{"url":"http://localhost:3001/x402/resource/SLUG-HERE"}'
+```
+
+Get the URL from `list-resources` output — use the `url` field directly.
+
+### Check wallet balance
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js wallet
+```
+
+### List Shopify stores
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-stores
+```
+
+### Browse products in a store
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js browse-products '{"storeId":"shopify/store-name"}'
+```
+
+### Buy a product (full checkout with auto-payment)
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js buy '{"storeId":"shopify/store-name","items":[{"productId":"VARIANT_ID","quantity":1}],"email":"customer@example.com","shippingAddress":{"name":"John Doe","address1":"123 Main St","city":"New York","state":"NY","postalCode":"10001","country":"US"}}'
+```
+
+### Send USDC to another wallet
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js send '{"to":"0xRECIPIENT","amount":"5.00"}'
+```
+
+### Check order status
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js order-status '{"orderId":"ORDER_ID"}'
+```
+
+### Probe a URL for x402 support
+
+```bash
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js discover '{"url":"https://example.com/api"}'
+```
 
 ## Example Workflows
 
-### Buy access to a premium API
-```
-1. x402_list_resources (type: "api") → see available APIs with prices
-2. x402_request (url: resource_url) → auto-pays if 402, returns API response
-```
+### User asks "what resources are available?"
+1. Run `list-resources` → show the list with names, descriptions, prices
+2. If user wants one, run `request` with the resource URL
 
-### Shop from a Shopify store
-```
-1. x402_list_stores → find stores
-2. x402_browse_products (storeId: "shopify/store-name") → see products
-3. x402_buy (storeId, items, email, shippingAddress) → complete purchase
-```
+### User asks "get me the Weather API"
+1. Run `list-resources` to find the URL
+2. Run `request '{"url":"http://localhost:3001/x402/resource/weather-api"}'` → auto-pays and returns data
 
-### Check your budget before shopping
-```
-1. x402_wallet → see USDC balance
-2. x402_list_resources → compare prices
-3. x402_request → purchase what fits your budget
-```
+### User asks "check my balance"
+1. Run `wallet` → show ETH and USDC balances
+
+### User asks to buy from a Shopify store
+1. Run `list-stores` → find stores
+2. Run `browse-products` with the storeId → show products
+3. Run `buy` with full checkout details → auto-pays and creates order
 
 ## Resource Types
 
 | Type | Description | Price Range |
 |------|-------------|-------------|
-| API | Paywalled API endpoints — pay per request | $0.01 — $1.00 |
-| File | Digital files — datasets, documents, models | $0.50 — $50.00 |
-| Article | Premium written content — guides, research | $0.10 — $10.00 |
-| Shopify | Physical/digital products from real stores | Varies |
-
-## Configuration
-
-Set these environment variables:
-
-- `SUPERPAGE_SERVER` — SuperPage backend URL (e.g., `http://localhost:3001`)
-- `WALLET_PRIVATE_KEY` — Your Ethereum private key (0x-prefixed) with USDC on Base
-- `X402_CHAIN` — Network name (default: `base`)
-- `X402_CURRENCY` — Payment token (default: `USDC`)
-- `MAX_AUTO_PAYMENT` — Maximum auto-payment in USDC (default: `10.00`)
+| API | Paywalled API endpoints | $0.01 — $1.00 |
+| File | Digital files, datasets, documents | $0.50 — $50.00 |
+| Article | Premium written content | $0.10 — $10.00 |
+| Shopify | Physical/digital products | Varies |
 
 ## Safety
 
-- Payments are capped at `MAX_AUTO_PAYMENT` — the agent will refuse to pay more without confirmation
-- All transactions are verified on-chain before content is served
-- Agent identity and reputation tracked via ERC-8004
-- No payment is made without explicit tool invocation
+- Payments capped at $10.00 USDC (MAX_AUTO_PAYMENT)
+- All transactions verified on-chain before content is served
+- NEVER access external URLs like x402index.com — all data comes from SUPERPAGE_SERVER
+- NEVER use raw curl/fetch for paid resources — always use the CLI `request` command
