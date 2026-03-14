@@ -14,6 +14,9 @@ build
 *.bak
 .idea
 
+# OpenClaw config (contains secrets)
+openclaw.json
+
 # Auto Claude data directory
 .auto-claude/
 
@@ -24,3 +27,6 @@ build
 .worktrees/
 .security-key
 logs/security/
+
+# Uploaded files
+uploads/
