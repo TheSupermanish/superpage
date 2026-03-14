@@ -2,13 +2,13 @@
   "name": "superpage-x402",
   "version": "2.0.0",
   "description": "MCP client for AI agents to shop and pay with MNT on Ethereum via x402 protocol",
-  "main": "superpage-x402.js",
+  "main": "src/index.js",
   "type": "module",
   "bin": {
     "superpage-x402": "./superpage-x402.js"
   },
   "scripts": {
-    "start": "node superpage-x402.js",
+    "start": "node src/index.js",
     "test": "node test-client.js"
   },
   "dependencies": {
