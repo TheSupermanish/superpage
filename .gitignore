@@ -1,0 +1,23 @@
+node_modules
+dist
+build
+.next
+*.log
+.DS_Store
+.env
+.env.local
+.env.*.local
+# pnpm-lock.yaml  # committed for Docker builds
+.env
+.idea
+
+# Auto Claude data directory
+.auto-claude/
+
+# Auto Claude generated files
+.auto-claude-security.json
+.auto-claude-status
+.claude_settings.json
+.worktrees/
+.security-key
+logs/security/

@@ -1,0 +1,31 @@
+{
+  "name": "monorepo",
+  "version": "1.0.0",
+  "description": "A pnpm TypeScript monorepo with Express backend and Next.js frontend",
+  "private": true,
+  "scripts": {
+    "dev": "./dev.sh",
+    "build": "pnpm -r run build",
+    "start": "concurrently -n backend,payment,frontend -c blue,green,yellow \"pnpm --filter backend run start\" \"pnpm --filter backend run start:payment\" \"pnpm --filter frontend run start\"",
+    "start:backend": "pnpm --filter backend run start:all",
+    "start:frontend": "pnpm --filter frontend run start",
+    "agent": "pnpm --filter ai-agent run dev",
+    "agent:build": "pnpm --filter ai-agent run build",
+    "lint": "pnpm -r run lint",
+    "type-check": "pnpm -r run type-check",
+    "test": "pnpm --filter @super-x402/sdk run test && pnpm --filter backend run test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@reown/appkit-controllers": "1.7.8"
+    }
+  }
+}
