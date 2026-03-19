@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "paths": {
+      "@x402-sdk-eth/*": ["../x402-sdk-eth/src/*"]
+    },
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "../x402-sdk-eth", "src/test-*.ts", "src/buy-product-eth.ts", "src/__tests__"]
+}
