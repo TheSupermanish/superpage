@@ -1,0 +1,67 @@
+{
+  "name": "@super-x402/sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK for implementing HTTP 402 payment flows on Ethereum and EVM chains",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "x402",
+    "http-402",
+    "payment",
+    "ethereum",
+    "evm",
+    "usdc",
+    "web3",
+    "blockchain",
+    "monetization",
+    "api"
+  ],
+  "author": "x402",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/x402/x402-sdk-eth"
+  },
+  "dependencies": {
+    "viem": "^2.21.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  },
+  "peerDependencies": {
+    "express": "^4.18.0 || ^5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "express": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
