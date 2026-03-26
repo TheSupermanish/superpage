@@ -13,6 +13,12 @@ for port in 3000 3001 3002; do
   fi
 done
 
+# Build SDK if dist doesn't exist
+if [ ! -f "packages/x402-sdk-eth/dist/index.js" ]; then
+  echo "  Building x402-sdk-eth..."
+  cd packages/x402-sdk-eth && npx tsup src/index.ts --format cjs,esm && cd ../..
+fi
+
 echo ""
 echo "  ┌──────────────────────────────────────┐"
 echo "  │  SuperPage Dev                        │"
@@ -31,4 +37,4 @@ exec npx concurrently \
   "pnpm --filter backend run dev" \
   "pnpm --filter backend run dev:payment" \
   "pnpm --filter frontend run dev" \
-  "pnpm --filter x402-sdk-eth run dev"
+  "pnpm --filter @super-x402/sdk run dev"
