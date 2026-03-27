@@ -18,7 +18,7 @@
 import { configDotenv } from "dotenv";
 import { privateKeyToAccount } from "viem/accounts";
 import { createPublicClient, createWalletClient, http, parseUnits, formatUnits, formatEther, defineChain } from "viem";
-import { mainnet, sepolia } from "viem/chains";
+import { mainnet, sepolia, baseSepolia } from "viem/chains";
 import { getChainConfig, getTokenAddress, getTokenDecimals } from "./config/chain-config.js";
 
 configDotenv();
@@ -78,6 +78,7 @@ const CHAIN_MAP: Record<string, any> = {
   "mantle-sepolia": mantleSepolia,
   "mainnet": mainnet,
   "sepolia": sepolia,
+  "base-sepolia": baseSepolia,
   "bite-v2-sandbox": biteV2Sandbox,
 };
 

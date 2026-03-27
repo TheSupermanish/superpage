@@ -8,11 +8,22 @@
       "args": ["./packages/mcp-client/superpage-x402.js"],
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
+        "WALLET_PRIVATE_KEY": "REDACTED_WALLET_PRIVATE_KEY",
         "X402_CHAIN": "base",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       },
       "status": "active"
+    }
+  },
+  "skills": {
+    "entries": {
+      "moltbook-poster": {
+        "enabled": true,
+        "env": {
+          "MOLTBOOK_API_KEY": "REDACTED_API_KEY"
+        }
+      }
     }
   }
 }

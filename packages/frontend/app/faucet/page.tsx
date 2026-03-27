@@ -4,22 +4,23 @@ import { useState, useCallback, useEffect } from "react";
 import { useAccount, useWriteContract } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { createPublicClient, http, parseAbi, formatUnits } from "viem";
-import { biteV2Sandbox } from "@/lib/chains";
+import { getDefaultChain, getDefaultChainId } from "@/lib/chains";
 import { useEnsureNetwork } from "@/hooks/use-network-switch";
 import { PublicNavbar } from "@/components/public-navbar";
 import { Droplets, Wallet, Loader2, CheckCircle2, AlertCircle, ExternalLink, Copy, Check } from "lucide-react";
 import { getTxUrl } from "@/lib/chain-config";
 
-const BITE_CHAIN_ID = 103698795;
-const USDC_ADDRESS = "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8" as const;
+const PAYMENT_CHAIN_ID = getDefaultChainId();
+const PAYMENT_CHAIN = getDefaultChain();
+const USDC_ADDRESS = "0xa059e27967e5a573a14a62c706ebd1be75333f9a" as const;
 
 const USDC_ABI = parseAbi([
   "function mint(address to, uint256 amount) external",
   "function balanceOf(address owner) view returns (uint256)",
 ]);
 
-const biteClient = createPublicClient({
-  chain: biteV2Sandbox,
+const faucetClient = createPublicClient({
+  chain: PAYMENT_CHAIN,
   transport: http(),
 });
 
@@ -35,7 +36,7 @@ type FaucetStatus = "idle" | "switching" | "minting" | "confirming" | "success" 
 export default function FaucetPage() {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
-  const { ensureCorrectNetwork } = useEnsureNetwork(BITE_CHAIN_ID);
+  const { ensureCorrectNetwork } = useEnsureNetwork(PAYMENT_CHAIN_ID);
   const { writeContractAsync } = useWriteContract();
 
   const [status, setStatus] = useState<FaucetStatus>("idle");
@@ -49,7 +50,7 @@ export default function FaucetPage() {
   const fetchBalance = useCallback(async () => {
     if (!address) { setBalance(null); return; }
     try {
-      const raw = await biteClient.readContract({
+      const raw = await faucetClient.readContract({
         address: USDC_ADDRESS,
         abi: USDC_ABI,
         functionName: "balanceOf",
@@ -72,7 +73,7 @@ export default function FaucetPage() {
       setTxHash(null);
 
       const switched = await ensureCorrectNetwork();
-      if (!switched) throw new Error("Please switch to BITE V2 Sandbox");
+      if (!switched) throw new Error(`Please switch to ${PAYMENT_CHAIN.name}`);
 
       setStatus("minting");
       const hash = await writeContractAsync({
@@ -80,13 +81,13 @@ export default function FaucetPage() {
         address: USDC_ADDRESS,
         functionName: "mint",
         args: [address!, AMOUNTS[selectedAmount].value],
-        chainId: BITE_CHAIN_ID,
+        chainId: PAYMENT_CHAIN_ID,
       });
 
       setTxHash(hash);
       setStatus("confirming");
 
-      const receipt = await biteClient.waitForTransactionReceipt({ hash, confirmations: 1 });
+      const receipt = await faucetClient.waitForTransactionReceipt({ hash, confirmations: 1 });
       if (receipt.status === "reverted") throw new Error("Mint transaction reverted");
 
       setStatus("success");
@@ -121,7 +122,7 @@ export default function FaucetPage() {
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">USDC Faucet</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Get free test USDC tokens on BITE V2 Sandbox. Zero gas fees — mint as much as you need for testing.
+            Get free test mUSDC tokens on Base Sepolia. Mint as much as you need for testing SuperPage.
           </p>
         </div>
 
@@ -165,7 +166,7 @@ export default function FaucetPage() {
             <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 flex items-center gap-3">
               <Loader2 className="h-5 w-5 text-primary animate-spin" />
               <span className="text-sm font-medium">
-                {status === "switching" && "Switching to BITE V2 network..."}
+                {status === "switching" && "Switching to Base Sepolia network..."}
                 {status === "minting" && "Approve the mint in your wallet..."}
                 {status === "confirming" && "Confirming transaction..."}
               </span>
@@ -244,7 +245,7 @@ export default function FaucetPage() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Network</span>
-              <span className="font-medium">BITE V2 Sandbox</span>
+              <span className="font-medium">Base Sepolia</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Decimals</span>

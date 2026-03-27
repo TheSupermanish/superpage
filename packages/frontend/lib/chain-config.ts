@@ -82,7 +82,7 @@ export const EXPLORER_URLS: Record<string, string> = {
  * Get the configured network
  */
 export function getNetwork(): string {
-  return process.env.NEXT_PUBLIC_X402_CHAIN || "bite-v2-sandbox";
+  return process.env.NEXT_PUBLIC_X402_CHAIN || "base-sepolia";
 }
 
 /**
@@ -123,7 +123,7 @@ export function getCurrencyDisplay(): string {
  */
 export function getChainId(): number {
   const network = getNetwork();
-  return CHAIN_IDS[network] || 103698795; // Default to BITE V2 Sandbox
+  return CHAIN_IDS[network] || 84532; // Default to Base Sepolia
 }
 
 /**
@@ -154,7 +154,7 @@ export function getSupportedNetworks(): string[] {
  */
 export function getExplorerUrl(): string {
   const network = getNetwork();
-  return EXPLORER_URLS[network] || "https://base-sepolia-testnet-explorer.skalenodes.com:10032";
+  return EXPLORER_URLS[network] || "https://sepolia.basescan.org";
 }
 
 /**

@@ -127,7 +127,7 @@ const biteV2Sandbox = defineChain({
 
 const SERVER_URL = process.env.SUPERPAGE_SERVER || "http://localhost:3001";
 const WALLET_PRIVATE_KEY = process.env.WALLET_PRIVATE_KEY;
-const NETWORK = process.env.X402_CHAIN || process.env.ETH_NETWORK || "bite-v2-sandbox";
+const NETWORK = process.env.X402_CHAIN || process.env.ETH_NETWORK || "base-sepolia";
 const CURRENCY = process.env.X402_CURRENCY || "USDC";
 const TOKEN_ADDRESS = process.env.X402_TOKEN_ADDRESS || "";
 const TOKEN_DECIMALS = process.env.X402_TOKEN_DECIMALS 
@@ -176,7 +176,7 @@ const TOKEN_ADDRESSES = {
     USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
   "base-sepolia": {
-    USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+    USDC: "0xa059e27967e5a573a14a62c706ebd1be75333f9a",
   },
   polygon: {
     USDC: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",

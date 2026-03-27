@@ -195,7 +195,7 @@ export const CHAIN_REGISTRY: Record<NetworkId, ChainMetadata> = {
     explorerUrl: "https://sepolia.basescan.org",
     nativeToken: { symbol: "ETH", name: "Sepolia Ether", decimals: 18 },
     tokens: {
-      USDC: { symbol: "USDC", decimals: 6, address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e" },
+      USDC: { symbol: "USDC", decimals: 6, address: "0xa059e27967e5a573a14a62c706ebd1be75333f9a" },
     },
     defaultPaymentToken: "USDC",
   },

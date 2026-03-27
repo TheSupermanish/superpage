@@ -30,25 +30,25 @@ export default function LandingPage() {
       {/* ============================================
           HERO SECTION
           ============================================ */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 py-28 overflow-hidden">
         {/* Soft glow backgrounds */}
         <div className="absolute top-20 left-[10%] w-64 h-64 rounded-full bg-sp-pink/10 blur-3xl animate-float-slow pointer-events-none" />
         <div className="absolute top-40 right-[15%] w-48 h-48 rounded-full bg-sp-blue/10 blur-3xl animate-float pointer-events-none" style={{ animationDelay: "2s" }} />
         <div className="absolute bottom-10 left-[30%] w-56 h-56 rounded-full bg-sp-gold/10 blur-3xl animate-float-slow pointer-events-none" style={{ animationDelay: "4s" }} />
 
-        {/* Flying logo coins — Gumroad style */}
-        <Image src="/logo.png" alt="" width={80} height={80} className="absolute top-24 left-[3%] w-20 h-20 object-contain opacity-20 coin-float-1 pointer-events-none select-none hidden md:block" />
-        <Image src="/logo.png" alt="" width={112} height={112} className="absolute top-[60%] left-[7%] w-28 h-28 object-contain opacity-15 coin-float-3 pointer-events-none select-none hidden lg:block" />
-        <Image src="/logo.png" alt="" width={96} height={96} className="absolute top-16 right-[4%] w-24 h-24 object-contain opacity-20 coin-float-2 pointer-events-none select-none hidden md:block" />
-        <Image src="/logo.png" alt="" width={64} height={64} className="absolute top-[55%] right-[6%] w-16 h-16 object-contain opacity-25 coin-float-4 pointer-events-none select-none hidden md:block" />
-        <Image src="/logo.png" alt="" width={56} height={56} className="absolute bottom-20 right-[20%] w-14 h-14 object-contain opacity-10 coin-float-1 pointer-events-none select-none hidden lg:block" />
-        <Image src="/logo.png" alt="" width={48} height={48} className="absolute bottom-32 left-[18%] w-12 h-12 object-contain opacity-10 coin-float-2 pointer-events-none select-none hidden lg:block" />
+        {/* Flying logo coins — smooth floating */}
+        <Image src="/logo.png" alt="" width={80} height={80} className="absolute top-28 left-[3%] w-20 h-20 object-contain opacity-15 coin-float-1 pointer-events-none select-none hidden md:block" />
+        <Image src="/logo.png" alt="" width={112} height={112} className="absolute top-[60%] left-[7%] w-28 h-28 object-contain opacity-10 coin-float-3 pointer-events-none select-none hidden lg:block" />
+        <Image src="/logo.png" alt="" width={96} height={96} className="absolute top-24 right-[4%] w-24 h-24 object-contain opacity-15 coin-float-2 pointer-events-none select-none hidden md:block" />
+        <Image src="/logo.png" alt="" width={64} height={64} className="absolute top-[55%] right-[6%] w-16 h-16 object-contain opacity-20 coin-float-4 pointer-events-none select-none hidden md:block" />
+        <Image src="/logo.png" alt="" width={56} height={56} className="absolute bottom-24 right-[20%] w-14 h-14 object-contain opacity-8 coin-float-1 pointer-events-none select-none hidden lg:block" />
+        <Image src="/logo.png" alt="" width={48} height={48} className="absolute bottom-36 left-[18%] w-12 h-12 object-contain opacity-8 coin-float-2 pointer-events-none select-none hidden lg:block" />
 
-        <div className="max-w-5xl mx-auto text-center space-y-8">
+        <div className="max-w-5xl mx-auto text-center space-y-8 px-4">
           {/* Badge */}
           <div className="animate-fade-in-up inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-bold">
             <Zap className="h-4 w-4" />
-            Built on Base &middot; HTTP 402 Protocol
+            x402 Protocol &middot; Autonomous Payments
           </div>
 
           {/* Logo */}
@@ -62,9 +62,8 @@ export default function LandingPage() {
 
           {/* Headline */}
           <h1 className="animate-fade-in-up animate-fade-in-up-2 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tight">
-            Where Creators Meet{" "}
-            <span className="gradient-text">the Future</span>{" "}
-            of Payments
+            Commerce for Humans{" "}
+            <span className="gradient-text">&amp; AI.</span>
           </h1>
 
           {/* Subtitle */}
@@ -334,7 +333,7 @@ if (response.status === 402) {
                 &ldquo;I paywalled my GPT-4 wrapper API and made $2,400 in the first week. AI agents just pay automatically — no onboarding, no API keys. It&apos;s wild.&rdquo;
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-border">
-                <Image src="https://api.dicebear.com/7.x/shapes/svg?seed=marcus-r" alt="Marcus R." width={40} height={40} className="rounded-full shrink-0" />
+                <div className="size-10 rounded-full bg-sp-blue/20 text-sp-blue flex items-center justify-center font-bold text-sm shrink-0">MR</div>
                 <div>
                   <p className="font-bold text-sm">Marcus R.</p>
                   <p className="text-xs text-muted-foreground">API Developer &middot; Austin, TX</p>
@@ -349,7 +348,7 @@ if (response.status === 402) {
                 &ldquo;Moved my paid newsletter off Substack and onto SuperPage. My readers pay 50 cents per article in USDC. I keep 100%. No platform fees eating my margins.&rdquo;
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-border">
-                <Image src="https://api.dicebear.com/7.x/shapes/svg?seed=sara-k" alt="Sara K." width={40} height={40} className="rounded-full shrink-0" />
+                <div className="size-10 rounded-full bg-sp-pink/20 text-sp-pink flex items-center justify-center font-bold text-sm shrink-0">SK</div>
                 <div>
                   <p className="font-bold text-sm">Sara K.</p>
                   <p className="text-xs text-muted-foreground">Writer &middot; Berlin, DE</p>
@@ -364,7 +363,7 @@ if (response.status === 402) {
                 &ldquo;We sell design assets through Shopify + SuperPage. Crypto payments settled instantly. Our AI agent customers grew 10x once we added x402 support.&rdquo;
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-border">
-                <Image src="https://api.dicebear.com/7.x/shapes/svg?seed=james-l" alt="James L." width={40} height={40} className="rounded-full shrink-0" />
+                <div className="size-10 rounded-full bg-sp-gold/20 text-sp-gold flex items-center justify-center font-bold text-sm shrink-0">JL</div>
                 <div>
                   <p className="font-bold text-sm">James L.</p>
                   <p className="text-xs text-muted-foreground">Design Studio &middot; London, UK</p>

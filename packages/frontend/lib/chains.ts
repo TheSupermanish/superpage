@@ -276,8 +276,8 @@ export async function ensureNetwork(expectedChainId: number): Promise<boolean> {
  * Get the default chain based on environment config
  */
 export function getDefaultChain(): Chain {
-  const networkName = process.env.NEXT_PUBLIC_X402_CHAIN || "bite-v2-sandbox";
-  return CHAIN_BY_NAME[networkName] || biteV2Sandbox;
+  const networkName = process.env.NEXT_PUBLIC_X402_CHAIN || "base-sepolia";
+  return CHAIN_BY_NAME[networkName] || baseSepolia;
 }
 
 /**
