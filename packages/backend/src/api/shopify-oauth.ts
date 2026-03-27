@@ -188,7 +188,6 @@ export async function handleShopifyAuth(req: AuthenticatedRequest, res: Response
   }
 
   const apiKey = process.env.SHOPIFY_API_KEY;
-  console.log(`🔐 Shopify API key: ${apiKey}`);
   if (!apiKey) {
     return res.status(500).json({ error: "Shopify API key not configured" });
   }

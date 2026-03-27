@@ -12,6 +12,7 @@
     "test": "node test-client.js"
   },
   "dependencies": {
+    "abitype": "^1.2.3",
     "viem": "^2.21.0"
   },
   "keywords": [

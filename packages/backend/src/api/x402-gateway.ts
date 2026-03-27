@@ -291,6 +291,20 @@ async function serveResource(resource: any, req: Request, res: Response) {
 }
 
 /**
+ * Validate that a URL is safe to proxy (no SSRF)
+ */
+function validateProxyUrl(urlString: string): void {
+  const url = new URL(urlString);
+  if (!['http:', 'https:'].includes(url.protocol)) {
+    throw new Error("Only HTTP(S) URLs are allowed");
+  }
+  const blockedPatterns = /^(localhost|127\.|0\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.|169\.254\.|::1|\[::1\])/i;
+  if (blockedPatterns.test(url.hostname)) {
+    throw new Error("Internal/private URLs are not allowed");
+  }
+}
+
+/**
  * Proxy request to upstream API
  */
 async function serveApiProxy(resource: any, req: Request, res: Response) {
@@ -301,6 +315,7 @@ async function serveApiProxy(resource: any, req: Request, res: Response) {
   }
 
   try {
+    validateProxyUrl(upstream_url);
     const targetMethod = method || req.method;
     const url = new URL(upstream_url);
 
@@ -375,6 +390,7 @@ async function serveFile(resource: any, _req: Request, res: Response) {
     }
 
     try {
+      validateProxyUrl(targetUrl);
       const fileRes = await fetch(targetUrl);
 
       if (!fileRes.ok) {
@@ -481,6 +497,7 @@ async function serveArticle(resource: any, req: Request, res: Response) {
   // Mode: Blog URL - proxy the blog content
   if (mode === "url" && blog_url) {
     try {
+      validateProxyUrl(blog_url);
       const blogRes = await fetch(blog_url);
       
       if (!blogRes.ok) {
@@ -515,6 +532,7 @@ async function serveArticle(resource: any, req: Request, res: Response) {
   // Mode: Sitemap/RSS - return the feed
   if (mode === "sitemap" && sitemap_url) {
     try {
+      validateProxyUrl(sitemap_url);
       const feedRes = await fetch(sitemap_url);
       
       if (!feedRes.ok) {
@@ -643,8 +661,8 @@ export async function handleListX402Resources(req: Request, res: Response) {
   try {
     const { type, limit, offset } = req.query;
 
-    const limitNum = Math.min(parseInt(limit as string) || 50, 100);
-    const offsetNum = parseInt(offset as string) || 0;
+    const limitNum = Math.max(1, Math.min(parseInt(limit as string) || 50, 100));
+    const offsetNum = Math.max(0, parseInt(offset as string) || 0);
 
     const filter: any = {
       isActive: true,

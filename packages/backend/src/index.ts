@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/database.js";
@@ -90,6 +92,22 @@ const corsOptions = {
   exposedHeaders: ["Content-Disposition", "Content-Type", "X-402-Paid"],
 };
 
+// Security middleware
+app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled for API server
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300, // 300 requests per window
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30, // stricter for auth endpoints
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(generalLimiter);
+
 // Middleware
 app.use(cors(corsOptions as any));
 app.use(express.json({ limit: '10mb' })); // Increased limit for base64 image uploads
@@ -107,8 +125,8 @@ app.get("/health", (_req, res) => {
 // ============================================================
 // WALLET AUTHENTICATION
 // ============================================================
-app.post("/api/auth/nonce", handleGetNonce);
-app.post("/api/auth/verify", handleVerifySignature);
+app.post("/api/auth/nonce", authLimiter, handleGetNonce);
+app.post("/api/auth/verify", authLimiter, handleVerifySignature);
 app.get("/api/auth/me", authMiddleware, handleGetMe);
 app.put("/api/auth/me", authMiddleware, handleUpdateMe);
 app.get("/api/creators/:username/exists", handleCheckUsernameExists);

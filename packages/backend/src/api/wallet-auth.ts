@@ -13,8 +13,11 @@ import crypto from "crypto";
 import { recoverMessageAddress, isAddress } from "viem";
 import { Creator, AuthNonce } from "../models/index.js";
 
-// JWT secret - should be set in environment
-const JWT_SECRET = process.env.JWT_SECRET || "x402-dev-secret-change-in-production";
+// JWT secret - MUST be set in environment
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is required");
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRY = "7d";
 const NONCE_EXPIRY_MINUTES = 10;
 

@@ -28,6 +28,13 @@ const nextConfig: NextConfig = {
     ],
   },
   devIndicators: false,
+  serverExternalPackages: [
+    '@walletconnect/keyvaluestorage',
+    '@walletconnect/core',
+    '@walletconnect/sign-client',
+    '@walletconnect/universal-provider',
+    '@walletconnect/ethereum-provider',
+  ],
   turbopack: {
     root: path.resolve(__dirname, '../../'),
   },
