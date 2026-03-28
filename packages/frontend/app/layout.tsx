@@ -21,6 +21,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "SuperPage - Monetize Anything with Crypto on Base",
   description: "Paywall your APIs, files, articles, and stores with USDC on Base. AI-agent ready payments powered by HTTP 402.",
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
