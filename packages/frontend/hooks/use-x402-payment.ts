@@ -6,27 +6,15 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useEnsureNetwork } from "./use-network-switch";
 import { createPublicClient, http, parseAbi } from "viem";
 import { getDefaultChain, getDefaultChainId, CHAIN_BY_NAME } from "@/lib/chains";
-import { getNetwork } from "@/lib/chain-config";
+import { getNetwork, getUsdcAddress, USDC_ADDRESSES } from "@/lib/chain-config";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-// USDC addresses per network
-const USDC_ADDRESSES: Record<string, `0x${string}`> = {
-  "base-sepolia": "0xa059e27967e5a573a14a62c706ebd1be75333f9a",
-  "base": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-  "mainnet": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  "polygon": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-  "arbitrum": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-  "optimism": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-  "sepolia": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
-  "bite-v2-sandbox": "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
-};
 
 // Resolve current chain config
 const CURRENT_NETWORK = getNetwork();
 const CURRENT_CHAIN_ID = getDefaultChainId();
 const CURRENT_CHAIN = getDefaultChain();
-const USDC_ADDRESS = USDC_ADDRESSES[CURRENT_NETWORK] || USDC_ADDRESSES["base-sepolia"];
+const USDC_ADDRESS = getUsdcAddress();
 
 const ERC20_ABI = parseAbi([
   "function transfer(address to, uint256 amount) returns (bool)",

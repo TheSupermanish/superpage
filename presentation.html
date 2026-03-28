@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperPage — SURGE × OpenClaw Hackathon 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f0e13;
+    --surface: #18171e;
+    --surface2: #1e1d26;
+    --border: #2a2833;
+    --text: #e8e8f0;
+    --text-dim: #9090a8;
+    --accent: #5B8FB9;
+    --accent2: #E8A0BF;
+    --green: #22c55e;
+    --orange: #E5BA73;
+    --red: #ef4444;
+    --pink: #E07A8F;
+    --cream: #D4C5A9;
+    --brand-blue: #5B8FB9;
+    --brand-pink: #E8A0BF;
+    --brand-gold: #E5BA73;
+    --brand-coral: #E07A8F;
+    --brand-cream: #D4C5A9;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  .deck {
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .slide.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  p, li {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #5B8FB9, #E8A0BF, #E5BA73);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 4px;
+  }
+
+  .tag-blue { background: rgba(91,143,185,0.15); color: #7CB4D8; border: 1px solid rgba(91,143,185,0.3); }
+  .tag-purple { background: rgba(232,160,191,0.15); color: #E8A0BF; border: 1px solid rgba(232,160,191,0.3); }
+  .tag-green { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+  .tag-orange { background: rgba(229,186,115,0.15); color: #E5BA73; border: 1px solid rgba(229,186,115,0.3); }
+  .tag-pink { background: rgba(224,122,143,0.15); color: #E07A8F; border: 1px solid rgba(224,122,143,0.3); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card h3 { margin-bottom: 10px; }
+  .card p { font-size: 1rem; }
+
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+    overflow: hidden;
+    white-space: pre;
+  }
+
+  .code-block .keyword { color: #E8A0BF; }
+  .code-block .string { color: #4ade80; }
+  .code-block .comment { color: #555570; }
+  .code-block .number { color: #E5BA73; }
+  .code-block .fn { color: #7CB4D8; }
+  .code-block .arrow { color: #E07A8F; }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+
+  .flow-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .flow-arrow {
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 40px;
+    margin: 24px 0;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul li {
+    padding: 8px 0;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .slide-number {
+    position: fixed;
+    bottom: 24px;
+    right: 40px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 100;
+  }
+
+  .nav-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 40px;
+    font-size: 0.8rem;
+    color: #444460;
+    z-index: 100;
+  }
+
+  .slide-logo {
+    position: fixed;
+    top: 24px;
+    right: 40px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.6;
+    z-index: 100;
+  }
+
+  .title-logo-img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 24px;
+  }
+
+  .title-logo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+  }
+
+  .vs-table th, .vs-table td {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 1.05rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vs-table th {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .vs-table td { color: var(--text-dim); }
+  .vs-table .yes { color: var(--green); font-weight: 600; }
+  .vs-table .no { color: var(--red); font-weight: 600; }
+
+  .arch-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .arch-box.highlight {
+    border-color: var(--brand-blue);
+    background: rgba(91,143,185,0.08);
+  }
+
+  .arch-arrow {
+    text-align: center;
+    font-size: 1.4rem;
+    color: var(--accent);
+    padding: 8px 0;
+  }
+
+  .proto-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .proto-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .proto-card .proto-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .proto-card .proto-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .surface-icon {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .tools-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .tool-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #7CB4D8;
+  }
+
+  .safety-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .safety-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .safety-item .safety-icon {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+
+  .safety-item h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .safety-item p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .demo-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-step:last-child { border-bottom: none; }
+
+  .step-num {
+    background: var(--accent);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .step-content h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 0.9rem;
+  }
+
+  .links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .link-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+
+  .link-card:hover { border-color: var(--accent); }
+  .link-card .link-label { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 4px; }
+  .link-card .link-url { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--accent); }
+
+  .big-quote {
+    font-size: 2rem;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-dim);
+    line-height: 1.5;
+    border-left: 3px solid var(--accent);
+    padding-left: 24px;
+    margin: 32px 0;
+  }
+
+  .track-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 12px;
+  }
+
+  .track-card.primary {
+    border-color: var(--brand-blue);
+    background: rgba(91,143,185,0.05);
+  }
+
+  .track-card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .track-card p {
+    font-size: 0.95rem;
+  }
+</style>
+</head>
+<body>
+<img class="slide-logo" src="packages/frontend/public/logo.png" alt="SuperPage">
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" id="slide-1">
+    <img class="title-logo-img" src="packages/frontend/public/logo.png" alt="SuperPage Logo">
+    <div class="title-logo">SURGE × OpenClaw Hackathon 2026</div>
+    <h1 style="font-size: 4rem;">
+      <span class="gradient-text">SuperPage</span>
+    </h1>
+    <p class="subtitle" style="font-size: 1.8rem; max-width: 800px;">
+      The x402 Payment Skill for the Agent Internet
+    </p>
+    <p style="font-size: 1.15rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;">
+      An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments on Base Sepolia.
+    </p>
+    <div>
+      <span class="tag tag-blue">x402 Protocol</span>
+      <span class="tag tag-purple">OpenClaw</span>
+      <span class="tag tag-green">Base Sepolia</span>
+      <span class="tag tag-orange">MCP</span>
+      <span class="tag tag-pink">A2A / AP2 / ERC-8004</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: The Problem -->
+  <div class="slide" id="slide-2">
+    <h3>The Problem</h3>
+    <h2 style="max-width: 700px;">AI Agents Are Locked Out of Commerce</h2>
+    <div class="grid-2" style="margin-top: 32px;">
+      <div>
+        <div class="big-quote">
+          Agents can research, write, and plan — but they can't pay for anything.
+        </div>
+        <p style="margin-top: 16px; font-size: 1.1rem;">
+          Premium APIs, digital content, and e-commerce are all trapped behind human checkout flows. There's no standard way for an agent to discover a resource, see its price, confirm with the user, and pay.
+        </p>
+      </div>
+      <div>
+        <table class="vs-table">
+          <tr>
+            <th>What agents can do</th>
+            <th>What they can't</th>
+          </tr>
+          <tr><td class="yes">Write code</td><td class="no">Pay for cloud compute</td></tr>
+          <tr><td class="yes">Research products</td><td class="no">Purchase products</td></tr>
+          <tr><td class="yes">Analyze data</td><td class="no">Subscribe to data APIs</td></tr>
+          <tr><td class="yes">Plan trips</td><td class="no">Book & pay for hotels</td></tr>
+          <tr><td class="yes">Compare prices</td><td class="no">Complete checkout</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: The Solution -->
+  <div class="slide" id="slide-3">
+    <h3>The Solution</h3>
+    <h2 style="max-width: 750px;">A Complete Agent Payment Workflow</h2>
+    <p style="max-width: 650px; margin-bottom: 32px;">
+      SuperPage gives any AI agent the ability to discover, evaluate, pay for, and access resources — all autonomously with user confirmation.
+    </p>
+    <div class="flow-row" style="margin: 32px 0;">
+      <div class="flow-step">1. Discover<br><span style="color:var(--text-dim);font-size:0.8rem;">list-resources / search</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">2. Preview<br><span style="color:var(--text-dim);font-size:0.8rem;">price check (free)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">3. Confirm<br><span style="color:var(--text-dim);font-size:0.8rem;">"Buy for $0.50?"</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">4. Pay<br><span style="color:var(--text-dim);font-size:0.8rem;">USDC on Base</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">5. Deliver<br><span style="color:var(--text-dim);font-size:0.8rem;">content + receipt</span></div>
+    </div>
+    <p style="margin-top: 24px; font-size: 1.05rem;">
+      Works across <strong style="color:var(--text);">three surfaces</strong>: Telegram (OpenClaw), Claude Desktop (MCP), and CLI — all powered by the same <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.9rem;">superpage-x402.js</code> engine.
+    </p>
+  </div>
+
+  <!-- SLIDE 4: Architecture -->
+  <div class="slide" id="slide-4">
+    <h3>Architecture</h3>
+    <h2>Full-Stack AI-Native Commerce</h2>
+    <div style="margin-top: 24px;">
+      <!-- Agent Surfaces Row -->
+      <div class="grid-3" style="margin-bottom: 8px;">
+        <div class="arch-box">
+          <div style="font-size:1.5rem;margin-bottom:6px;">💬</div>
+          <div style="font-weight:600;">Telegram</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">OpenClaw Skill</div>
+        </div>
+        <div class="arch-box">
+          <div style="font-size:1.5rem;margin-bottom:6px;">🤖</div>
+          <div style="font-weight:600;">Claude Desktop</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">MCP Server (12 tools)</div>
+        </div>
+        <div class="arch-box">
+          <div style="font-size:1.5rem;margin-bottom:6px;">⌨️</div>
+          <div style="font-weight:600;">CLI Agent</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Anthropic / OpenAI / Google</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <!-- Core Engine -->
+      <div class="arch-box highlight" style="margin-bottom: 8px;">
+        <div style="font-weight:700;font-size:1.1rem;">superpage-x402.js</div>
+        <div style="font-size:0.85rem;color:var(--text-dim);">Dual-mode CLI + MCP engine — preview, request, buy, send, wallet, search, discover</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <!-- Platform -->
+      <div class="grid-3" style="margin-bottom: 8px;">
+        <div class="arch-box">
+          <div style="font-weight:600;">x402 Gateway</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">HTTP 402 payment-gated</div>
+        </div>
+        <div class="arch-box">
+          <div style="font-weight:600;">Marketplace</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">26+ resources + Shopify</div>
+        </div>
+        <div class="arch-box">
+          <div style="font-weight:600;">A2A / AP2 Server</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">Agent discovery + shopping</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <!-- Blockchain -->
+      <div class="arch-box" style="border-color: var(--green); background: rgba(34,197,94,0.05);">
+        <div style="font-weight:700;font-size:1.1rem;">Base Sepolia (L2)</div>
+        <div style="font-size:0.85rem;color:var(--text-dim);">USDC payments · Chain ID 84532 · ~2s blocks · On-chain receipts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Agent Surfaces -->
+  <div class="slide" id="slide-5">
+    <h3>Agent Surfaces</h3>
+    <h2>One Skill, Three Surfaces</h2>
+    <div class="grid-3" style="margin-top: 32px;">
+      <div class="card">
+        <div class="surface-icon">💬</div>
+        <h3 style="color:var(--text);">Telegram</h3>
+        <p style="font-size: 0.95rem; margin-bottom: 16px;">
+          OpenClaw skill powering <strong style="color:var(--text);">@HeySuperioBot</strong>. Agent previews price, asks user to confirm, pays on-chain, delivers content.
+        </p>
+        <div style="font-size:0.85rem;color:var(--text-dim);font-style:italic;">
+          "Buy the Weather API"<br>
+          → "It costs $0.50 USDC. Proceed?"<br>
+          → "Yes"<br>
+          → Paid! Here's the data...
+        </div>
+      </div>
+      <div class="card">
+        <div class="surface-icon">🤖</div>
+        <h3 style="color:var(--text);">Claude Desktop (MCP)</h3>
+        <p style="font-size: 0.95rem; margin-bottom: 16px;">
+          12 autonomous tools via Model Context Protocol. Claude can browse, pay, and access resources natively.
+        </p>
+        <div class="tools-list" style="grid-template-columns:1fr;">
+          <div class="tool-item">x402_list_resources</div>
+          <div class="tool-item">x402_preview / x402_request</div>
+          <div class="tool-item">x402_buy (Shopify)</div>
+          <div class="tool-item">x402_wallet / x402_send</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="surface-icon">⌨️</div>
+        <h3 style="color:var(--text);">CLI Agent</h3>
+        <p style="font-size: 0.95rem; margin-bottom: 16px;">
+          Multi-LLM standalone agent via Vercel AI SDK. Supports Anthropic, OpenAI, and Google models.
+        </p>
+        <div class="code-block" style="font-size:0.8rem;padding:14px;">
+<span class="comment">$ pnpm agent "buy weather API"</span>
+
+Found Weather API for <span class="number">$0.50</span> USDC.
+Confirm? <span class="string">yes</span>
+Paid <span class="number">0.50</span> USDC — tx: <span class="fn">0x01e5...</span>
+Here's the data: { temp: 72 }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: x402 Payment Flow -->
+  <div class="slide" id="slide-6">
+    <h3>x402 Protocol</h3>
+    <h2>HTTP 402 Payment Flow</h2>
+    <div class="two-col" style="margin-top: 24px;">
+      <div>
+        <div class="demo-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Agent Requests Resource</h4>
+            <p><code style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;">GET /x402/resource/weather-api</code></p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--orange);">2</div>
+          <div class="step-content">
+            <h4>Server Returns 402</h4>
+            <p>Payment requirements: amount, currency, recipient, chainId</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--accent2);">3</div>
+          <div class="step-content">
+            <h4>Preview Mode (Stops Here)</h4>
+            <p>Returns price to user — "Buy for $0.50 USDC?"</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--green);">4</div>
+          <div class="step-content">
+            <h4>User Confirms → Agent Pays</h4>
+            <p>USDC transfer on Base Sepolia, ~2s confirmation</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--pink);">5</div>
+          <div class="step-content">
+            <h4>Retry with Proof → Content Delivered</h4>
+            <p>X-PAYMENT header with tx hash, on-chain verification, resource served</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="code-block" style="font-size:0.85rem;">
+<span class="comment">// 1. Request resource</span>
+<span class="fn">GET</span> /x402/resource/weather-api
+
+<span class="comment">// 2. Server responds: 402</span>
+{
+  <span class="string">"amount"</span>: <span class="string">"0.50"</span>,
+  <span class="string">"currency"</span>: <span class="string">"USDC"</span>,
+  <span class="string">"recipient"</span>: <span class="string">"0x..."</span>,
+  <span class="string">"chainId"</span>: <span class="number">84532</span>
+}
+
+<span class="comment">// 3. Agent pays USDC on Base</span>
+<span class="keyword">await</span> <span class="fn">sendUSDC</span>(recipient, <span class="string">"0.50"</span>)
+<span class="comment">// tx: 0x9eab1d...</span>
+
+<span class="comment">// 4. Retry with payment proof</span>
+<span class="fn">GET</span> /x402/resource/weather-api
+<span class="fn">Headers</span>: {
+  <span class="string">"X-PAYMENT"</span>: <span class="string">"0x9eab1d..."</span>
+}
+
+<span class="comment">// 5. 200 OK — content delivered</span>
+{ <span class="string">"temperature"</span>: <span class="number">72</span>, ... }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Five Protocols -->
+  <div class="slide" id="slide-7">
+    <h3>Protocol Stack</h3>
+    <h2>Five Protocols, One Platform</h2>
+    <p style="max-width: 600px; margin-bottom: 8px;">SuperPage is the first platform to combine all five agent protocols into a single commerce infrastructure.</p>
+    <div class="proto-grid">
+      <div class="proto-card" style="border-color:var(--accent);">
+        <div class="proto-name" style="color:var(--accent);">x402</div>
+        <div class="proto-desc">HTTP 402 payment-gated resources. The payment standard for the agent internet.</div>
+      </div>
+      <div class="proto-card" style="border-color:var(--accent2);">
+        <div class="proto-name" style="color:var(--accent2);">A2A</div>
+        <div class="proto-desc">Agent-to-agent discovery via /.well-known/agent.json. JSON-RPC 2.0.</div>
+      </div>
+      <div class="proto-card" style="border-color:var(--orange);">
+        <div class="proto-name" style="color:var(--orange);">AP2</div>
+        <div class="proto-desc">Google's Agent Payments. Intent → Cart → Payment → Receipt mandate flow.</div>
+      </div>
+      <div class="proto-card" style="border-color:var(--green);">
+        <div class="proto-name" style="color:var(--green);">MCP</div>
+        <div class="proto-desc">Model Context Protocol. 12 tools for Claude Desktop native integration.</div>
+      </div>
+      <div class="proto-card" style="border-color:var(--pink);">
+        <div class="proto-name" style="color:var(--pink);">ERC-8004</div>
+        <div class="proto-desc">On-chain agent identity, reputation scoring, and trust validation.</div>
+      </div>
+    </div>
+    <div style="margin-top: 32px;">
+      <h3 style="font-size: 1.1rem;">AP2 Shopping Flow (Google Agent Payments Protocol)</h3>
+      <div class="flow-row">
+        <div class="flow-step" style="border-color:var(--orange);">IntentMandate<br><span style="font-size:0.75rem;color:var(--text-dim);">What to buy</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:var(--orange);">CartMandate<br><span style="font-size:0.75rem;color:var(--text-dim);">Itemized cart</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:var(--orange);">PaymentMandate<br><span style="font-size:0.75rem;color:var(--text-dim);">On-chain tx</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step" style="border-color:var(--orange);">PaymentReceipt<br><span style="font-size:0.75rem;color:var(--text-dim);">Verified settlement</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Marketplace & Shopify -->
+  <div class="slide" id="slide-8">
+    <h3>Platform Features</h3>
+    <h2>Two-Sided AI-Native Marketplace</h2>
+    <div class="grid-2" style="margin-top: 24px;">
+      <div>
+        <h3 style="color:var(--text);font-size:1.2rem;">For Creators & Merchants</h3>
+        <ul>
+          <li>List digital resources: APIs, datasets, guides, articles</li>
+          <li>Connect Shopify store in 3 clicks — products auto-sync</li>
+          <li>Set prices in USDC — receive payments directly on-chain</li>
+          <li>Creator dashboard with analytics and order management</li>
+          <li>Public profiles with tipping support</li>
+          <li>Earn from both humans and AI agents</li>
+        </ul>
+        <div class="stat-row" style="margin-top:24px;">
+          <div class="stat">
+            <div class="stat-number gradient-text">26+</div>
+            <div class="stat-label">Digital Resources</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number gradient-text">12</div>
+            <div class="stat-label">MCP Tools</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number gradient-text">5</div>
+            <div class="stat-label">Protocols</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--text);font-size:1.2rem;">Shopify Integration</h3>
+        <div class="code-block" style="font-size:0.85rem;">
+<span class="comment">// Agent browses store products</span>
+<span class="fn">browse-products</span> {
+  <span class="string">"storeId"</span>: <span class="string">"shopify/x402-store"</span>
+}
+
+<span class="comment">// Returns products with variants</span>
+[{
+  <span class="string">"title"</span>: <span class="string">"Example T-Shirt"</span>,
+  <span class="string">"price"</span>: <span class="string">"0.01 USDC"</span>,
+  <span class="string">"variantId"</span>: <span class="string">"gid://shopify/..."</span>
+}]
+
+<span class="comment">// Agent completes full checkout</span>
+<span class="fn">buy</span> {
+  <span class="string">"storeId"</span>: <span class="string">"shopify/x402-store"</span>,
+  <span class="string">"items"</span>: [{
+    <span class="string">"productId"</span>: <span class="string">"gid://..."</span>,
+    <span class="string">"quantity"</span>: <span class="number">1</span>
+  }],
+  <span class="string">"shippingAddress"</span>: { ... }
+}
+<span class="comment">// → Order created + USDC paid</span>
+        </div>
+        <div style="margin-top: 16px;">
+          <h3 style="color:var(--text);font-size:1.2rem;">Resource Types</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+            <span class="tag tag-blue">API — $0.01-$1</span>
+            <span class="tag tag-purple">File — $0.50-$50</span>
+            <span class="tag tag-green">Article — $0.10-$10</span>
+            <span class="tag tag-orange">Shopify — varies</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Safety & Security -->
+  <div class="slide" id="slide-9">
+    <h3>Safety & Security</h3>
+    <h2>Trust Built Into Every Layer</h2>
+    <div class="safety-grid">
+      <div class="safety-item">
+        <div class="safety-icon">🔒</div>
+        <h4>Spending Caps</h4>
+        <p>MAX_AUTO_PAYMENT limits per-transaction spend. Default $10 USDC max.</p>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">👁️</div>
+        <h4>Preview Before Pay</h4>
+        <p>Agent always shows price and asks for user confirmation before any payment.</p>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">🔑</div>
+        <h4>Non-Custodial</h4>
+        <p>Agent controls its own private key. No third party holds funds.</p>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">⛓️</div>
+        <h4>On-Chain Verification</h4>
+        <p>Every payment cryptographically verified against Base Sepolia before content is served.</p>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">⏱️</div>
+        <h4>Time-Bounded</h4>
+        <p>15-minute payment windows prevent stale or replayed transactions.</p>
+      </div>
+      <div class="safety-item">
+        <div class="safety-icon">📋</div>
+        <h4>Full Audit Trail</h4>
+        <p>Transaction hash, amount, timestamp, recipient — everything logged and verifiable.</p>
+      </div>
+    </div>
+    <div style="margin-top: 32px;">
+      <div class="code-block" style="font-size: 0.9rem; max-width: 600px;">
+<span class="comment">// Every transaction receipt includes:</span>
+{
+  <span class="string">"txHash"</span>:    <span class="string">"0x9eab1d..."</span>,
+  <span class="string">"amount"</span>:    <span class="string">"0.50 USDC"</span>,
+  <span class="string">"to"</span>:        <span class="string">"0x5163..."</span>,
+  <span class="string">"chainId"</span>:   <span class="number">84532</span>,
+  <span class="string">"verified"</span>:  <span class="keyword">true</span>,
+  <span class="string">"timestamp"</span>: <span class="number">1709312400</span>
+}
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Tech Stack -->
+  <div class="slide" id="slide-10">
+    <h3>Technology</h3>
+    <h2>Monorepo Architecture</h2>
+    <div class="grid-2" style="margin-top: 24px;">
+      <div>
+        <table class="vs-table">
+          <tr><th>Layer</th><th>Stack</th></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Frontend</td><td>Next.js 16, React 19, Tailwind 4</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Backend</td><td>Express, TypeScript, MongoDB</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">MCP Client</td><td>Node.js, viem, JSON-RPC</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">AI Agent</td><td>Vercel AI SDK (multi-LLM)</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">SDK</td><td>@super-x402/sdk (payment verification)</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Blockchain</td><td>Base Sepolia, viem, USDC</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">E-Commerce</td><td>Shopify Admin API</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Identity</td><td>ERC-8004</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Wallet</td><td>RainbowKit, wagmi</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Agent Runtime</td><td>OpenClaw (Telegram gateway)</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="code-block" style="font-size:0.85rem;">
+superpage/
+├── packages/
+│   ├── frontend/
+│   │   <span class="comment">Next.js 16 + React 19 + Tailwind 4</span>
+│   │
+│   ├── backend/
+│   │   <span class="comment">Express + MongoDB + A2A + AP2 + x402</span>
+│   │
+│   ├── mcp-client/
+│   │   <span class="comment">MCP server + CLI (superpage-x402.js)</span>
+│   │
+│   ├── ai-agent/
+│   │   <span class="comment">Standalone AI agent (multi-LLM)</span>
+│   │
+│   ├── x402-sdk-eth/
+│   │   <span class="comment">Payment verification SDK</span>
+│   │
+│   └── contracts/
+│       <span class="comment">Smart contract ABIs</span>
+│
+├── dev.sh
+└── package.json  <span class="comment">pnpm workspace</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: Track Alignment -->
+  <div class="slide" id="slide-11">
+    <h3>Hackathon Tracks</h3>
+    <h2>Track Alignment</h2>
+    <div style="margin-top: 24px;">
+      <div class="track-card primary">
+        <h4><span style="color:var(--accent);">Track 5:</span> Autonomous Payments & Monetized Skills</h4>
+        <p>x402-integrated OpenClaw skill charging USDC per resource. Preview + confirm flow, micro-payments ($0.01–$5), 12 MCP tools, direct creator revenue, reusable skill any OpenClaw agent can install.</p>
+      </div>
+      <div class="grid-3" style="margin-top: 12px;">
+        <div class="track-card">
+          <h4><span style="color:var(--accent2);">Track 1:</span> Agent Execution</h4>
+          <p>Autonomous Shopify shopping, wallet management, full checkout pipeline with shipping.</p>
+        </div>
+        <div class="track-card">
+          <h4><span style="color:var(--green);">Track 3:</span> Developer Infrastructure</h4>
+          <p>x402 SDK, MCP server, A2A protocol, AP2 implementation — reusable building blocks.</p>
+        </div>
+        <div class="track-card">
+          <h4><span style="color:var(--orange);">Track 4:</span> Agent-to-Agent</h4>
+          <p>A2A discovery, AP2 mandate-based shopping, ERC-8004 identity and reputation.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 32px;">
+      <h3 style="font-size: 1.1rem; color: var(--text);">What Makes Us Different</h3>
+      <div class="grid-3" style="margin-top: 12px;">
+        <div style="text-align:center;">
+          <div style="font-size:2rem;margin-bottom:8px;">🏪</div>
+          <div style="font-weight:600;margin-bottom:4px;">Full Platform</div>
+          <div style="font-size:0.85rem;color:var(--text-dim);">Not a demo — real marketplace with 26+ resources and Shopify integration</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:2rem;margin-bottom:8px;">🔌</div>
+          <div style="font-weight:600;margin-bottom:4px;">Multi-Surface</div>
+          <div style="font-size:0.85rem;color:var(--text-dim);">Telegram + Claude Desktop + CLI — same engine, three interfaces</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:2rem;margin-bottom:8px;">🤝</div>
+          <div style="font-weight:600;margin-bottom:4px;">5 Protocols</div>
+          <div style="font-size:0.85rem;color:var(--text-dim);">x402, A2A, AP2, MCP, ERC-8004 — most comprehensive protocol stack</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Demo -->
+  <div class="slide" id="slide-12">
+    <h3>Live Demo</h3>
+    <h2>See It In Action</h2>
+    <div class="grid-2" style="margin-top: 24px;">
+      <div>
+        <h3 style="color:var(--text);font-size:1.15rem;margin-bottom:16px;">Telegram (@HeySuperioBot)</h3>
+        <div class="demo-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>"What resources are available?"</h4>
+            <p>Lists all 26+ resources with names, descriptions, prices</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--accent2);">2</div>
+          <div class="step-content">
+            <h4>"Buy the Weather API"</h4>
+            <p>Previews price → asks "Buy for $0.50?" → waits for yes</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--green);">3</div>
+          <div class="step-content">
+            <h4>"Yes"</h4>
+            <p>Pays USDC on-chain → delivers content → shows tx receipt</p>
+          </div>
+        </div>
+        <div class="demo-step">
+          <div class="step-num" style="background:var(--orange);">4</div>
+          <div class="step-content">
+            <h4>"Buy a t-shirt from the Shopify store"</h4>
+            <p>Browses products → selects variant → full checkout with shipping</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--text);font-size:1.15rem;margin-bottom:16px;">Try It Now</h3>
+        <div class="links-grid" style="grid-template-columns:1fr;">
+          <div class="link-card">
+            <div class="link-label">Live Demo</div>
+            <div style="font-weight:600;">superpa.ge</div>
+            <div class="link-url">Browse marketplace, connect wallet, mint test USDC</div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">Telegram Bot</div>
+            <div style="font-weight:600;">@HeySuperioBot</div>
+            <div class="link-url">Message the bot → ask to buy a resource</div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">Agent Discovery</div>
+            <div style="font-weight:600;">/.well-known/agent.json</div>
+            <div class="link-url">A2A agent card with skills & extensions</div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">GitHub</div>
+            <div style="font-weight:600;">AIProjects402/superpage</div>
+            <div class="link-url">Full source code — MIT license</div>
+          </div>
+        </div>
+        <div style="margin-top: 24px;">
+          <h3 style="color:var(--text);font-size:1.15rem;">Network Details</h3>
+          <table class="vs-table" style="margin-top:8px;">
+            <tr><td style="color:var(--text);">Network</td><td>Base Sepolia</td></tr>
+            <tr><td style="color:var(--text);">Chain ID</td><td>84532</td></tr>
+            <tr><td style="color:var(--text);">Currency</td><td>USDC (6 decimals)</td></tr>
+            <tr><td style="color:var(--text);">Block Time</td><td>~2 seconds</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: Thank You -->
+  <div class="slide" id="slide-13">
+    <div style="text-align: center; max-width: 700px; margin: 0 auto;">
+      <img src="packages/frontend/public/logo.png" alt="SuperPage" style="width:100px;height:100px;margin-bottom:16px;">
+      <h1 style="font-size: 3.5rem; margin-bottom: 16px;">
+        <span class="gradient-text">SuperPage</span>
+      </h1>
+      <p class="subtitle" style="font-size: 1.6rem;">The x402 Payment Skill for the Agent Internet</p>
+      <div class="big-quote" style="border:none;text-align:center;padding:0;font-size:1.4rem;margin:32px 0;">
+        Where AI agents and humans coexist as buyers and sellers.
+      </div>
+      <div style="margin: 40px 0;">
+        <span class="tag tag-blue" style="font-size:1rem;padding:10px 20px;">superpa.ge</span>
+        <span class="tag tag-purple" style="font-size:1rem;padding:10px 20px;">@HeySuperioBot</span>
+        <span class="tag tag-green" style="font-size:1rem;padding:10px 20px;">GitHub</span>
+      </div>
+      <p style="color:var(--text-dim);font-size:1.1rem;margin-top:40px;">
+        Built for <strong style="color:var(--text);">SURGE × OpenClaw Hackathon</strong> — February 2026
+      </p>
+      <div style="margin-top: 16px;">
+        <span class="tag tag-blue">x402</span>
+        <span class="tag tag-purple">A2A</span>
+        <span class="tag tag-orange">AP2</span>
+        <span class="tag tag-green">MCP</span>
+        <span class="tag tag-pink">ERC-8004</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="slide-number" id="slideNum">1 / 13</div>
+<div class="nav-hint">← → arrow keys to navigate</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const slideNum = document.getElementById('slideNum');
+  let current = 0;
+  const total = slides.length;
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    slideNum.textContent = `${current + 1} / ${total}`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      diff > 0 ? goTo(current + 1) : goTo(current - 1);
+    }
+  });
+
+  // Click to advance
+  document.addEventListener('click', (e) => {
+    const x = e.clientX / window.innerWidth;
+    x > 0.5 ? goTo(current + 1) : goTo(current - 1);
+  });
+</script>
+</body>
+</html>

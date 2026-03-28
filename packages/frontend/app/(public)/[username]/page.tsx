@@ -31,10 +31,11 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { parseUnits } from "viem";
 import { PublicNavbar } from "@/components/public-navbar";
 import { PurchaseModal, type PurchaseItem } from "@/components/purchase-modal";
-import { getTxUrl } from "@/lib/chain-config";
+import { getTxUrl, getChainId, getUsdcAddress } from "@/lib/chain-config";
+import { getDefaultChainId } from "@/lib/chains";
 
-const BITE_CHAIN_ID = 103698795;
-const USDC_ADDRESS = "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8" as const;
+const TIP_CHAIN_ID = getDefaultChainId();
+const USDC_ADDRESS = getUsdcAddress();
 const ERC20_ABI = [
   {
     name: "transfer",
@@ -150,10 +151,10 @@ export default function PublicProfilePage() {
     setTipTxHash(null);
 
     try {
-      // Switch to SKALE if needed
-      if (chainId !== BITE_CHAIN_ID) {
+      // Switch to payment chain if needed
+      if (chainId !== TIP_CHAIN_ID) {
         setTipStatus("switching");
-        await switchChainAsync({ chainId: BITE_CHAIN_ID });
+        await switchChainAsync({ chainId: TIP_CHAIN_ID });
       }
 
       // Send USDC transfer
@@ -166,7 +167,7 @@ export default function PublicProfilePage() {
           data.profile.walletAddress as `0x${string}`,
           parseUnits(amount, 6),
         ],
-        chainId: BITE_CHAIN_ID,
+        chainId: TIP_CHAIN_ID,
       });
 
       setTipTxHash(hash);
@@ -264,7 +265,7 @@ export default function PublicProfilePage() {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10 w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col items-center">
+      <main className="relative z-10 w-full max-w-2xl mx-auto px-6 sm:px-8 lg:px-10 pt-20 pb-12 flex flex-col items-center">
         {/* Back Button and Share Button */}
         <div className="w-full flex items-center justify-between mb-6">
           <button

@@ -17,7 +17,7 @@ export interface AgentConfig {
   // Wallet
   walletPrivateKey: `0x${string}`;
 
-  // Chain (BITE V2 Sandbox defaults)
+  // Chain
   network: string;
   chainId: number;
   rpcUrl: string;
@@ -67,12 +67,12 @@ export function loadConfig(): AgentConfig {
     llmApiKey,
     merchantUrl: process.env.MERCHANT_URL || "http://localhost:3001",
     walletPrivateKey: walletPrivateKey as `0x${string}`,
-    network: "bite-v2-sandbox",
-    chainId: 103698795,
+    network: process.env.X402_CHAIN || "base-sepolia",
+    chainId: parseInt(process.env.CHAIN_ID || "84532", 10),
     rpcUrl:
-      "https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox",
+      process.env.RPC_URL || "https://sepolia.base.org",
     usdcAddress:
-      "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8" as `0x${string}`,
+      (process.env.USDC_ADDRESS || "0xa059e27967e5a573a14a62c706ebd1be75333f9a") as `0x${string}`,
     erc8004AgentId: process.env.ERC8004_AGENT_ID || undefined,
     maxSteps: parseInt(process.env.MAX_STEPS || "20", 10),
     autoApprovePayments: process.env.AUTO_APPROVE_PAYMENTS === "true",

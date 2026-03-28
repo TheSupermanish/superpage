@@ -134,14 +134,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* User Profile & Logout */}
         <div className="flex flex-col gap-4">
-          <div className="p-4 rounded-xl bg-card border border-border flex items-center gap-3">
-            <Image
-              src={creator?.avatarUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${creator?.username || creator?.walletAddress || "user"}`}
-              alt={creator?.username || "User"}
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full bg-muted ring-2 ring-primary/20 shrink-0 object-cover"
-            />
+          <div className="p-4 rounded-xl bg-card border border-border flex items-center gap-3 overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-muted ring-2 ring-primary/20 shrink-0 overflow-hidden">
+              <Image
+                src={creator?.avatarUrl || `https://api.dicebear.com/7.x/shapes/svg?seed=${creator?.username || creator?.walletAddress || "user"}`}
+                alt={creator?.username || "User"}
+                width={40}
+                height={40}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="flex flex-col overflow-hidden flex-1">
               <p className="font-bold text-sm truncate">{creator?.username || "User"}</p>
               <p className="text-xs text-muted-foreground truncate">{creator?.walletAddress?.slice(0, 4)}...{creator?.walletAddress?.slice(-4)}</p>

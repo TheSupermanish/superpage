@@ -39,7 +39,7 @@ async function interactive() {
   ui.walletInfo(ctx.wallet.address, balance);
   ui.info("Model", `${config.llmProvider}/${config.llmModel}`);
   ui.info("Merchant", config.merchantUrl);
-  ui.info("Network", "BITE V2 Sandbox");
+  ui.info("Network", config.network);
   if (config.erc8004AgentId) {
     ui.info("Agent ID", config.erc8004AgentId);
   }
@@ -86,7 +86,7 @@ async function interactive() {
         case "config":
           ui.info("Model", `${config.llmProvider}/${config.llmModel}`);
           ui.info("Merchant", config.merchantUrl);
-          ui.info("Network", "BITE V2 Sandbox");
+          ui.info("Network", config.network);
           ui.info("Wallet", `${ctx.wallet.address.slice(0, 6)}...${ctx.wallet.address.slice(-4)}`);
           ui.info("Turns", `${Math.floor(ctx.messages.length / 2)}`);
           break;
@@ -187,7 +187,7 @@ async function main() {
     ANTHROPIC_API_KEY              For Claude
     OPENAI_API_KEY                 For GPT
     GOOGLE_GENERATIVE_AI_API_KEY   For Gemini
-    WALLET_PRIVATE_KEY             0x-prefixed (with USDC on BITE V2)
+    WALLET_PRIVATE_KEY             0x-prefixed (with USDC on Base Sepolia)
     MERCHANT_URL                   Default: http://localhost:3001
     ERC8004_AGENT_ID               On-chain agent ID (set after registration)
     AUTO_APPROVE_PAYMENTS          true = skip payment confirmations
