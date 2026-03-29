@@ -9,6 +9,7 @@
  */
 
 import { Request, Response } from "express";
+import path from "path";
 import { Resource, Creator, AccessLog } from "../models/index.js";
 import { initializeX402Server } from "../utils/x402-config";
 import { parsePaymentHeader } from "../utils/x402-payment-helpers";
@@ -32,9 +33,7 @@ export async function handleResourceAccess(req: Request, res: Response) {
   const startTime = Date.now();
   const { resourceId } = req.params;
 
-  console.log(`\n${"=".repeat(60)}`);
   console.log(`[x402-gateway] Resource access: ${resourceId}`);
-  console.log(`${"=".repeat(60)}`);
 
   try {
     // Load resource with creator info
@@ -107,11 +106,7 @@ export async function handleResourceAccess(req: Request, res: Response) {
       recipientAddress = X402_RECIPIENT;
     }
 
-    console.log("[x402-gateway] Recipient resolution:");
-    console.log("  - creatorId type:", typeof resource.creatorId);
-    console.log("  - creatorId value:", resource.creatorId);
-    console.log("  - X402_RECIPIENT:", X402_RECIPIENT);
-    console.log("  - Final recipient:", recipientAddress);
+    console.log(`[x402-gateway] Recipient: ${recipientAddress || "NONE"}`);
 
     if (!recipientAddress) {
       console.error("[x402-gateway] No recipient address configured");
@@ -126,9 +121,7 @@ export async function handleResourceAccess(req: Request, res: Response) {
     // ============================================================
     if (!xPaymentHeader) {
       const network = getNetwork();
-      console.log(`[x402-gateway] No payment header - returning 402`);
-      console.log(`[x402-gateway] Price: ${priceUsdc} ${currency} (${amountMicroUsdc} base units)`);
-      console.log(`[x402-gateway] Recipient: ${recipientAddress}`);
+      console.log(`[x402-gateway] No payment header - returning 402 (${priceUsdc} ${currency})`);
 
       // Get chain ID from the chain registry
       const chainId = getChainId(network);
@@ -180,7 +173,7 @@ export async function handleResourceAccess(req: Request, res: Response) {
       return res.status(400).json({ error: "Invalid payment header format" });
     }
 
-    console.log("[x402-gateway] Payment data:", JSON.stringify(paymentData, null, 2));
+    console.log(`[x402-gateway] Payment data parsed (network: ${paymentData.network})`);
 
     // Verify payment
     const network = getNetwork();
@@ -210,8 +203,7 @@ export async function handleResourceAccess(req: Request, res: Response) {
       token: currency as any,
     };
 
-    console.log("[x402-gateway] Payment proof:", JSON.stringify(paymentProof, null, 2));
-    console.log("[x402-gateway] Payment requirements:", JSON.stringify(paymentRequirements, null, 2));
+    console.log(`[x402-gateway] Verifying payment (amount: ${amountMicroUsdc}, network: ${network})`);
 
     // Verify with retries — fast chains like SKALE may need a moment for RPC sync
     let verified = false;
@@ -411,13 +403,21 @@ async function serveFile(resource: any, _req: Request, res: Response) {
     }
   }
 
-  // Mode: Hosted file - TODO: Implement file storage (MongoDB GridFS, S3, etc.)
+  // Mode: Hosted file - serve from local uploads directory
   if (storage_key) {
-    // TODO: Replace with MongoDB GridFS or cloud storage implementation
-    return res.status(501).json({
-      error: "Hosted file storage not yet implemented",
-      message: "Please use external_url mode for file resources"
-    });
+    const uploadsFilesDir = path.resolve(process.cwd(), "uploads", "files");
+    const resolvedPath = path.resolve(uploadsFilesDir, storage_key);
+
+    // Prevent path traversal
+    if (!resolvedPath.startsWith(uploadsFilesDir)) {
+      return res.status(403).json({ error: "Invalid storage key" });
+    }
+
+    if (filename) {
+      res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    }
+
+    return res.sendFile(resolvedPath);
   }
 
   // Fallback: generate sample content so the demo works even with placeholder URLs

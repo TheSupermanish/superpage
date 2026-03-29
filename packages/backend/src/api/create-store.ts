@@ -47,14 +47,7 @@ export async function handleCreateStore(req: Request, res: Response) {
       agentMetadata,
     });
 
-    console.log(`[CreateStore] Created store:`, store.id, {
-      name,
-      description,
-      currency,
-      networks,
-      asset,
-      agentMetadata,
-    });
+    console.log(`[CreateStore] Created store: ${store.id} (${name}, ${currency})`);
 
     return res.status(200).json({
       id: store.id,
