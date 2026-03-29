@@ -154,10 +154,13 @@ export class X402Server {
         return false;
       }
 
-      // Check deadline if provided
-      if (requirements.deadline && proof.timestamp > requirements.deadline) {
-        console.error("Payment deadline exceeded");
-        return false;
+      // Check deadline if provided (deadline is Unix seconds, proof.timestamp is milliseconds)
+      if (requirements.deadline) {
+        const deadlineMs = requirements.deadline * 1000;
+        if (proof.timestamp > deadlineMs) {
+          console.error("Payment deadline exceeded");
+          return false;
+        }
       }
 
       // Verify transaction on blockchain
