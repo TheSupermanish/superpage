@@ -53,6 +53,8 @@ export async function handleGetNonce(req: Request, res: Response) {
       return res.status(400).json({ error: "Invalid Ethereum wallet address" });
     }
 
+    const normalizedAddress = walletAddress.toLowerCase();
+
     // Generate random nonce
     const nonce = crypto.randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + NONCE_EXPIRY_MINUTES * 60 * 1000);
@@ -60,7 +62,7 @@ export async function handleGetNonce(req: Request, res: Response) {
     // Store nonce in database
     try {
       await AuthNonce.create({
-        walletAddress,
+        walletAddress: normalizedAddress,
         nonce,
         expiresAt,
       });
@@ -70,7 +72,7 @@ export async function handleGetNonce(req: Request, res: Response) {
     }
 
     // Create the message to sign
-    const message = createSignMessage(walletAddress, nonce);
+    const message = createSignMessage(normalizedAddress, nonce);
 
     return res.json({
       nonce,
@@ -99,9 +101,11 @@ export async function handleVerifySignature(req: Request, res: Response) {
       });
     }
 
+    const normalizedAddress = walletAddress.toLowerCase();
+
     // Verify nonce exists and is valid
     const nonceData = await AuthNonce.findOne({
-      walletAddress,
+      walletAddress: normalizedAddress,
       nonce,
       expiresAt: { $gt: new Date() },
     });
@@ -110,10 +114,15 @@ export async function handleVerifySignature(req: Request, res: Response) {
       return res.status(401).json({ error: "Invalid or expired nonce" });
     }
 
-    // Delete the nonce (one-time use)
-    await AuthNonce.deleteOne({ _id: nonceData._id });
+    // Delete the nonce immediately (one-time use) to prevent replay attempts
+    // This happens before verification so the nonce is consumed regardless of outcome
+    try {
+      await AuthNonce.deleteOne({ _id: nonceData._id });
+    } catch (deleteErr) {
+      console.error("[Auth] Failed to delete nonce:", deleteErr);
+    }
 
-    const message = createSignMessage(walletAddress, nonce);
+    const message = createSignMessage(normalizedAddress, nonce);
 
     // Ethereum signature verification
     let isValid = false;
@@ -125,7 +134,7 @@ export async function handleVerifySignature(req: Request, res: Response) {
         signature: ethSignature as `0x${string}`,
       });
 
-      isValid = recoveredAddress.toLowerCase() === walletAddress.toLowerCase();
+      isValid = recoveredAddress.toLowerCase() === normalizedAddress;
     } catch (err: any) {
       console.error("[Auth] Signature verification error:", err.message);
       isValid = false;
@@ -136,14 +145,14 @@ export async function handleVerifySignature(req: Request, res: Response) {
     }
 
     // Get or create creator
-    let creator = await Creator.findOne({ walletAddress });
+    let creator = await Creator.findOne({ walletAddress: normalizedAddress });
 
     // Create new creator if doesn't exist
     if (!creator) {
       try {
         creator = await Creator.create({
-          walletAddress,
-          name: `Creator ${walletAddress.slice(0, 6)}...`,
+          walletAddress: normalizedAddress,
+          name: `Creator ${normalizedAddress.slice(0, 6)}...`,
         });
       } catch (error) {
         console.error("Creator creation error:", error);
@@ -242,6 +251,25 @@ export async function handleUpdateMe(req: AuthenticatedRequest, res: Response) {
       isPublic,
       showStats
     } = req.body;
+
+    // Validate URL fields start with http:// or https://
+    const isValidUrl = (url: string) => /^https?:\/\//.test(url);
+
+    if (website !== undefined && website !== "" && !isValidUrl(website)) {
+      return res.status(400).json({ error: "website must start with http:// or https://" });
+    }
+
+    if (avatarUrl !== undefined && avatarUrl !== "" && !isValidUrl(avatarUrl)) {
+      return res.status(400).json({ error: "avatarUrl must start with http:// or https://" });
+    }
+
+    if (socialLinks !== undefined && socialLinks !== null && typeof socialLinks === "object") {
+      for (const [key, value] of Object.entries(socialLinks)) {
+        if (typeof value === "string" && value !== "" && !isValidUrl(value)) {
+          return res.status(400).json({ error: `socialLinks.${key} must start with http:// or https://` });
+        }
+      }
+    }
 
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;

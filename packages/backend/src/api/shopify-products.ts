@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ShopifyProduct, ShopifyVariant } from "../types";
-import { Store, findStoreById } from "../models/index.js";
+import { findStoreById } from "../models/index.js";
 
 export async function handleShopifyProducts(req: Request, res: Response) {
   try {

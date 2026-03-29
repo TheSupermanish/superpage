@@ -103,7 +103,8 @@ const OrderIntentSchema = new Schema<IOrderIntent>(
 // id is already indexed via unique: true
 OrderIntentSchema.index({ storeId: 1 });
 OrderIntentSchema.index({ status: 1 });
-OrderIntentSchema.index({ expiresAt: 1 });
+// TTL index to automatically delete expired intents from MongoDB
+OrderIntentSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 OrderIntentSchema.index({ email: 1 });
 
 export const OrderIntent = mongoose.model<IOrderIntent>('OrderIntent', OrderIntentSchema);

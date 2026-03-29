@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StoreProduct, Store, findStoreById } from "../models/index.js";
+import { StoreProduct, findStoreById } from "../models/index.js";
 import { ProductInput } from "../types";
 
 export async function handleUpsertStoreProducts(req: Request, res: Response) {

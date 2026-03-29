@@ -65,7 +65,7 @@ export type ShopifyVariant = {
   };
   
   // Checkout Types
-  export type CheckoutItem = { productId: string; quantity: number };
+  export type CheckoutItem = { productId: string; quantity: number; variantId?: string; id?: string };
   export type ShippingAddress = {
     name: string;
     address1: string;

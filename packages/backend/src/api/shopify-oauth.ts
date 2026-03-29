@@ -143,7 +143,9 @@ async function importShopifyProducts(storeId: string, storeUrl: string, accessTo
   }
 }
 
-// Store for temporary OAuth state (in production, use Redis or database)
+// TODO: This in-memory Map will not work correctly in multi-instance deployments
+// (e.g., behind a load balancer). The OAuth state should be stored in Redis or a
+// database so that the callback request can be handled by any server instance.
 const oauthStates = new Map<string, { timestamp: number; redirect?: string; creatorId?: string }>();
 
 // Clean up old states (older than 10 minutes)

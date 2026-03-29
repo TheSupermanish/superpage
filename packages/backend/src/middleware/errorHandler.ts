@@ -34,7 +34,15 @@ export function errorHandler(
   });
 
   res.status(statusCode).json({
-    error: message,
+    error: {
+      code: statusCode === 404 ? "NOT_FOUND"
+        : statusCode === 400 ? "BAD_REQUEST"
+        : statusCode === 401 ? "UNAUTHORIZED"
+        : statusCode === 403 ? "FORBIDDEN"
+        : statusCode === 429 ? "RATE_LIMITED"
+        : "INTERNAL_ERROR",
+      message,
+    },
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 }
