@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono, Sora } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { ErrorBoundary } from "@/components/error-boundary";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -46,7 +47,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${sora.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        <Providers>{children}</Providers>
+        <ErrorBoundary>
+          <Providers>{children}</Providers>
+        </ErrorBoundary>
       </body>
     </html>
   );

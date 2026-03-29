@@ -123,6 +123,15 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
     }
   }, [open, item, reset]);
 
+  // Revoke blob URLs when modal closes or component unmounts
+  useEffect(() => {
+    return () => {
+      if (resourceResult?.downloaded?.url) {
+        URL.revokeObjectURL(resourceResult.downloaded.url);
+      }
+    };
+  }, [resourceResult]);
+
   if (!item) return null;
 
   const isResource = item.kind === "resource";
@@ -152,6 +161,10 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
         // Validate shipping
         if (!shipping.name || !shipping.email || !shipping.address1 || !shipping.city || !shipping.postalCode || !shipping.country) {
           setFormError("Please fill in all required shipping fields");
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(shipping.email)) {
+          setFormError("Please enter a valid email address");
           return;
         }
         setFormError(null);

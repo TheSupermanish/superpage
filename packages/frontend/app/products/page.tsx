@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -69,8 +68,8 @@ export default function ProductsPage() {
         }
         const data = (await res.json()) as { products: Product[] };
         setProducts(data.products ?? []);
-      } catch (e: any) {
-        setError(e?.message ?? "Failed to fetch products");
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : "Failed to fetch products");
       } finally {
         setLoading(false);
       }
@@ -181,7 +180,7 @@ export default function ProductsPage() {
                 ? Math.min(...allPrices)
                 : undefined;
               const currency = p.variants.find((v) => typeof v.price !== "string")
-                ? (p.variants.find((v) => typeof v.price !== "string")!.price as any)
+                ? (p.variants.find((v) => typeof v.price !== "string")!.price as { amount: string; currencyCode: string })
                     .currencyCode
                 : undefined;
 

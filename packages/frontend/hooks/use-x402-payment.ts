@@ -116,6 +116,8 @@ async function downloadResponse(res: Response, filename: string): Promise<string
   document.body.appendChild(anchor);
   anchor.click();
   document.body.removeChild(anchor);
+  // Revoke after a short delay to allow the download to start
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
   return blobUrl;
 }
 

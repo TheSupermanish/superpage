@@ -25,9 +25,14 @@ const supportedChains = [
   mantleSepolia,    // Mantle testnet
 ] as const;
 
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+if (!projectId || projectId === "YOUR_PROJECT_ID") {
+  console.error("WalletConnect project ID not configured. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID");
+}
+
 const config = getDefaultConfig({
   appName: "SuperPage",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "YOUR_PROJECT_ID",
+  projectId: projectId || "YOUR_PROJECT_ID",
   chains: supportedChains,
   ssr: true,
 });

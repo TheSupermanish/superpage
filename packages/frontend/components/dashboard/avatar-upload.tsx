@@ -42,31 +42,26 @@ export function AvatarUpload({ currentAvatarUrl, onUpload }: AvatarUploadProps) 
       };
       reader.readAsDataURL(file);
 
-      // TODO: Implement actual upload to storage (S3/Cloudinary/etc)
-      // For now, we'll just use the data URL
-      // In production, you'd upload to a CDN and get back a URL
-      
       const formData = new FormData();
       formData.append("file", file);
-      
-      // Placeholder - implement actual upload endpoint
-      // const res = await fetch(`${API_URL}/api/upload/avatar`, {
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      //   body: formData,
-      // });
-      
-      // const data = await res.json();
-      // onUpload(data.url);
 
-      // For now, just use a placeholder URL or data URL
-      setTimeout(() => {
-        const dataUrl = reader.result as string;
-        onUpload(dataUrl);
-        setIsUploading(false);
-      }, 1000);
+      const token = localStorage.getItem("x402_token");
+      const res = await fetch(`${API_URL}/api/upload/avatar`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Upload failed");
+      }
+
+      const data = await res.json();
+      onUpload(data.url);
+      setIsUploading(false);
       
     } catch (err) {
       console.error("Upload error:", err);

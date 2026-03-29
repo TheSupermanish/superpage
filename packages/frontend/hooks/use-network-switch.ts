@@ -47,9 +47,15 @@ export function useNetworkSwitch(): UseNetworkSwitchResult {
   const isTestnet = chain?.testnet ?? false;
 
   // Switch to a specific chain
-  const switchToChain = useCallback(async (targetChainId: number): Promise<boolean> => {
+  const switchToChain = useCallback(async (targetChainId: number, depth = 0): Promise<boolean> => {
     if (chainId === targetChainId) {
       return true; // Already on the correct chain
+    }
+
+    // Prevent infinite recursion when addNetwork succeeds but switch keeps failing
+    if (depth > 1) {
+      setError("Failed to switch network after adding chain");
+      return false;
     }
 
     setIsSwitching(true);
@@ -66,27 +72,27 @@ export function useNetworkSwitch(): UseNetworkSwitchResult {
       // Fallback to direct MetaMask call
       const success = await switchNetworkDirect(targetChainId);
       setIsSwitching(false);
-      
+
       if (!success) {
         setError("Failed to switch network");
       }
-      
+
       return success;
     } catch (err: any) {
       setIsSwitching(false);
-      
+
       // User rejected
       if (err.code === 4001) {
         setError("User rejected network switch");
         return false;
       }
-      
+
       // Chain not added - try to add it
       if (err.code === 4902) {
         const added = await addNetwork(targetChainId);
         if (added) {
-          // Try switching again
-          return await switchToChain(targetChainId);
+          // Try switching again with incremented depth
+          return await switchToChain(targetChainId, depth + 1);
         }
         setError("Failed to add network");
         return false;

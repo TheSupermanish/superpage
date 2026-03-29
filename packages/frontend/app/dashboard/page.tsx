@@ -138,11 +138,16 @@ export default function DashboardPage() {
     }
   }, [chartPeriod, fetchChartData]);
 
-  // Auto-refresh data every 30 seconds
+  // Auto-refresh data with exponential backoff on failure
   useEffect(() => {
     if (!token) return;
 
-    const interval = setInterval(async () => {
+    const BASE_INTERVAL = 30_000; // 30 seconds
+    const MAX_INTERVAL = 300_000; // 5 minutes
+    let currentInterval = BASE_INTERVAL;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const refresh = async () => {
       try {
         const [overviewRes, earningsRes, storesRes] = await Promise.all([
           fetch(`${API_URL}/api/analytics/overview`, {
@@ -172,12 +177,21 @@ export default function DashboardPage() {
             : (storesData.stores || []);
           setStoresCount(stores.length);
         }
+
+        // Reset to base interval on success
+        currentInterval = BASE_INTERVAL;
       } catch (err) {
         console.error("Failed to refresh dashboard data:", err);
+        // Double interval on failure, capped at max
+        currentInterval = Math.min(currentInterval * 2, MAX_INTERVAL);
       }
-    }, 30000); // Refresh every 30 seconds
 
-    return () => clearInterval(interval);
+      timeoutId = setTimeout(refresh, currentInterval);
+    };
+
+    timeoutId = setTimeout(refresh, currentInterval);
+
+    return () => clearTimeout(timeoutId);
   }, [token]);
 
   if (loading) {

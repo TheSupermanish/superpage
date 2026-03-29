@@ -8,11 +8,11 @@ import { getDefaultChain, getDefaultChainId } from "@/lib/chains";
 import { useEnsureNetwork } from "@/hooks/use-network-switch";
 import { PublicNavbar } from "@/components/public-navbar";
 import { Droplets, Wallet, Loader2, CheckCircle2, AlertCircle, ExternalLink, Copy, Check } from "lucide-react";
-import { getTxUrl } from "@/lib/chain-config";
+import { getTxUrl, getUsdcAddress } from "@/lib/chain-config";
 
 const PAYMENT_CHAIN_ID = getDefaultChainId();
 const PAYMENT_CHAIN = getDefaultChain();
-const USDC_ADDRESS = "0xa059e27967e5a573a14a62c706ebd1be75333f9a" as const;
+const USDC_ADDRESS = getUsdcAddress();
 
 const USDC_ABI = parseAbi([
   "function mint(address to, uint256 amount) external",

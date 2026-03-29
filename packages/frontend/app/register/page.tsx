@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -69,8 +68,8 @@ export default function Register() {
 
       // Redirect to backend OAuth endpoint - it will handle everything
       window.location.href = `${API_URL}/api/shopify/auth?${params.toString()}`;
-    } catch (err: any) {
-      setError(err.message || "Failed to start installation");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to start installation");
       setIsLoading(false);
     }
   }

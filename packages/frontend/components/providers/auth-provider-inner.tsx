@@ -169,13 +169,7 @@ export function AuthProviderInner({ children }: AuthProviderInnerProps) {
   }, [isConnected, creator]);
 
   // User needs onboarding if they don't have a username
-  // BUT: if they're an existing user (created more than 24 hours ago), 
-  // they don't need onboarding even without a username
-  const isExistingUser = creator?.createdAt 
-    ? new Date().getTime() - new Date(creator.createdAt).getTime() > 24 * 60 * 60 * 1000
-    : false;
-  
-  const needsOnboarding = !!creator && !creator.username && !isExistingUser;
+  const needsOnboarding = !!creator && !creator.username;
 
   return (
     <AuthContext.Provider
