@@ -2,12 +2,22 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import rateLimit from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./config/database.js";
 
-// MVC Routes
+// Rate limiters
+import { generalLimiter } from "./middleware/rateLimiters.js";
+
+// Route modules
+import authRoutes from "./routes/authRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
+import shopifyRoutes, { webhookRouter as shopifyWebhookRoutes } from "./routes/shopifyRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import mcpRoutes, { handleMCPPaymentRequest } from "./routes/mcpRoutes.js";
+import a2aRoutes from "./routes/a2aRoutes.js";
+import x402Routes from "./routes/x402Routes.js";
+import profileRoutes from "./routes/profileRoutes.js";
 import exploreRoutes from "./routes/exploreRoutes.js";
 import resourceRoutes from "./routes/resourceRoutes.js";
 import creatorRoutes from "./routes/creatorRoutes.js";
@@ -15,64 +25,6 @@ import storeRoutes from "./routes/storeRoutes.js";
 
 // Error handling
 import { errorHandler } from "./middleware/errorHandler.js";
-
-// Existing Shopify imports
-import { handleShopifyProducts } from "./api/shopify-products.js";
-import { handleCreateStore } from "./api/create-store.js";
-import { handleUpsertStoreProducts } from "./api/upsert-store-products.js";
-import { handleDeleteStoreProduct } from "./api/delete-store-product.js";
-import { handleGetOrderIntents } from "./api/x402-order-intents.js";
-import { handleGetOrders, handleGetMyOrders, handleGetStoreOrdersProtected } from "./api/x402-orders.js";
-import { handleListStoreProducts } from "./api/x402-store-products.js";
-import { handleCheckout } from "./api/x402-checkout.js";
-import { handleGetOrderDetails } from "./api/x402-order-details.js";
-// Legacy MCP handlers (will be replaced by modular system)
-import { handleMCPRequest } from "./api/mcp-handler.js";
-import { handleMCPPaymentRequest } from "./api/mcp-payment-handler.js";
-// New modular MCP system
-import { initializeMCPTools, createMCPServers } from "./mcp/index.js";
-// A2A (Agent-to-Agent) protocol
-import { handleA2ARequest, handleAgentCard } from "./a2a/index.js";
-// ERC-8004 Trustless Agents
-import { handleRegistrationFile } from "./erc8004/registration-file.js";
-import { handleShopifyAuth, handleShopifyCallback, handleGetInstallUrl } from "./api/shopify-oauth.js";
-import { handleLinkStore } from "./api/link-store.js";
-import { handleProductUpdate, handleProductDelete } from "./api/shopify-webhooks.js";
-import { handleGetPublicProfile, handleGetStorefront } from "./api/public-profile.js";
-import { handleFileUpload, upload } from "./api/file-upload.js";
-import { handleCheckUsernameExists, handleCheckUsernameAvailability } from "./api/check-username.js";
-
-// x402 Everything imports
-import {
-  handleGetNonce,
-  handleVerifySignature,
-  handleGetMe,
-  handleUpdateMe,
-  authMiddleware,
-  optionalAuthMiddleware,
-} from "./api/wallet-auth.js";
-import {
-  handleListResources,
-  handleGetResource,
-  handleCreateResource,
-  handleUpdateResource,
-  handleDeleteResource,
-} from "./api/resources.js";
-import { handleResourceAccess } from "./api/x402-gateway.js";
-import { handleEthStoreProductAccess, handleEthTest, handleEthCheckout } from "./api/x402-eth-gateway.js";
-import {
-  handleGetEarnings,
-  handleGetAccessLogs,
-  handleGetChartData,
-  handleGetOverview,
-} from "./api/analytics.js";
-import {
-  handleGetCreatorResources,
-  handleGetCreatorStats,
-  handleSearchCreators,
-  handleCheckUsername,
-  handleUpdateUsername,
-} from "./api/creators.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -94,18 +46,6 @@ const corsOptions = {
 
 // Security middleware
 app.use(helmet({ contentSecurityPolicy: false })); // CSP disabled for API server
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // 300 requests per window
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 30, // stricter for auth endpoints
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 app.use(generalLimiter);
 
 // Middleware
@@ -117,159 +57,57 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use("/files", express.static(path.join(__dirname, "../public/files")));
 
+// Serve uploaded files from disk
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 // Health check
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", version: "2.0", name: "x402-everything" });
 });
 
 // ============================================================
-// WALLET AUTHENTICATION
+// MOUNT ROUTERS
 // ============================================================
-app.post("/api/auth/nonce", authLimiter, handleGetNonce);
-app.post("/api/auth/verify", authLimiter, handleVerifySignature);
-app.get("/api/auth/me", authMiddleware, handleGetMe);
-app.put("/api/auth/me", authMiddleware, handleUpdateMe);
-app.get("/api/creators/:username/exists", handleCheckUsernameExists);
-app.get("/api/creators/check-username/:username", authMiddleware, handleCheckUsernameAvailability);
 
-// ============================================================
-// RESOURCE MANAGEMENT (Protected)
-// ============================================================
-app.get("/api/resources", authMiddleware, handleListResources);
-app.get("/api/resources/:id", authMiddleware, handleGetResource);
-app.post("/api/resources", authMiddleware, handleCreateResource);
-app.put("/api/resources/:id", authMiddleware, handleUpdateResource);
-app.delete("/api/resources/:id", authMiddleware, handleDeleteResource);
+// Auth
+app.use("/api/auth", authRoutes);
 
-// ============================================================
-// FILE UPLOAD (Protected)
-// ============================================================
-app.post("/api/upload", authMiddleware, upload.single("file"), handleFileUpload);
+// Analytics
+app.use("/api/analytics", analyticsRoutes);
 
-// ============================================================
-// ANALYTICS (Protected)
-// ============================================================
-app.get("/api/analytics/overview", authMiddleware, handleGetOverview);
-app.get("/api/analytics/earnings", authMiddleware, handleGetEarnings);
-app.get("/api/analytics/access", authMiddleware, handleGetAccessLogs);
-app.get("/api/analytics/chart", authMiddleware, handleGetChartData);
-
-// ============================================================
-// EXPLORE API (Public) - Combined endpoint for explore page
-// ============================================================
+// Explore (public)
 app.use("/api/explore", exploreRoutes);
 
-// ============================================================
-// RESOURCE API (Public)
-// ============================================================
+// Resources (public + protected CRUD)
 app.use("/api/resources", resourceRoutes);
-// x402 resources endpoint (for backward compatibility)
-app.get("/x402/resources", async (req, res, next) => {
-  const { listX402Resources } = await import("./controllers/resourcesController.js");
-  return listX402Resources(req, res, next);
-});
 
-// ============================================================
-// CREATOR API (Public)
-// ============================================================
-// Specific routes must come before parameterized routes
-app.get("/api/creators/search", handleSearchCreators);
-app.get("/api/creators/check-username/:username", handleCheckUsername);
-app.put("/api/creators/me/username", authMiddleware, handleUpdateUsername);
-app.get("/api/creators/:username/resources", handleGetCreatorResources);
-app.get("/api/creators/:username/stats", handleGetCreatorStats);
+// Creators
 app.use("/api/creators", creatorRoutes);
 
-// ============================================================
-// PUBLIC PROFILES (New in v3.0)
-// ============================================================
-app.get("/@:username", handleGetPublicProfile);
-app.get("/@:username/store/:storeSlug", handleGetStorefront);
+// Shopify OAuth & integration
+app.use("/api/shopify", shopifyRoutes);
+app.use("/api/webhooks/shopify", shopifyWebhookRoutes);
 
-// ============================================================
-// x402 UNIVERSAL GATEWAY (Public - payment protected)
-// ============================================================
-app.get("/x402/resource/:resourceId", handleResourceAccess);
-app.post("/x402/resource/:resourceId", handleResourceAccess);
+// Stores, file upload (mixed /api/* and /x402/* paths, mounted at root)
+app.use("/", storeRoutes);
 
-// ============================================================
-// x402 ETHEREUM GATEWAY (EVM payments)
-// ============================================================
-app.get("/x402/eth/test", handleEthTest);
-app.get("/x402/eth/store/:storeId/product/:productId", handleEthStoreProductAccess);
-app.post("/x402/eth/store/:storeId/checkout", handleEthCheckout);
+// Orders & checkout (mixed /api/* and /x402/* paths, mounted at root)
+app.use("/", orderRoutes);
 
-// ============================================================
-// SHOPIFY OAUTH (for app installation)
-// ============================================================
-app.get("/api/shopify/auth", optionalAuthMiddleware, handleShopifyAuth);
-app.get("/api/shopify/callback", handleShopifyCallback);
-app.get("/api/shopify/install-url", optionalAuthMiddleware, handleGetInstallUrl);
-app.post("/api/shopify/install-url", optionalAuthMiddleware, handleGetInstallUrl);
+// x402 gateway
+app.use("/x402", x402Routes);
 
-// SHOPIFY WEBHOOKS (for auto-sync)
-// ============================================================
-app.post("/api/webhooks/shopify/products/update", handleProductUpdate);
-app.post("/api/webhooks/shopify/products/delete", handleProductDelete);
+// MCP agent servers
+app.use("/mcp", mcpRoutes);
 
-// ============================================================
-// SHOPIFY INTEGRATION (Legacy)
-// ============================================================
-// SHOPIFY ROUTES
-// ============================================================
-app.post("/api/shopify/products", handleShopifyProducts);
-app.post("/api/stores", handleCreateStore);
-app.get("/api/stores", authMiddleware, async (req, res, next) => {
-  const { listMyStores } = await import("./controllers/storesController.js");
-  return listMyStores(req, res, next);
-});
-app.post("/api/stores/:storeId/products", handleUpsertStoreProducts);
-app.post("/api/stores/:storeId/link", authMiddleware, handleLinkStore);
-app.delete("/api/store-products/:productId", handleDeleteStoreProduct);
-app.delete("/api/stores/:storeId", authMiddleware, async (req, res, next) => {
-  const { deleteStore } = await import("./controllers/storesController.js");
-  return deleteStore(req, res, next);
-});
-
-// ============================================================
-// STORE API (Public)
-// ============================================================
-app.use("/x402", storeRoutes);
-app.get("/x402/stores/:storeId/products", handleListStoreProducts);
-app.get("/x402/stores/:storeId/order-intents", handleGetOrderIntents);
-app.get("/x402/stores/:storeId/orders", handleGetOrders);
-app.post("/x402/checkout", handleCheckout);
-
-// Protected order endpoints (for dashboard)
-app.get("/api/orders", authMiddleware, handleGetMyOrders);
-app.get("/api/stores/:storeId/orders", authMiddleware, handleGetStoreOrdersProtected);
-app.get("/x402/orders/:orderId", handleGetOrderDetails);
-
-// ============================================================
-// MCP AGENT SERVERS (Modular)
-// ============================================================
-// Initialize all MCP tools at startup
-initializeMCPTools();
-const mcpHandlers = createMCPServers();
-
-// Modular MCP endpoints
-app.post("/mcp/shopping", mcpHandlers.shopping);      // Shopping tools only
-app.post("/mcp/payment", mcpHandlers.payment);        // Payment tools only
-app.post("/mcp/resources", mcpHandlers.resources);    // Resource access tools only
-app.post("/mcp/a2a", mcpHandlers.a2a);                // A2A protocol tools
-app.post("/mcp/erc8004", mcpHandlers.erc8004);        // ERC-8004 trustless agent tools
-app.post("/mcp/universal", mcpHandlers.universal);    // All tools combined
-
-// Legacy endpoints (backward compatibility)
-app.post("/mcp", handleMCPRequest);
+// Legacy MCP payment endpoint (backward compatibility)
 app.post("/mcp-payment", handleMCPPaymentRequest);
 
-// ============================================================
-// A2A (Agent-to-Agent) PROTOCOL
-// ============================================================
-app.get("/.well-known/agent.json", handleAgentCard);
-app.get("/.well-known/agent-registration.json", handleRegistrationFile);
-app.post("/a2a", handleA2ARequest);
+// A2A protocol & well-known endpoints (mounted at root)
+app.use("/", a2aRoutes);
+
+// Public profiles (mounted at root)
+app.use("/", profileRoutes);
 
 // ============================================================
 // ERROR HANDLING MIDDLEWARE (must be last)
@@ -288,15 +126,15 @@ function validateEnvironment() {
     'APP_URL',
     'FRONTEND_URL'
   ];
-  
+
   const missing: string[] = [];
-  
+
   for (const key of required) {
     if (!process.env[key]) {
       missing.push(key);
     }
   }
-  
+
   if (missing.length > 0) {
     console.error('\n❌ MISSING REQUIRED ENVIRONMENT VARIABLES:\n');
     missing.forEach(key => console.error(`   - ${key}`));
@@ -310,7 +148,7 @@ function validateEnvironment() {
     console.error('  FRONTEND_URL=http://localhost:3000\n');
     process.exit(1);
   }
-  
+
   console.log('✅ All required environment variables are set\n');
 }
 
@@ -321,7 +159,7 @@ async function startServer() {
   try {
     // Validate environment variables first
     validateEnvironment();
-    
+
     // Connect to MongoDB
     await connectDB();
 
