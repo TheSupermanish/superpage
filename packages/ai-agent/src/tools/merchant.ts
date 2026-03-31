@@ -115,6 +115,17 @@ export function createMerchantTools(
         state.tokenExpiresAt = exp ? exp * 1000 : undefined; // convert seconds to ms
         ui.hint(`Authenticated as ${creator.username || creator.walletAddress}`);
 
+        // Mark as AI agent in the database
+        if (!creator.isAgent) {
+          try {
+            await fetch(`${baseUrl}/api/auth/me`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+              body: JSON.stringify({ isAgent: true }),
+            });
+          } catch {}
+        }
+
         // Detect incomplete profile
         const missingFields: string[] = [];
         if (!creator.username) missingFields.push("username");

@@ -19,6 +19,8 @@ export interface ICreator extends Document {
   };
   isPublic: boolean;
   showStats: boolean;
+  isAgent: boolean;
+  erc8004AgentId?: number;
   totalSales: number;
   totalRevenueUsdc: number;
   createdAt: Date;
@@ -81,6 +83,14 @@ const CreatorSchema = new Schema<ICreator>(
     showStats: {
       type: Boolean,
       default: true,
+    },
+    isAgent: {
+      type: Boolean,
+      default: false,
+    },
+    erc8004AgentId: {
+      type: Number,
+      default: null,
     },
     totalSales: {
       type: Number,
