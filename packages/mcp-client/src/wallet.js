@@ -54,8 +54,9 @@ export function getExplorerUrl(txHash) {
     'cronos-testnet': `https://explorer.cronos.org/testnet/tx/${txHash}`,
     'cronos': `https://explorer.cronos.org/tx/${txHash}`,
     'bite-v2-sandbox': `https://base-sepolia-testnet.explorer.skalenodes.com/tx/${txHash}`,
+    'initia-testnet': `https://scan.testnet.initia.xyz/tx/${txHash}`,
   };
-  return explorers[NETWORK] || `https://base-sepolia-testnet.explorer.skalenodes.com/tx/${txHash}`;
+  return explorers[NETWORK] || `https://scan.testnet.initia.xyz/tx/${txHash}`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

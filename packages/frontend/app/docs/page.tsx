@@ -80,7 +80,7 @@ const x402 = new X402Server({
   network: 'mainnet',
   privateKey: process.env.ETH_PRIVATE_KEY,
   recipientAddress: '0xYourAddress',
-  tokenAddress: '0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8' // USDC on SKALE
+  tokenAddress: '0x06d1a12b351cab22727515c1f4fec2544f42d751' // USDC on Initia testnet
 });
 
 app.get('/api/premium',

@@ -34,7 +34,7 @@ Open `claude_desktop_config.json` and add:
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
         "WALLET_PRIVATE_KEY": "REDACTED_WALLET_PRIVATE_KEY",
-        "X402_CHAIN": "bite-v2-sandbox",
+        "X402_CHAIN": "initia-testnet",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       }
@@ -121,7 +121,7 @@ Agent: "Do I have enough to buy the premium API?"
 
 ### Payment Errors
 1. Check wallet has USDC balance
-2. Verify network is `bite-v2-sandbox`
+2. Verify network is `initia-testnet`
 3. Ensure WALLET_PRIVATE_KEY is set correctly
 
 ## Test Data
@@ -145,7 +145,7 @@ When ready to use production server:
   "env": {
     "SUPERPAGE_SERVER": "http://20.168.79.130",
     "WALLET_PRIVATE_KEY": "your-production-wallet-key",
-    "X402_CHAIN": "bite-v2-sandbox",
+    "X402_CHAIN": "initia-testnet",
     "X402_CURRENCY": "USDC",
     "MAX_AUTO_PAYMENT": "10.00"
   }

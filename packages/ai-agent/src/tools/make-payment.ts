@@ -10,7 +10,7 @@ export function createMakePaymentTool(
 ) {
   return tool({
     description:
-      "Execute an on-chain USDC payment on BITE V2 Sandbox. Transfers real tokens from the agent's wallet to the merchant. Use after receiving payment requirements. Returns the transaction hash needed for submit_payment_proof. Amounts are in base units (6 decimals: 1000000 = $1.00 USDC).",
+      "Execute an on-chain USDC payment on Initia testnet. Transfers real tokens from the agent's wallet to the merchant. Use after receiving payment requirements. Returns the transaction hash needed for submit_payment_proof. Amounts are in base units (6 decimals: 1000000 = $1.00 USDC).",
     parameters: z.object({
       payTo: z
         .string()
@@ -64,7 +64,7 @@ export function createMakePaymentTool(
         );
 
         const confirmed = await wallet.waitForTx(txHash);
-        const explorerUrl = `https://base-sepolia-testnet-explorer.skalenodes.com:10032/tx/${txHash}`;
+        const explorerUrl = `https://scan.testnet.initia.xyz/tx/${txHash}`;
 
         if (confirmed) {
           ui.paymentConfirmed(txHash, explorerUrl);
@@ -78,8 +78,8 @@ export function createMakePaymentTool(
           amount: displayAmount,
           amountBaseUnits: amount,
           payTo,
-          network: "bite-v2-sandbox",
-          chainId: 103698795,
+          network: "initia-testnet",
+          chainId: 3981013683081008,
           explorerUrl,
         };
       } catch (err: any) {

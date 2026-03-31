@@ -67,12 +67,12 @@ export function loadConfig(): AgentConfig {
     llmApiKey,
     merchantUrl: process.env.MERCHANT_URL || "http://localhost:3001",
     walletPrivateKey: walletPrivateKey as `0x${string}`,
-    network: process.env.X402_CHAIN || "base-sepolia",
-    chainId: parseInt(process.env.CHAIN_ID || "84532", 10),
+    network: process.env.X402_CHAIN || "initia-testnet",
+    chainId: parseInt(process.env.CHAIN_ID || "3981013683081008", 10),
     rpcUrl:
-      process.env.RPC_URL || "https://sepolia.base.org",
+      process.env.RPC_URL || "http://0.0.0.0:8545",
     usdcAddress:
-      (process.env.USDC_ADDRESS || "0xa059e27967e5a573a14a62c706ebd1be75333f9a") as `0x${string}`,
+      (process.env.USDC_ADDRESS || "0x06d1a12b351cab22727515c1f4fec2544f42d751") as `0x${string}`,
     erc8004AgentId: process.env.ERC8004_AGENT_ID || undefined,
     maxSteps: parseInt(process.env.MAX_STEPS || "20", 10),
     autoApprovePayments: process.env.AUTO_APPROVE_PAYMENTS === "true",

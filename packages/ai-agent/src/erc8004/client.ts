@@ -1,6 +1,6 @@
 /**
  * ERC-8004 Client for the buyer agent.
- * Uses the same BITE V2 Sandbox chain as payments (chainId 103698795).
+ * Uses the Initia testnet chain for payments (chainId 3981013683081008).
  */
 import {
   createPublicClient,
@@ -37,6 +37,18 @@ const biteV2Sandbox = defineChain({
   network: "bite-v2-sandbox",
   nativeCurrency: { decimals: 18, name: "sFUEL", symbol: "sFUEL" },
   rpcUrls: { default: { http: [BITE_RPC] } },
+  testnet: true,
+});
+
+const INITIA_RPC = "http://0.0.0.0:8545";
+
+const initiaTestnet = defineChain({
+  id: 3981013683081008,
+  name: "Initia Testnet",
+  network: "initia-testnet",
+  nativeCurrency: { decimals: 18, name: "INIT", symbol: "INIT" },
+  rpcUrls: { default: { http: [INITIA_RPC] } },
+  blockExplorers: { default: { name: "Initia Scan", url: "https://scan.testnet.initia.xyz" } },
   testnet: true,
 });
 
@@ -81,14 +93,14 @@ export class ERC8004Client {
     this.address = account.address;
 
     this.publicClient = createPublicClient({
-      chain: biteV2Sandbox,
-      transport: http(BITE_RPC),
+      chain: initiaTestnet,
+      transport: http(INITIA_RPC),
     });
 
     this.walletClient = createWalletClient({
       account,
-      chain: biteV2Sandbox,
-      transport: http(BITE_RPC),
+      chain: initiaTestnet,
+      transport: http(INITIA_RPC),
     });
   }
 

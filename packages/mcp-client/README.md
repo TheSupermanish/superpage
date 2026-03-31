@@ -1,6 +1,6 @@
 # SUPERPAGE x402 - MCP Client for AI Agents
 
-An MCP (Model Context Protocol) client that enables AI agents like Claude to shop and pay using USDC stablecoin on SKALE (zero gas fees).
+An MCP (Model Context Protocol) client that enables AI agents like Claude to shop and pay using USDC stablecoin on Initia testnet.
 
 ## Features
 
@@ -29,7 +29,7 @@ Add to your `claude_desktop_config.json`:
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
         "WALLET_PRIVATE_KEY": "0xYourPrivateKeyHere",
-        "X402_CHAIN": "bite-v2-sandbox",
+        "X402_CHAIN": "initia-testnet",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       }
@@ -44,7 +44,7 @@ Add to your `claude_desktop_config.json`:
 |----------|-------------|---------|
 | `SUPERPAGE_SERVER` | SuperPage backend server URL | `http://localhost:3001` |
 | `WALLET_PRIVATE_KEY` | Ethereum private key (with 0x prefix) | Required for payments |
-| `X402_CHAIN` | Network (`bite-v2-sandbox`, `mainnet`, `sepolia`, etc.) | `bite-v2-sandbox` |
+| `X402_CHAIN` | Network (`initia-testnet`, `mainnet`, `sepolia`, etc.) | `initia-testnet` |
 | `X402_CURRENCY` | Payment currency (`USDC`, `USDT`, `DAI`) | `USDC` |
 | `MAX_AUTO_PAYMENT` | Maximum USDC amount agent can pay automatically | `10.00` |
 
@@ -183,13 +183,12 @@ Here's the content: [article content]
 ## Token Information
 
 **USDC** is a USD-backed stablecoin:
-- Contract: `0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8`
+- Contract: `0x06d1a12b351cab22727515c1f4fec2544f42d751`
 - Decimals: 6
-- Network: SKALE BITE V2 Sandbox
-- Chain ID: 103698795
-- RPC: `https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox`
-- Explorer: `https://base-sepolia-testnet.explorer.skalenodes.com`
-- Gas: **FREE** (zero gas fees on SKALE)
+- Network: Initia Testnet
+- Chain ID: 3981013683081008
+- RPC: `http://0.0.0.0:8545`
+- Explorer: `https://scan.testnet.initia.xyz`
 
 ---
 

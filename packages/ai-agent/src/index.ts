@@ -187,7 +187,7 @@ async function main() {
     ANTHROPIC_API_KEY              For Claude
     OPENAI_API_KEY                 For GPT
     GOOGLE_GENERATIVE_AI_API_KEY   For Gemini
-    WALLET_PRIVATE_KEY             0x-prefixed (with USDC on Base Sepolia)
+    WALLET_PRIVATE_KEY             0x-prefixed (with USDC on Initia testnet)
     MERCHANT_URL                   Default: http://localhost:3001
     ERC8004_AGENT_ID               On-chain agent ID (set after registration)
     AUTO_APPROVE_PAYMENTS          true = skip payment confirmations

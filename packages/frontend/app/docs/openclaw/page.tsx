@@ -235,7 +235,7 @@ metadata:
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
         "WALLET_PRIVATE_KEY": "0x...",
-        "X402_CHAIN": "base-sepolia",
+        "X402_CHAIN": "initia-testnet",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       }

@@ -105,11 +105,11 @@ export function createAP2MandateTools(client: A2AClient) {
       network: z
         .string()
         .optional()
-        .describe("Network (default bite-v2-sandbox)"),
+        .describe("Network (default initia-testnet)"),
       chainId: z
         .number()
         .optional()
-        .describe("Chain ID (default 103698795)"),
+        .describe("Chain ID (default 3981013683081008)"),
     }),
     execute: async ({ taskId, transactionHash, network, chainId }) => {
       let response;
@@ -135,8 +135,8 @@ export function createAP2MandateTools(client: A2AClient) {
                         details: {
                           transactionHash,
                           network:
-                            network || "bite-v2-sandbox",
-                          chainId: chainId || 103698795,
+                            network || "initia-testnet",
+                          chainId: chainId || 3981013683081008,
                           timestamp: Date.now(),
                         },
                       },
