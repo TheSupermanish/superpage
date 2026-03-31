@@ -8,6 +8,7 @@
     "compile": "hardhat compile",
     "deploy:skale": "npx tsx scripts/deploy-musdc.ts",
     "deploy:erc8004": "npx tsx scripts/deploy-erc8004.ts",
+    "deploy:initia": "npx tsx scripts/deploy-initia.ts",
     "mint": "npx tsx scripts/mint-musdc.ts",
     "clean": "hardhat clean"
   },
