@@ -1,18 +1,18 @@
 /**
  * ERC-8004 Client for the buyer agent.
- * Uses the same BITE V2 Sandbox chain as payments (chainId 103698795).
+ * Uses Flow EVM Testnet (chainId 545).
  */
 import {
   createPublicClient,
   createWalletClient,
   http,
-  defineChain,
   type Address,
   type Hash,
   type PublicClient,
   type WalletClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
+import { flowTestnet } from "viem/chains";
 import {
   IDENTITY_REGISTRY_ABI,
   REPUTATION_REGISTRY_ABI,
@@ -21,24 +21,14 @@ import {
 
 export const ERC8004_CONTRACTS = {
   identityRegistry:
-    "0xa059e27967e5a573a14a62c706ebd1be75333f9a" as Address,
+    "0xbdf0ae617ac3570795b9b18ece6fd85444c6a918" as Address,
   reputationRegistry:
-    "0x11c2dfed5b71a60a4a9a22b2aedca64d5132ea7c" as Address,
+    "0xf0aab3cfc4dc5e335faeb0b95a934af994073b95" as Address,
   validationRegistry:
-    "0x9815dba34c266dc8be4687ff86247a17e7c63c78" as Address,
+    "0x0bfff9626f409639c8501c14813ddba6f30d5a99" as Address,
 } as const;
 
-const BITE_RPC =
-  "https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox";
-
-const biteV2Sandbox = defineChain({
-  id: 103698795,
-  name: "BITE V2 Sandbox 2",
-  network: "bite-v2-sandbox",
-  nativeCurrency: { decimals: 18, name: "sFUEL", symbol: "sFUEL" },
-  rpcUrls: { default: { http: [BITE_RPC] } },
-  testnet: true,
-});
+const FLOW_RPC = "https://testnet.evm.nodes.onflow.org";
 
 const ZERO_BYTES32 =
   "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`;
@@ -81,14 +71,14 @@ export class ERC8004Client {
     this.address = account.address;
 
     this.publicClient = createPublicClient({
-      chain: biteV2Sandbox,
-      transport: http(BITE_RPC),
+      chain: flowTestnet,
+      transport: http(FLOW_RPC),
     });
 
     this.walletClient = createWalletClient({
       account,
-      chain: biteV2Sandbox,
-      transport: http(BITE_RPC),
+      chain: flowTestnet,
+      transport: http(FLOW_RPC),
     });
   }
 

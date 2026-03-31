@@ -22,6 +22,8 @@ const CHAIN_DEFAULTS: Record<string, { defaultCurrency: string; displayCurrency?
   "mantle-sepolia": { defaultCurrency: "MNT" },
   "cronos-testnet": { defaultCurrency: "USDC", displayCurrency: "devUSDC.e" },
   "bite-v2-sandbox": { defaultCurrency: "USDC", displayCurrency: "USDC" },
+  "flow": { defaultCurrency: "USDC" },
+  "flow-testnet": { defaultCurrency: "FLOW" },
 };
 
 // Native token symbols per chain
@@ -40,6 +42,8 @@ const NATIVE_TOKENS: Record<string, string> = {
   "cronos": "CRO",
   "cronos-testnet": "TCRO",
   "bite-v2-sandbox": "sFUEL",
+  "flow": "FLOW",
+  "flow-testnet": "FLOW",
 };
 
 // Chain IDs for reference
@@ -58,6 +62,8 @@ export const CHAIN_IDS: Record<string, number> = {
   "cronos": 25,
   "cronos-testnet": 338,
   "bite-v2-sandbox": 103698795,
+  "flow": 747,
+  "flow-testnet": 545,
 };
 
 // Block explorer URLs
@@ -76,6 +82,8 @@ export const EXPLORER_URLS: Record<string, string> = {
   "cronos": "https://explorer.cronos.org",
   "cronos-testnet": "https://explorer.cronos.org/testnet",
   "bite-v2-sandbox": "https://base-sepolia-testnet-explorer.skalenodes.com:10032",
+  "flow": "https://evm.flowscan.io",
+  "flow-testnet": "https://evm-testnet.flowscan.io",
 };
 
 // USDC contract addresses per network
@@ -88,6 +96,8 @@ export const USDC_ADDRESSES: Record<string, `0x${string}`> = {
   "optimism": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
   "sepolia": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
   "bite-v2-sandbox": "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
+  "flow": "0xF1815bd50389c46847f0Bda824eC8da914045D14",
+  "flow-testnet": "0x291b030d596cf505f774426d8de7c946ce5af7a5",
 };
 
 /**
@@ -123,7 +133,7 @@ export function getCurrencyDisplay(): string {
   }
   
   // Show native token symbol for native currencies
-  if (currency === "ETH" || currency === "MNT" || currency === "CRO" || currency === "sFUEL") {
+  if (currency === "ETH" || currency === "MNT" || currency === "CRO" || currency === "sFUEL" || currency === "FLOW") {
     return NATIVE_TOKENS[network] || currency;
   }
   
@@ -151,7 +161,7 @@ export function getNativeToken(): string {
  */
 export function isTestnet(): boolean {
   const network = getNetwork();
-  return network.includes("sepolia") || network.includes("testnet") || network.includes("amoy") || network.includes("sandbox");
+  return network.includes("sepolia") || network.includes("testnet") || network.includes("amoy") || network.includes("sandbox") || network === "flow-testnet";
 }
 
 /**

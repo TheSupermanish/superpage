@@ -50,6 +50,19 @@ app.use(generalLimiter);
 
 // Middleware
 app.use(cors(corsOptions as any));
+
+// Capture raw body for Shopify webhook HMAC verification
+// Must come BEFORE express.json() for webhook routes
+app.use("/api/webhooks/shopify", express.raw({ type: "application/json" }), (req, _res, next) => {
+  (req as any).rawBody = req.body;
+  try {
+    req.body = JSON.parse(Buffer.isBuffer(req.body) ? req.body.toString() : req.body);
+  } catch {
+    // Leave body as-is if parse fails
+  }
+  next();
+});
+
 app.use(express.json({ limit: '10mb' })); // Increased limit for base64 image uploads
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -176,6 +189,28 @@ async function startServer() {
       }
     } catch (e) {
       console.warn("[migration] Store network migration skipped:", (e as Error).message);
+    }
+
+    // ERC-8004: Auto-register agent identity on Flow if not configured
+    try {
+      const { getERC8004Config, ERC8004_EXPLORER_URL } = await import("./erc8004/config.js");
+      const config = getERC8004Config();
+      if (config.agentId !== null) {
+        console.log(`[ERC-8004] Agent registered: ID=${config.agentId} (chain: eip155:545)`);
+      } else if (config.walletPrivateKey) {
+        console.log("[ERC-8004] No agent ID configured, auto-registering...");
+        const { registerAgent } = await import("./erc8004/identity.js");
+        const baseUrl = process.env.APP_URL || `http://localhost:${PORT}`;
+        const result = await registerAgent(`${baseUrl}/.well-known/agent-registration.json`);
+        console.log(`[ERC-8004] ✅ Registered agent ID=${result.agentId} on Flow EVM Testnet`);
+        console.log(`[ERC-8004]    tx: ${ERC8004_EXPLORER_URL}/tx/${result.txHash}`);
+        console.log(`[ERC-8004]    Set ERC8004_AGENT_ID=${result.agentId} in .env to skip next time`);
+        process.env.ERC8004_AGENT_ID = result.agentId.toString();
+      } else {
+        console.log("[ERC-8004] Skipped: no wallet key configured");
+      }
+    } catch (e) {
+      console.warn("[ERC-8004] Auto-registration failed:", (e as Error).message);
     }
 
     // Start Express server

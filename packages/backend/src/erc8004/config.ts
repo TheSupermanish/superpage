@@ -2,18 +2,18 @@
  * ERC-8004 Configuration
  *
  * Contract addresses and chain config for the ERC-8004 Trustless Agents
- * registries deployed on BITE V2 Sandbox (zero gas).
+ * registries deployed on Flow EVM Testnet (chainId: 545).
  */
 
-export const ERC8004_CHAIN_ID = 103698795;
-export const ERC8004_NETWORK = "bite-v2-sandbox" as const;
-export const ERC8004_RPC_URL = "https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox";
-export const ERC8004_EXPLORER_URL = "https://base-sepolia-testnet-explorer.skalenodes.com:10032";
+export const ERC8004_CHAIN_ID = 545;
+export const ERC8004_NETWORK = "flow-testnet" as const;
+export const ERC8004_RPC_URL = "https://testnet.evm.nodes.onflow.org";
+export const ERC8004_EXPLORER_URL = "https://evm-testnet.flowscan.io";
 
 export const ERC8004_CONTRACTS = {
-  identityRegistry: "0xa059e27967e5a573a14a62c706ebd1be75333f9a" as `0x${string}`,
-  reputationRegistry: "0x11c2dfed5b71a60a4a9a22b2aedca64d5132ea7c" as `0x${string}`,
-  validationRegistry: "0x9815dba34c266dc8be4687ff86247a17e7c63c78" as `0x${string}`,
+  identityRegistry: "0xbdf0ae617ac3570795b9b18ece6fd85444c6a918" as `0x${string}`,
+  reputationRegistry: "0xf0aab3cfc4dc5e335faeb0b95a934af994073b95" as `0x${string}`,
+  validationRegistry: "0x0bfff9626f409639c8501c14813ddba6f30d5a99" as `0x${string}`,
 } as const;
 
 export const ERC8004_EXTENSION_URI = "urn:eip:8004:trustless-agents";

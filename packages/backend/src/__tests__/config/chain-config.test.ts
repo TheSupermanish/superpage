@@ -41,8 +41,8 @@ describe("Module constants", () => {
 });
 
 describe("CHAIN_REGISTRY", () => {
-  it("should have 14 networks", () => {
-    expect(Object.keys(CHAIN_REGISTRY).length).toBe(14);
+  it("should have 16 networks", () => {
+    expect(Object.keys(CHAIN_REGISTRY).length).toBe(16);
   });
 
   it("should have BITE V2 Sandbox", () => {
@@ -152,9 +152,11 @@ describe("getCurrencyDisplayName", () => {
 describe("getSupportedNetworks", () => {
   it("should return all networks", () => {
     const networks = getSupportedNetworks();
-    expect(networks.length).toBe(14);
+    expect(networks.length).toBe(16);
     expect(networks).toContain("mainnet");
     expect(networks).toContain("bite-v2-sandbox");
+    expect(networks).toContain("flow");
+    expect(networks).toContain("flow-testnet");
   });
 });
 

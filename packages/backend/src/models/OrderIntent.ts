@@ -11,7 +11,7 @@ export interface IOrderIntent extends Document {
   taxAmount: string;
   totalAmount: string;
   currency: string;
-  status: 'pending' | 'paid' | 'expired' | 'cancelled';
+  status: 'pending' | 'processing' | 'paid' | 'expired' | 'cancelled';
   expiresAt: Date;
   bodyHash?: string;
   x402Requirements?: any;
@@ -68,7 +68,7 @@ const OrderIntentSchema = new Schema<IOrderIntent>(
     },
     status: {
       type: String,
-      enum: ['pending', 'paid', 'expired', 'cancelled'],
+      enum: ['pending', 'processing', 'paid', 'expired', 'cancelled'],
       default: 'pending',
     },
     expiresAt: {

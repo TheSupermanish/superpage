@@ -26,12 +26,14 @@ export const NetworkSchema = z.enum([
   "cronos",        // Cronos Mainnet
   "cronos-testnet", // Cronos Testnet
   "bite-v2-sandbox",    // BITE V2 Sandbox 2 (SKALE)
+  "flow",          // Flow EVM Mainnet
+  "flow-testnet",  // Flow EVM Testnet
 ]);
 export type Network = z.infer<typeof NetworkSchema>;
 
 // Token types supported on EVM chains
 // ETH = native token on Ethereum-family chains; other native tokens per chain
-export const TokenTypeSchema = z.enum(["ETH", "USDC", "USDT", "DAI", "CRO", "MNT", "sFUEL"]);
+export const TokenTypeSchema = z.enum(["ETH", "USDC", "USDT", "DAI", "CRO", "MNT", "sFUEL", "FLOW"]);
 export type TokenType = z.infer<typeof TokenTypeSchema>;
 
 /**

@@ -31,11 +31,12 @@ export type NetworkId =
   | "optimism" | "optimism-sepolia"
   | "mantle-sepolia"
   | "cronos" | "cronos-testnet"
-  | "bite-v2-sandbox";
+  | "bite-v2-sandbox"
+  | "flow" | "flow-testnet";
 
-export type TokenSymbol = "ETH" | "USDC" | "USDT" | "DAI" | "CRO" | "MNT" | "sFUEL";
+export type TokenSymbol = "ETH" | "USDC" | "USDT" | "DAI" | "CRO" | "MNT" | "sFUEL" | "FLOW";
 
-export type NativeTokenSymbol = "ETH" | "CRO" | "MNT" | "sFUEL";
+export type NativeTokenSymbol = "ETH" | "CRO" | "MNT" | "sFUEL" | "FLOW";
 
 interface TokenConfig {
   address: string;
@@ -72,6 +73,7 @@ export const TOKEN_DECIMALS: Record<string, number> = {
   CRO: 18,
   MNT: 18,
   sFUEL: 18,
+  FLOW: 18,
 };
 
 // ============================================================
@@ -247,6 +249,32 @@ export const CHAIN_REGISTRY: Record<NetworkId, ChainMetadata> = {
     displayCurrency: "devUSDC.e",
     isTestnet: true,
   },
+  // Flow
+  flow: {
+    chainId: 747,
+    name: "Flow EVM Mainnet",
+    rpcUrl: "https://mainnet.evm.nodes.onflow.org",
+    explorerUrl: "https://evm.flowscan.io",
+    nativeToken: { symbol: "FLOW", decimals: 18 },
+    tokens: {
+      USDC: { address: "0xF1815bd50389c46847f0Bda824eC8da914045D14", decimals: 6 },
+      USDT: { address: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8", decimals: 6 },
+    },
+    defaultPaymentToken: "USDC",
+    isTestnet: false,
+  },
+  "flow-testnet": {
+    chainId: 545,
+    name: "Flow EVM Testnet",
+    rpcUrl: "https://testnet.evm.nodes.onflow.org",
+    explorerUrl: "https://evm-testnet.flowscan.io",
+    nativeToken: { symbol: "FLOW", decimals: 18 },
+    tokens: {
+      USDC: { address: "0x291b030d596cf505f774426d8de7c946ce5af7a5", decimals: 6 },
+    },
+    defaultPaymentToken: "USDC",
+    isTestnet: true,
+  },
   // BITE V2 Sandbox 2 (SKALE)
   "bite-v2-sandbox": {
     chainId: 103698795,
@@ -296,7 +324,7 @@ export function getChainId(networkId: NetworkId): number {
  * Check if token is a native token (not an ERC-20)
  */
 export function isNativeToken(symbol: TokenSymbol): symbol is NativeTokenSymbol {
-  return ["ETH", "CRO", "MNT", "sFUEL"].includes(symbol);
+  return ["ETH", "CRO", "MNT", "sFUEL", "FLOW"].includes(symbol);
 }
 
 /**

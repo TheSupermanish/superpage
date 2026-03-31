@@ -16,14 +16,16 @@ import {
 import { TransactionFailedError } from "../x402-types";
 
 describe("CHAINS constant", () => {
-  it("should have all 14 networks", () => {
-    expect(Object.keys(CHAINS).length).toBe(14);
+  it("should have all 16 networks", () => {
+    expect(Object.keys(CHAINS).length).toBe(16);
   });
 
   it("should have correct chain IDs", () => {
     expect(CHAINS.mainnet.id).toBe(1);
     expect(CHAINS["base-sepolia"].id).toBe(84532);
     expect(CHAINS["bite-v2-sandbox"].id).toBe(103698795);
+    expect(CHAINS["flow"].id).toBe(747);
+    expect(CHAINS["flow-testnet"].id).toBe(545);
   });
 });
 

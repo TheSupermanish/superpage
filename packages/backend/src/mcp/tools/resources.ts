@@ -7,7 +7,7 @@
 import { z } from "zod";
 import { toolRegistry, defineTool } from "../tool-registry.js";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
+const BACKEND_URL = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || process.env.APP_URL || "http://localhost:3001";
 
 // ============================================================
 // Helper Functions

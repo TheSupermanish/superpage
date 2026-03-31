@@ -16,6 +16,8 @@ import {
   arbitrumSepolia,
   optimism,
   optimismSepolia,
+  flowMainnet,
+  flowTestnet,
 } from "viem/chains";
 
 // ============================================================
@@ -86,7 +88,8 @@ export const SUPPORTED_CHAINS: Chain[] = [
   arbitrum,
   optimism,
   cronos,
-  
+  flowMainnet,
+
   // Testnets
   sepolia,
   baseSepolia,
@@ -96,6 +99,7 @@ export const SUPPORTED_CHAINS: Chain[] = [
   mantleSepolia,
   cronosTestnet,
   biteV2Sandbox,
+  flowTestnet,
 ];
 
 // Chain ID to Chain mapping
@@ -119,6 +123,8 @@ export const CHAIN_BY_NAME: Record<string, Chain> = {
   cronos,
   "cronos-testnet": cronosTestnet,
   "bite-v2-sandbox": biteV2Sandbox,
+  flow: flowMainnet,
+  "flow-testnet": flowTestnet,
 };
 
 // ============================================================

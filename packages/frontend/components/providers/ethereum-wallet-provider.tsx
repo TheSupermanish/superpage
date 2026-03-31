@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { RainbowKitProvider, getDefaultConfig, darkTheme } from "@rainbow-me/rainbowkit";
-import { mainnet, sepolia, base, baseSepolia, polygon, arbitrum, optimism } from "wagmi/chains";
+import { mainnet, sepolia, base, baseSepolia, polygon, arbitrum, optimism, flowMainnet, flowTestnet } from "wagmi/chains";
 import { cronos, cronosTestnet, mantleSepolia, biteV2Sandbox } from "@/lib/chains";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -23,6 +23,8 @@ const supportedChains = [
   cronosTestnet,    // Cronos testnet
   cronos,           // Cronos mainnet
   mantleSepolia,    // Mantle testnet
+  flowMainnet,      // Flow EVM mainnet
+  flowTestnet,      // Flow EVM testnet
 ] as const;
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
