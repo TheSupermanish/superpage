@@ -7,7 +7,7 @@ import { DEFAULT_NETWORK, DEFAULT_ASSET } from "../config/chain-config";
 /**
  * Automatically import all products from Shopify store
  */
-async function importShopifyProducts(storeId: string, storeUrl: string, accessToken: string) {
+export async function importShopifyProducts(storeId: string, storeUrl: string, accessToken: string) {
   const url = storeUrl.replace(/\/$/, "");
   const apiVersion = "2025-01";
   const graphqlEndpoint = `${url}/admin/api/${apiVersion}/graphql.json`;

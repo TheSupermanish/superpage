@@ -1,8 +1,9 @@
 import { Router, type Router as ExpressRouter } from "express";
 import { optionalAuthMiddleware } from "../api/wallet-auth.js";
-import { handleShopifyAuth, handleShopifyCallback, handleGetInstallUrl } from "../api/shopify-oauth.js";
+import { handleShopifyAuth, handleShopifyCallback, handleGetInstallUrl, importShopifyProducts } from "../api/shopify-oauth.js";
 import { handleShopifyProducts } from "../api/shopify-products.js";
 import { handleProductUpdate, handleProductDelete } from "../api/shopify-webhooks.js";
+import { Store } from "../models/index.js";
 
 const router: ExpressRouter = Router();
 
@@ -44,6 +45,31 @@ router.post("/install-url", optionalAuthMiddleware, handleGetInstallUrl);
  * @access  Public
  */
 router.post("/products", handleShopifyProducts);
+
+/**
+ * @route   POST /api/shopify/sync
+ * @desc    Re-sync products from Shopify (re-imports all products for a store)
+ * @access  Public
+ */
+router.post("/sync", async (req, res) => {
+  const { storeId } = req.body as { storeId?: string };
+  if (!storeId) {
+    return res.status(400).json({ error: "Missing storeId" });
+  }
+  const store = await Store.findOne({ id: storeId });
+  if (!store) {
+    return res.status(404).json({ error: "Store not found" });
+  }
+  if (!store.adminAccessToken) {
+    return res.status(400).json({ error: "Store has no access token — reconnect via OAuth" });
+  }
+  try {
+    await importShopifyProducts(store.id, store.url, store.adminAccessToken);
+    return res.status(200).json({ success: true, message: `Products synced for ${store.id}` });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Sync failed", details: err.message });
+  }
+});
 
 // ============================================================
 // SHOPIFY WEBHOOKS (mounted separately at /api/webhooks/shopify)

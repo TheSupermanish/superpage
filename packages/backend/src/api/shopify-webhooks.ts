@@ -47,16 +47,18 @@ export async function handleProductUpdate(req: Request, res: Response) {
     const store = await Store.findOne({ shopDomain });
     if (!store) {
       console.log(`⚠️ Store not found: ${shopDomain}`);
-      return res.status(200).json({ ok: true, message: "Store not found" });
+      return res.status(404).json({ error: "Store not found", shopDomain });
     }
 
-    // Update all variants of this product
+    // Update all variants of this product (upsert: true to catch newly added variants)
     const updatePromises = product.variants?.map(async (variant: any) => {
       const variantId = `gid://shopify/ProductVariant/${variant.id}`;
-      
+
       await StoreProduct.findOneAndUpdate(
         { storeId: store.id, variantId },
         {
+          storeId: store.id,
+          variantId,
           name: `${product.title}${variant.title !== "Default Title" ? ` - ${variant.title}` : ""}`,
           description: product.body_html || null,
           image: variant.image_id ? product.images?.find((img: any) => img.id === variant.image_id)?.src : product.image?.src || null,
@@ -65,11 +67,12 @@ export async function handleProductUpdate(req: Request, res: Response) {
           inventory: variant.inventory_quantity ?? null,
           metadata: {
             productId: `gid://shopify/Product/${product.id}`,
+            handle: product.handle || null,
             variantTitle: variant.title,
             sku: variant.sku,
           },
         },
-        { upsert: false } // Only update if already imported
+        { upsert: true } // Create new variants if they don't exist yet
       );
     }) || [];
 
