@@ -1,6 +1,6 @@
 ---
 name: superpage-x402
-description: Discover, browse, and purchase digital resources and physical products from the SuperPage marketplace using x402 USDC payments on Base
+description: Discover, browse, and purchase digital resources and physical products from the SuperPage marketplace using x402 USDC payments on Flow EVM
 version: 2.1.0
 metadata:
   openclaw:
@@ -26,7 +26,7 @@ SuperPage is a marketplace where AI agents and humans coexist as both buyers and
 All commands use the SuperPage CLI. Run them with your `exec` or bash tool:
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js <command> [json-args]
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js <command> [json-args]
 ```
 
 **IMPORTANT:** Every command below MUST include the environment variables. The output is always JSON.
@@ -36,13 +36,13 @@ SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_C
 ### List all resources (discover what's available)
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-resources
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-resources
 ```
 
 ### Search resources by keyword
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js search '{"query":"weather"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js search '{"query":"weather"}'
 ```
 
 ### Access/buy a paid resource (AUTO-PAYS with USDC)
@@ -50,7 +50,7 @@ SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_C
 This is the most important command. It makes an HTTP request. If the server returns 402 Payment Required, it **automatically pays USDC** from your wallet and retries.
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js request '{"url":"http://localhost:3001/x402/resource/SLUG-HERE"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js request '{"url":"http://localhost:3001/x402/resource/SLUG-HERE"}'
 ```
 
 Get the URL from `list-resources` output — use the `url` field directly.
@@ -58,43 +58,43 @@ Get the URL from `list-resources` output — use the `url` field directly.
 ### Check wallet balance
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js wallet
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js wallet
 ```
 
 ### List Shopify stores
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-stores
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js list-stores
 ```
 
 ### Browse products in a store
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js browse-products '{"storeId":"shopify/store-name"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js browse-products '{"storeId":"shopify/store-name"}'
 ```
 
 ### Buy a product (full checkout with auto-payment)
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js buy '{"storeId":"shopify/store-name","items":[{"productId":"VARIANT_ID","quantity":1}],"email":"customer@example.com","shippingAddress":{"name":"John Doe","address1":"123 Main St","city":"New York","state":"NY","postalCode":"10001","country":"US"}}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js buy '{"storeId":"shopify/store-name","items":[{"productId":"VARIANT_ID","quantity":1}],"email":"customer@example.com","shippingAddress":{"name":"John Doe","address1":"123 Main St","city":"New York","state":"NY","postalCode":"10001","country":"US"}}'
 ```
 
 ### Send USDC to another wallet
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js send '{"to":"0xRECIPIENT","amount":"5.00"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js send '{"to":"0xRECIPIENT","amount":"5.00"}'
 ```
 
 ### Check order status
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js order-status '{"orderId":"ORDER_ID"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js order-status '{"orderId":"ORDER_ID"}'
 ```
 
 ### Probe a URL for x402 support
 
 ```bash
-SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=base-sepolia X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js discover '{"url":"https://example.com/api"}'
+SUPERPAGE_SERVER=$SUPERPAGE_SERVER WALLET_PRIVATE_KEY=$WALLET_PRIVATE_KEY X402_CHAIN=flow-testnet X402_CURRENCY=USDC node /Users/beyond/Desktop/projects/superpage/packages/mcp-client/superpage-x402.js discover '{"url":"https://example.com/api"}'
 ```
 
 ## Example Workflows

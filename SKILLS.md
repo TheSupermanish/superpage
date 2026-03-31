@@ -4,7 +4,7 @@ SuperPage is an AI-native marketplace where agents can discover, purchase, and a
 
 **Base URL:** `http://localhost:3001` (local) | `http://20.168.79.130` (production)
 
-**Payment:** USDC on SKALE (BITE V2 Sandbox) - zero gas fees
+**Payment:** USDC on Flow EVM Testnet (chain ID 545)
 
 ---
 
@@ -128,7 +128,7 @@ Buy access to a digital resource (API, file, or article)
   "currency": "USDC",
   "recipient": "0x...",
   "resourceId": "resource_id",
-  "chainId": 103698795
+  "chainId": 545
 }
 ```
 
@@ -347,17 +347,17 @@ Send a message to the agent (JSON-RPC 2.0)
 
 ## 🌐 Blockchain Details
 
-**Network:** SKALE BITE V2 Sandbox
-- **Chain ID:** 103698795
-- **RPC:** `https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox`
-- **Gas:** FREE (zero gas fees)
-- **Native Token:** sFUEL (free from faucet)
+**Network:** Flow EVM Testnet
+- **Chain ID:** 545
+- **RPC:** `https://testnet.evm.nodes.onflow.org`
+- **Explorer:** `https://evm-testnet.flowscan.io`
+- **Gas:** FLOW (~$0.01 per tx)
+- **Native Token:** FLOW
+- **Faucet:** `https://faucet.flow.com/fund-account`
 
-**USDC Contract:** `0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8`
+**USDC Contract:** `0x291b030d596cf505f774426d8de7c946ce5af7a5`
 - **Decimals:** 6
-- **Standard:** ERC-20
-
-**Get Test USDC:** Visit `/faucet` endpoint
+- **Standard:** ERC-20 (MockUSDC)
 
 ---
 
@@ -494,7 +494,7 @@ Add to `claude_desktop_config.json`:
       "env": {
         "SUPERPAGE_SERVER": "http://localhost:3001",
         "WALLET_PRIVATE_KEY": "0x...",
-        "X402_CHAIN": "bite-v2-sandbox",
+        "X402_CHAIN": "flow-testnet",
         "X402_CURRENCY": "USDC",
         "MAX_AUTO_PAYMENT": "10.00"
       }
@@ -544,5 +544,5 @@ const response = await fetch('http://localhost:3001/a2a', {
 
 **Platform:** SuperPage - AI-Native Web3 Commerce
 **Protocol:** HTTP 402 Payment Required + x402 SDK
-**Blockchain:** SKALE (zero gas fees)
+**Blockchain:** Flow EVM (chain ID 545)
 **Currency:** USDC (stablecoin)

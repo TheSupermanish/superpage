@@ -499,12 +499,12 @@
       The x402 Payment Skill for the Agent Internet
     </p>
     <p style="font-size: 1.15rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;">
-      An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments on Base Sepolia.
+      An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments on Flow EVM Testnet.
     </p>
     <div>
       <span class="tag tag-blue">x402 Protocol</span>
       <span class="tag tag-purple">OpenClaw</span>
-      <span class="tag tag-green">Base Sepolia</span>
+      <span class="tag tag-green">Flow EVM Testnet</span>
       <span class="tag tag-orange">MCP</span>
       <span class="tag tag-pink">A2A / AP2 / ERC-8004</span>
     </div>
@@ -610,8 +610,8 @@
       <div class="arch-arrow">↓</div>
       <!-- Blockchain -->
       <div class="arch-box" style="border-color: var(--green); background: rgba(34,197,94,0.05);">
-        <div style="font-weight:700;font-size:1.1rem;">Base Sepolia (L2)</div>
-        <div style="font-size:0.85rem;color:var(--text-dim);">USDC payments · Chain ID 84532 · ~2s blocks · On-chain receipts</div>
+        <div style="font-weight:700;font-size:1.1rem;">Flow EVM Testnet</div>
+        <div style="font-size:0.85rem;color:var(--text-dim);">USDC payments · Chain ID 545 · ~1s blocks · On-chain receipts</div>
       </div>
     </div>
   </div>
@@ -696,7 +696,7 @@ Here's the data: { temp: 72 }
           <div class="step-num" style="background:var(--green);">4</div>
           <div class="step-content">
             <h4>User Confirms → Agent Pays</h4>
-            <p>USDC transfer on Base Sepolia, ~2s confirmation</p>
+            <p>USDC transfer on Flow EVM Testnet, ~1s confirmation</p>
           </div>
         </div>
         <div class="demo-step">
@@ -717,7 +717,7 @@ Here's the data: { temp: 72 }
   <span class="string">"amount"</span>: <span class="string">"0.50"</span>,
   <span class="string">"currency"</span>: <span class="string">"USDC"</span>,
   <span class="string">"recipient"</span>: <span class="string">"0x..."</span>,
-  <span class="string">"chainId"</span>: <span class="number">84532</span>
+  <span class="string">"chainId": 545</span>
 }
 
 <span class="comment">// 3. Agent pays USDC on Base</span>
@@ -870,7 +870,7 @@ Here's the data: { temp: 72 }
       <div class="safety-item">
         <div class="safety-icon">⛓️</div>
         <h4>On-Chain Verification</h4>
-        <p>Every payment cryptographically verified against Base Sepolia before content is served.</p>
+        <p>Every payment cryptographically verified against Flow EVM Testnet before content is served.</p>
       </div>
       <div class="safety-item">
         <div class="safety-icon">⏱️</div>
@@ -890,7 +890,7 @@ Here's the data: { temp: 72 }
   <span class="string">"txHash"</span>:    <span class="string">"0x9eab1d..."</span>,
   <span class="string">"amount"</span>:    <span class="string">"0.50 USDC"</span>,
   <span class="string">"to"</span>:        <span class="string">"0x5163..."</span>,
-  <span class="string">"chainId"</span>:   <span class="number">84532</span>,
+  <span class="string">"chainId": 545</span>,
   <span class="string">"verified"</span>:  <span class="keyword">true</span>,
   <span class="string">"timestamp"</span>: <span class="number">1709312400</span>
 }
@@ -911,7 +911,7 @@ Here's the data: { temp: 72 }
           <tr><td style="color:var(--text);font-weight:500;">MCP Client</td><td>Node.js, viem, JSON-RPC</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">AI Agent</td><td>Vercel AI SDK (multi-LLM)</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">SDK</td><td>@super-x402/sdk (payment verification)</td></tr>
-          <tr><td style="color:var(--text);font-weight:500;">Blockchain</td><td>Base Sepolia, viem, USDC</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Blockchain</td><td>Flow EVM, viem, USDC, ERC-8004</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">E-Commerce</td><td>Shopify Admin API</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">Identity</td><td>ERC-8004</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">Wallet</td><td>RainbowKit, wagmi</td></tr>
@@ -1056,8 +1056,8 @@ superpage/
         <div style="margin-top: 24px;">
           <h3 style="color:var(--text);font-size:1.15rem;">Network Details</h3>
           <table class="vs-table" style="margin-top:8px;">
-            <tr><td style="color:var(--text);">Network</td><td>Base Sepolia</td></tr>
-            <tr><td style="color:var(--text);">Chain ID</td><td>84532</td></tr>
+            <tr><td style="color:var(--text);">Network</td><td>Flow EVM Testnet</td></tr>
+            <tr><td style="color:var(--text);">Chain ID</td><td>545</td></tr>
             <tr><td style="color:var(--text);">Currency</td><td>USDC (6 decimals)</td></tr>
             <tr><td style="color:var(--text);">Block Time</td><td>~2 seconds</td></tr>
           </table>
