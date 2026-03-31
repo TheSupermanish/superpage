@@ -2,14 +2,16 @@
 node_modules
 **/node_modules
 
-# Build outputs (rebuilt in Docker)
-dist
-.next
-packages/contracts/artifacts
-packages/contracts/cache
-
 # Git
 .git
+
+# Build outputs EXCEPT frontend (pre-built locally)
+dist
+packages/contracts/artifacts
+packages/contracts/cache
+packages/x402-sdk-eth/dist
+
+# NOTE: .next is NOT ignored — it's pre-built locally and copied in
 
 # Data dumps
 data/
@@ -19,9 +21,8 @@ data/
 .idea
 .DS_Store
 
-# Docker (don't copy into itself)
+# Docker
 Dockerfile
-docker-compose.yml
 docker-compose.prod.yml
 
 # Test files
@@ -29,8 +30,7 @@ docker-compose.prod.yml
 **/*.test.ts
 **/test-*.ts
 
-# Local env (production env injected via docker-compose)
-.env
+# Local env files (production env injected via docker-compose)
 packages/backend/.env
 packages/frontend/.env.local
 packages/ai-agent/.env

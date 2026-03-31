@@ -250,7 +250,7 @@ export function useX402Payment() {
           // Check if it's a file download
           const fileInfo = tryFileDownload(phase1);
           if (fileInfo) {
-            const blobUrl = await prepareBlobUrl(phase1, fileInfo.downloaded!.filename);
+            const blobUrl = await prepareBlobUrl(phase1);
             setStatus("success");
             return { ...fileInfo, downloaded: { ...fileInfo.downloaded!, url: blobUrl } };
           }
@@ -284,7 +284,7 @@ export function useX402Payment() {
         // Check if this is a file download (Content-Disposition: attachment)
         const fileInfo = tryFileDownload(phase2);
         if (fileInfo) {
-          const blobUrl = await prepareBlobUrl(phase2, fileInfo.downloaded!.filename);
+          const blobUrl = await prepareBlobUrl(phase2);
           setStatus("success");
           return { ...fileInfo, downloaded: { ...fileInfo.downloaded!, url: blobUrl } };
         }
