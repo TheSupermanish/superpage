@@ -201,7 +201,7 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!isProcessing) onOpenChange(o); }}>
-      <DialogContent className="bg-card border-border text-foreground sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border text-foreground sm:max-w-3xl w-[95vw] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
             {isResource && typeConfig && (
@@ -471,10 +471,10 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
                 );
               }
 
-              // Fallback: JSON/raw content
+              // Fallback: JSON/raw content (APIs return JSON)
               return (
-                <div className="p-4 rounded-xl bg-muted border border-border max-h-48 overflow-y-auto">
-                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words">
+                <div className="p-4 rounded-xl bg-muted border border-border max-h-[50vh] overflow-y-auto">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words font-mono leading-relaxed">
                     {typeof raw === "string" ? raw : JSON.stringify(raw, null, 2)}
                   </pre>
                 </div>
