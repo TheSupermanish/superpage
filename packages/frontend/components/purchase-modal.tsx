@@ -36,6 +36,7 @@ import {
   ArrowRight,
   Package,
 } from "lucide-react";
+import { marked } from "marked";
 
 // ── Item types ──────────────────────────────────────
 
@@ -390,9 +391,9 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
             <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-3">
               <CheckCircle2 className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-sm font-medium text-foreground">File downloaded!</p>
+                <p className="text-sm font-medium text-foreground">Payment successful!</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {resourceResult.downloaded.filename}
+                  {resourceResult.downloaded.filename} is ready to download
                 </p>
               </div>
             </div>
@@ -410,10 +411,10 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
               <a
                 href={resourceResult.downloaded.url}
                 download={resourceResult.downloaded.filename}
-                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted border border-border text-sm text-primary hover:bg-muted/80 transition-colors"
+                className="flex items-center justify-center gap-2 w-full p-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors shadow-lg shadow-primary/10"
               >
-                <FileText className="h-4 w-4" />
-                Download again
+                <FileText className="h-5 w-5" />
+                Download {resourceResult.downloaded.filename}
               </a>
             )}
           </div>
@@ -448,24 +449,12 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
               );
 
               if (isMarkdown || (articleText && typeof articleText === "string")) {
+                const htmlContent = marked.parse(articleText, { breaks: true }) as string;
                 return (
                   <div className="p-6 rounded-xl bg-muted border border-border max-h-[50vh] overflow-y-auto">
                     <article
-                      className="prose prose-sm prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-code:text-primary prose-code:bg-background prose-code:px-1 prose-code:rounded prose-pre:bg-background prose-pre:border prose-pre:border-border prose-strong:text-foreground"
-                      dangerouslySetInnerHTML={{
-                        __html: articleText
-                          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
-                          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
-                          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-                          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                          .replace(/`([^`]+)`/g, '<code>$1</code>')
-                          .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
-                          .replace(/^- (.*$)/gm, '<li>$1</li>')
-                          .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-                          .replace(/\n\n/g, '</p><p>')
-                          .replace(/^(?!<[hluop])/gm, '<p>')
-                      }}
+                      className="prose prose-sm prose-invert max-w-none prose-headings:text-foreground prose-headings:font-bold prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-primary prose-code:text-primary prose-code:bg-background prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-pre:bg-background prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4 prose-strong:text-foreground prose-li:text-muted-foreground prose-ul:list-disc prose-ol:list-decimal prose-blockquote:border-primary/30 prose-blockquote:text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: htmlContent }}
                     />
                   </div>
                 );
