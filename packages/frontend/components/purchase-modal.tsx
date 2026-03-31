@@ -83,7 +83,7 @@ const TYPE_CONFIG: Record<string, { icon: typeof Code; color: string; label: str
 const STATUS_LABELS: Record<PaymentStatus, string> = {
   idle: "",
   "fetching-requirements": "Preparing payment...",
-  "switching-network": "Switching to SKALE network...",
+  "switching-network": "Switching network...",
   "awaiting-approval": "Approve transaction in your wallet",
   "confirming-tx": "Confirming transaction...",
   "verifying-payment": "Verifying payment...",
@@ -201,7 +201,7 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!isProcessing) onOpenChange(o); }}>
-      <DialogContent className="bg-card border-border text-foreground sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border text-foreground sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
             {isResource && typeConfig && (
@@ -436,14 +436,50 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
                 View transaction <ExternalLink className="h-3 w-3" />
               </a>
             )}
-            {/* Content preview */}
-            <div className="p-4 rounded-xl bg-muted border border-border max-h-48 overflow-y-auto">
-              <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words">
-                {typeof resourceResult.content === "string"
-                  ? resourceResult.content
-                  : JSON.stringify(resourceResult.content, null, 2)}
-              </pre>
-            </div>
+            {/* Content display */}
+            {(() => {
+              // Extract article content (may be nested in response object)
+              const raw = resourceResult.content as any;
+              const articleText = raw?.content || (typeof raw === "string" ? raw : null);
+              const isMarkdown = articleText && (
+                resourceResult.contentType?.includes("markdown") ||
+                raw?.contentType === "markdown" ||
+                articleText.startsWith("#")
+              );
+
+              if (isMarkdown || (articleText && typeof articleText === "string")) {
+                return (
+                  <div className="p-6 rounded-xl bg-muted border border-border max-h-[50vh] overflow-y-auto">
+                    <article
+                      className="prose prose-sm prose-invert max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary prose-code:text-primary prose-code:bg-background prose-code:px-1 prose-code:rounded prose-pre:bg-background prose-pre:border prose-pre:border-border prose-strong:text-foreground"
+                      dangerouslySetInnerHTML={{
+                        __html: articleText
+                          .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+                          .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+                          .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+                          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                          .replace(/`([^`]+)`/g, '<code>$1</code>')
+                          .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                          .replace(/^- (.*$)/gm, '<li>$1</li>')
+                          .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                          .replace(/\n\n/g, '</p><p>')
+                          .replace(/^(?!<[hluop])/gm, '<p>')
+                      }}
+                    />
+                  </div>
+                );
+              }
+
+              // Fallback: JSON/raw content
+              return (
+                <div className="p-4 rounded-xl bg-muted border border-border max-h-48 overflow-y-auto">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words">
+                    {typeof raw === "string" ? raw : JSON.stringify(raw, null, 2)}
+                  </pre>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -494,7 +530,7 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
               onClick={handleBuy}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold py-6"
             >
-              Pay {price}
+              {isResource && item.data.type === "article" ? "Read for" : "Pay"} {price}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           )}

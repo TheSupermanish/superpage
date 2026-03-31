@@ -321,8 +321,19 @@ export async function handleShopifyCallback(req: Request, res: Response) {
     const shopUsername = (shop as string).replace(".myshopify.com", "");
     const storeUrl = `https://${shop}`;
 
-    let store = await Store.findOne({ shopDomain: shop as string });
+    // Look up by shopDomain OR by the store ID (shopify/username) to handle
+    // cases where shopDomain was changed to custom domain after initial setup
+    const storeId = `shopify/${shopUsername}`;
+    let store = await Store.findOne({
+      $or: [
+        { shopDomain: shop as string },
+        { shopDomain: primaryDomain },
+        { id: storeId },
+      ],
+    });
     const creatorIdFromState = stateData.creatorId;
+
+    let storeTransferred = false;
 
     if (store) {
       // Update existing store
@@ -330,30 +341,61 @@ export async function handleShopifyCallback(req: Request, res: Response) {
       store.url = storeUrl;
       store.name = actualShopName;
       store.shopDomain = primaryDomain; // Use the primary/custom domain
-      
-      // Link to creator if provided and not already linked
-      if (creatorIdFromState && !store.creatorId) {
-        store.creatorId = creatorIdFromState as any;
-        console.log(`🔗 Linking store to creator: ${creatorIdFromState}`);
+
+      // Handle creator linking
+      if (creatorIdFromState) {
+        if (!store.creatorId) {
+          // No owner yet — link to current user
+          store.creatorId = creatorIdFromState as any;
+          console.log(`🔗 Linking store to creator: ${creatorIdFromState}`);
+        } else if (store.creatorId.toString() !== creatorIdFromState) {
+          // Store belongs to a different user — transfer ownership
+          // (Shopify OAuth grants access, so whoever completes OAuth owns it)
+          console.log(`🔄 Transferring store from ${store.creatorId} to ${creatorIdFromState}`);
+          store.creatorId = creatorIdFromState as any;
+          storeTransferred = true;
+        }
       }
-      
+
       await store.save();
       console.log(`✅ Updated existing store: ${actualShopName} (${store._id})`);
     } else {
-      // Create new store with shopify username as ID
-      const storeId = `shopify/${shopUsername}`;
-      store = await Store.create({
-        id: storeId,
-        name: actualShopName,
-        url: storeUrl,
-        shopDomain: primaryDomain, // Use the primary/custom domain
-        adminAccessToken: accessToken,
-        currency: "USD",
-        networks: [DEFAULT_NETWORK],
-        asset: DEFAULT_ASSET,
-        creatorId: creatorIdFromState ? (creatorIdFromState as any) : undefined,
-      });
-      console.log(`✅ Created new store: ${actualShopName} (ID: ${storeId})${creatorIdFromState ? ` linked to creator: ${creatorIdFromState}` : ''}`);
+      // Create new store — use findOneAndUpdate with upsert to avoid duplicate key errors
+      try {
+        store = await Store.findOneAndUpdate(
+          { id: storeId },
+          {
+            id: storeId,
+            name: actualShopName,
+            url: storeUrl,
+            shopDomain: primaryDomain,
+            adminAccessToken: accessToken,
+            currency: "USD",
+            networks: [DEFAULT_NETWORK],
+            asset: DEFAULT_ASSET,
+            ...(creatorIdFromState ? { creatorId: creatorIdFromState } : {}),
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
+        console.log(`✅ Created/updated store: ${actualShopName} (ID: ${storeId})${creatorIdFromState ? ` linked to creator: ${creatorIdFromState}` : ''}`);
+      } catch (createErr: any) {
+        // Final fallback — try to find the existing store
+        console.warn(`⚠️ Store create race condition, finding existing: ${createErr.message}`);
+        store = await Store.findOne({ id: storeId });
+        if (store) {
+          store.adminAccessToken = accessToken;
+          store.name = actualShopName;
+          store.shopDomain = primaryDomain;
+          if (creatorIdFromState) store.creatorId = creatorIdFromState as any;
+          await store.save();
+        } else {
+          throw createErr;
+        }
+      }
+    }
+
+    if (!store) {
+      throw new Error("Failed to create or find store");
     }
 
     // Automatically import products after store connection/update
@@ -366,11 +408,12 @@ export async function handleShopifyCallback(req: Request, res: Response) {
       // Don't fail OAuth if product import fails - user can import manually later
     }
 
-    // Redirect to stores dashboard (or product selection if coming from resources)
+    // Redirect to stores dashboard with status info
     const redirectPath = stateData.redirect || '/dashboard/stores';
-    const frontendCallbackUrl = `${process.env.FRONTEND_URL}${redirectPath}?connected=true&store_id=${store._id.toString()}`;
+    const transferParam = storeTransferred ? '&transferred=true' : '';
+    const frontendCallbackUrl = `${process.env.FRONTEND_URL}${redirectPath}?connected=true&store_id=${store._id.toString()}${transferParam}`;
     console.log(`✅ Redirecting to: ${frontendCallbackUrl}`);
-    
+
     return res.redirect(frontendCallbackUrl);
 
   } catch (error: any) {

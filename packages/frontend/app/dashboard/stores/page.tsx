@@ -83,7 +83,12 @@ export default function StoresPage() {
     }
 
     if (connectedParam === "true") {
-      setSuccess("Store connected successfully!");
+      const transferred = searchParams.get("transferred");
+      if (transferred === "true") {
+        setSuccess("Store reconnected and transferred to your account. Products imported.");
+      } else {
+        setSuccess("Store connected successfully! Products imported.");
+      }
       // Clear the URL params
       router.replace("/dashboard/stores", { scroll: false });
     }

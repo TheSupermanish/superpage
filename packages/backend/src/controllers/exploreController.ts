@@ -31,9 +31,10 @@ export const getExploreData = asyncHandler(async (req: Request, res: Response) =
       .limit(20)
       .lean(),
 
-    // Stores
+    // Stores (populate creator for profile link)
     Store.find()
       .select("-adminAccessToken")
+      .populate("creatorId", "username name displayName avatarUrl")
       .limit(10)
       .lean(),
 
@@ -86,11 +87,17 @@ export const getExploreData = asyncHandler(async (req: Request, res: Response) =
 
   // Format stores
   const formattedStores = stores.map((s: any) => ({
-    id: s._id?.toString() || s.id,
+    id: s.id || s._id?.toString(),
+    _id: s._id?.toString(),
     name: s.name,
     description: s.description,
     domain: s.domain || s.shopDomain,
     createdAt: s.createdAt,
+    creator: s.creatorId ? {
+      username: s.creatorId.username,
+      name: s.creatorId.displayName || s.creatorId.name,
+      avatarUrl: s.creatorId.avatarUrl,
+    } : null,
   }));
 
   // Format products

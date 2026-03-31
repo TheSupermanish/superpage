@@ -45,6 +45,11 @@ interface Store {
   description?: string;
   domain?: string;
   createdAt: string;
+  creator?: {
+    username?: string;
+    name?: string;
+    avatarUrl?: string;
+  };
 }
 
 interface StoreProduct {
@@ -416,137 +421,166 @@ export default function ExplorePage() {
           )}
         </section>
 
-        {/* Store Products Section */}
-        {filteredProducts.length > 0 && (
+        {/* Featured Stores */}
+        {filteredStores.length > 0 && (
           <section className="flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">
-                  {search ? `Products matching "${search}"` : "Shopify Products"}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {search ? `${filteredProducts.length} product(s) found` : "Physical & digital products accepting crypto"}
-                </p>
-              </div>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">
+                {search ? `Stores matching "${search}"` : "Featured Stores"}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {search ? `${filteredStores.length} store(s) found` : "Shopify stores accepting crypto payments via x402"}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.slice(0, 6).map((product) => (
-                <div
-                  key={product.id}
-                  className="group bg-card rounded-3xl border border-border overflow-hidden flex flex-col hover:border-sp-pink/40 hover:shadow-2xl hover:shadow-sp-pink/5 transition-all"
-                >
-                  <div className="h-40 bg-gradient-to-br from-sp-pink/20 to-sp-pink/10 p-6 flex items-center justify-center relative overflow-hidden">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover absolute inset-0"
-                      />
-                    ) : (
-                      <span className="material-symbols-outlined text-sp-pink text-6xl">
-                        shopping_bag
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-8 flex flex-col gap-6 flex-1">
-                    <div className="flex-1">
-                      <h3 className="font-bold text-xl mb-1">{product.name}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                        {product.description || "Premium product available for purchase"}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between py-4 border-y border-border">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-                          Price
-                        </span>
-                        <span className="text-sp-pink font-bold text-2xl">
-                          ${parseFloat(product.price).toFixed(2)} {getCurrencyDisplay()}
-                        </span>
-                      </div>
-                      {product.inventory !== null && (
-                        <div className="flex flex-col items-end">
-                          <span className="text-[10px] uppercase text-muted-foreground font-bold tracking-wider">
-                            In Stock
-                          </span>
-                          <span className="font-bold text-foreground text-lg">
-                            {product.inventory}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredStores.slice(0, 6).map((store: any) => {
+                const storeProds = storeProducts.filter(p => p.storeId === store.id);
+                const profileHref = store.creator?.username
+                  ? `/${store.creator.username}`
+                  : null;
+                const Wrapper = profileHref ? Link : "div" as any;
+                const wrapperProps = profileHref ? { href: profileHref } : {};
+                return (
+                  <Wrapper
+                    key={store.id}
+                    {...wrapperProps}
+                    className="bg-card rounded-2xl border border-border overflow-hidden hover:border-sp-pink hover:shadow-xl hover:shadow-sp-pink/5 transition-all group cursor-pointer block"
+                  >
+                    {/* Store header with gradient */}
+                    <div className="bg-gradient-to-br from-sp-pink/15 to-sp-pink/5 p-6 border-b border-border">
+                      <div className="flex items-start gap-4">
+                        <div className="size-14 bg-sp-pink/20 group-hover:bg-sp-pink rounded-xl flex items-center justify-center transition-colors">
+                          <span className="material-symbols-outlined text-sp-pink group-hover:text-white text-2xl transition-colors">
+                            storefront
                           </span>
                         </div>
-                      )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-lg truncate">{store.name}</h3>
+                          {store.domain && (
+                            <p className="text-xs text-muted-foreground truncate">{store.domain}</p>
+                          )}
+                          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">inventory_2</span>
+                              {storeProds.length} products
+                            </span>
+                            <span className="text-sp-pink font-bold">USDC payments</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => {
-                          setPurchaseItem({
-                            kind: "product",
-                            data: {
-                              id: product.id,
-                              storeId: product.storeId,
-                              name: product.name,
-                              description: product.description,
-                              image: product.image,
-                              price: product.price,
-                              currency: product.currency,
-                              inventory: product.inventory,
-                            },
-                          });
-                          setPurchaseOpen(true);
-                        }}
-                        className="flex-1 bg-sp-pink text-white font-bold py-3.5 rounded-2xl text-sm hover:bg-sp-pink/90 transition-all shadow-lg shadow-sp-pink/10"
-                      >
-                        Buy Product
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                    {/* Product preview thumbnails */}
+                    {storeProds.length > 0 && (
+                      <div className="p-4 flex gap-2 overflow-hidden">
+                        {storeProds.slice(0, 4).map((p) => (
+                          <div key={p.id} className="size-16 rounded-lg bg-muted flex-shrink-0 overflow-hidden">
+                            {p.image ? (
+                              <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="material-symbols-outlined text-muted-foreground text-xl">shopping_bag</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        {storeProds.length > 4 && (
+                          <div className="size-16 rounded-lg bg-muted flex-shrink-0 flex items-center justify-center text-xs text-muted-foreground font-bold">
+                            +{storeProds.length - 4}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </Wrapper>
+                );
+              })}
             </div>
           </section>
         )}
 
-        {/* Stores Section */}
-        {filteredStores.length > 0 && (
+        {/* Top Store Products */}
+        {filteredProducts.length > 0 && (
           <section className="flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">
-                  {search ? `Stores matching "${search}"` : "Connected Stores"}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {search ? `${filteredStores.length} store(s) found` : "Shopify stores accepting crypto payments"}
-                </p>
-              </div>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">
+                {search ? `Products matching "${search}"` : "Top Store Products"}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {search ? `${filteredProducts.length} product(s) found` : "Physical and digital products you can buy with crypto"}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredStores.slice(0, 6).map((store) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.slice(0, 8).map((product) => (
                 <div
-                  key={store.id}
-                  className="bg-card rounded-2xl border border-border p-6 hover:border-sp-pink hover:shadow-xl hover:shadow-sp-pink/5 transition-all"
+                  key={product.id}
+                  className="group bg-card rounded-2xl border border-border overflow-hidden flex flex-col hover:border-sp-pink/40 hover:shadow-xl hover:shadow-sp-pink/5 transition-all"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="size-12 bg-gradient-to-br from-sp-pink/20 to-sp-pink/10 rounded-xl flex items-center justify-center">
-                      <span className="material-symbols-outlined text-sp-pink text-2xl">
-                        storefront
-                      </span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-base mb-1 truncate">{store.name}</h3>
-                      {store.domain && (
-                        <p className="text-xs text-muted-foreground truncate">{store.domain}</p>
+                  <div className="aspect-square bg-muted relative overflow-hidden">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="material-symbols-outlined text-muted-foreground text-5xl">
+                          shopping_bag
+                        </span>
+                      </div>
+                    )}
+                    {product.inventory !== null && product.inventory === 0 && (
+                      <div className="absolute top-3 left-3 bg-red-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                        SOLD OUT
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4 flex flex-col gap-3 flex-1">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-sm line-clamp-2">{product.name}</h3>
+                      {product.description && (
+                        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+                          {product.description}
+                        </p>
                       )}
                     </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sp-pink font-bold text-lg">
+                        ${parseFloat(product.price).toFixed(2)}
+                      </span>
+                      {product.inventory !== null && product.inventory > 0 && (
+                        <span className="text-xs text-muted-foreground">
+                          {product.inventory} in stock
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setPurchaseItem({
+                          kind: "product",
+                          data: {
+                            id: product.id,
+                            storeId: product.storeId,
+                            name: product.name,
+                            description: product.description,
+                            image: product.image,
+                            price: product.price,
+                            currency: product.currency,
+                            inventory: product.inventory,
+                          },
+                        });
+                        setPurchaseOpen(true);
+                      }}
+                      disabled={product.inventory === 0}
+                      className="w-full bg-sp-pink text-white font-bold py-2.5 rounded-xl text-sm hover:bg-sp-pink/90 transition-all shadow-lg shadow-sp-pink/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {product.inventory === 0 ? "Sold Out" : "Buy Now"}
+                    </button>
                   </div>
-                  {store.description && (
-                    <p className="text-sm text-muted-foreground mt-4 line-clamp-2">
-                      {store.description}
-                    </p>
-                  )}
                 </div>
               ))}
             </div>
