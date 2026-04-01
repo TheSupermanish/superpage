@@ -6,12 +6,14 @@
 
 *An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments.*
 
+[![Coinbase x402 Winner](https://img.shields.io/badge/Coinbase_x402-Winner-0052FF)](https://x402.org)
 [![Flow Testnet](https://img.shields.io/badge/Flow-Testnet-00EF8B)](https://flow.com)
 [![x402 Protocol](https://img.shields.io/badge/x402-Enabled-blue)](https://x402.org)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-orange)](https://openclaw.ai)
 [![MCP Protocol](https://img.shields.io/badge/MCP-Integrated-purple)](https://modelcontextprotocol.io)
 
-**SURGE × OpenClaw Hackathon — February 2026**
+**Coinbase x402 Track Winner — SURGE x OpenClaw Hackathon 2026**
+**Now targeting PL Genesis Flow Hackathon — Flow Track + Existing Code + ERC-8004**
 
 [Live Demo](https://superpa.ge) · [Telegram Bot](https://t.me/HeySuperioBot) · [Documentation](#documentation)
 
