@@ -68,15 +68,17 @@ export async function handleResourceAccess(req: Request, res: Response) {
     }
 
     // Check if wallet already paid for this resource
+    // APIs are pay-per-request — always require fresh payment
+    // Articles and files are buy-once — check prior payment
     const walletParam = (req.query.wallet as string)?.toLowerCase();
-    if (walletParam) {
+    if (walletParam && resource.type !== "api") {
       const existingAccess = await AccessLog.findOne({
         resourceId: resource._id,
         walletAddress: walletParam,
       }).lean();
 
       if (existingAccess) {
-        console.log(`[x402-gateway] Wallet ${walletParam} already paid for resource ${resourceId} — serving content`);
+        console.log(`[x402-gateway] Wallet ${walletParam} already paid for ${resource.type} ${resourceId} — serving content`);
         return await serveResource(resource, req, res);
       }
     }
