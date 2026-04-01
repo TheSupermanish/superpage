@@ -122,7 +122,7 @@ export default function FaucetPage() {
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">USDC Faucet</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Get free test mUSDC tokens on Base Sepolia. Mint as much as you need for testing SuperPage.
+            Get free test mUSDC tokens on {PAYMENT_CHAIN.name}. Mint as much as you need for testing SuperPage.
           </p>
         </div>
 
@@ -166,7 +166,7 @@ export default function FaucetPage() {
             <div className="p-4 rounded-xl bg-primary/5 border border-primary/20 flex items-center gap-3">
               <Loader2 className="h-5 w-5 text-primary animate-spin" />
               <span className="text-sm font-medium">
-                {status === "switching" && "Switching to Base Sepolia network..."}
+                {status === "switching" && `Switching to ${PAYMENT_CHAIN.name}...`}
                 {status === "minting" && "Approve the mint in your wallet..."}
                 {status === "confirming" && "Confirming transaction..."}
               </span>
@@ -245,15 +245,15 @@ export default function FaucetPage() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Network</span>
-              <span className="font-medium">Base Sepolia</span>
+              <span className="font-medium">{PAYMENT_CHAIN.name}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Decimals</span>
               <span className="font-medium">6</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Gas Fees</span>
-              <span className="font-medium text-primary">Free (zero gas)</span>
+              <span className="text-muted-foreground">Gas</span>
+              <span className="font-medium text-primary">FLOW (~$0.01)</span>
             </div>
             <div className="flex items-center justify-between gap-2">
               <span className="text-muted-foreground">Contract</span>

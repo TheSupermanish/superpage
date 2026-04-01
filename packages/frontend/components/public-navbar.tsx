@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -8,13 +8,26 @@ import { WalletConnect } from "./wallet-connect";
 import { ThemeToggle } from "./theme-toggle";
 import { useAuth } from "./providers/auth-provider";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard, User, LogOut, ChevronDown } from "lucide-react";
 
 export function PublicNavbar() {
   const pathname = usePathname();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, creator, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -74,12 +87,53 @@ export function PublicNavbar() {
             <div className="hidden md:flex items-center gap-3">
               <ThemeToggle />
               {isAuthenticated ? (
-                <Link
-                  href="/dashboard"
-                  className="shimmer-btn text-white px-5 py-2 rounded-full text-sm font-bold transition-all"
-                >
-                  Dashboard
-                </Link>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border hover:border-primary/40 bg-card transition-all"
+                  >
+                    {creator?.avatarUrl ? (
+                      <img src={creator.avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+                    ) : (
+                      <div className="h-7 w-7 rounded-full bg-primary/15 flex items-center justify-center">
+                        <User className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                    )}
+                    <span className="text-sm font-medium max-w-[100px] truncate">
+                      {creator?.username || creator?.walletAddress?.slice(0, 8) + "..."}
+                    </span>
+                    <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", profileOpen && "rotate-180")} />
+                  </button>
+
+                  {profileOpen && (
+                    <div className="absolute right-0 mt-2 w-52 rounded-xl bg-card border border-border shadow-xl py-1.5 z-50">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
+                        Dashboard
+                      </Link>
+                      <Link
+                        href="/dashboard/settings"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        Profile
+                      </Link>
+                      <div className="border-t border-border my-1" />
+                      <button
+                        onClick={() => { setProfileOpen(false); signOut(); }}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-muted transition-colors w-full text-left"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Log Out
+                      </button>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <WalletConnect compact />
               )}

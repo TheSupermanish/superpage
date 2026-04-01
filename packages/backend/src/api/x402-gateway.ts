@@ -490,7 +490,7 @@ function generateSampleFileContent(resource: any, filename: string) {
  * Serve blog/article content (URL, sitemap, or direct content)
  */
 async function serveArticle(resource: any, req: Request, res: Response) {
-  const { content, storage_key, blog_url, sitemap_url, mode } = resource.config;
+  const { content, storage_key, blog_url, sitemap_url, mode } = resource.config || {};
 
   res.setHeader("X-402-Paid", "true");
 
@@ -589,7 +589,7 @@ async function serveArticle(resource: any, req: Request, res: Response) {
  * Redirect to Shopify checkout
  */
 async function serveShopify(resource: any, _req: Request, res: Response) {
-  const { store_id } = resource.config;
+  const { store_id } = resource.config || {};
 
   if (!store_id) {
     return res.status(500).json({ error: "Shopify resource misconfigured: missing store_id" });

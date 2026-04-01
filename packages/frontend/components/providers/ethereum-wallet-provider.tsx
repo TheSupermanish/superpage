@@ -12,7 +12,9 @@ const queryClient = new QueryClient();
 
 // All supported chains - Base first since it's the default
 const supportedChains = [
-  baseSepolia,      // Default testnet (x402 payment chain)
+  flowTestnet,      // Default testnet (x402 payment chain)
+  flowMainnet,      // Flow EVM mainnet
+  baseSepolia,      // Base testnet
   base,             // Base mainnet
   mainnet,          // Ethereum mainnet
   sepolia,          // Ethereum testnet
@@ -23,8 +25,6 @@ const supportedChains = [
   cronosTestnet,    // Cronos testnet
   cronos,           // Cronos mainnet
   mantleSepolia,    // Mantle testnet
-  flowMainnet,      // Flow EVM mainnet
-  flowTestnet,      // Flow EVM testnet
 ] as const;
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
@@ -59,7 +59,7 @@ export function EthereumWalletProvider({ children }: EthereumWalletProviderProps
             accentColorForeground: "white",
             borderRadius: "medium",
           })}
-          initialChain={baseSepolia}
+          initialChain={flowTestnet}
         >
           {mounted ? children : null}
         </RainbowKitProvider>

@@ -175,8 +175,8 @@ export default function ShopifyProductsPage() {
 
       console.log("Import successful:", result);
 
-      // Redirect to resources page
-      router.push("/dashboard/resources?tab=stores");
+      // Redirect back to stores page
+      router.push("/dashboard/stores");
     } catch (err: any) {
       console.error("Import error:", err);
       setError(err.message);
@@ -191,12 +191,12 @@ export default function ShopifyProductsPage() {
 
   if (error && !products.length) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 text-center">
+      <div className="w-full space-y-6">
+        <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center">
           <h2 className="text-xl font-semibold text-red-400 mb-2">Error</h2>
           <p className="text-red-300 mb-4">{error}</p>
-          <Button onClick={() => router.push("/dashboard/resources/new")}>
-            Back to Resources
+          <Button onClick={() => router.push("/dashboard/stores")}>
+            Back to Stores
           </Button>
         </div>
       </div>
@@ -204,17 +204,17 @@ export default function ShopifyProductsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <Link
-        href="/dashboard/resources/new"
-        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6"
+    <div className="w-full space-y-6">
+      <button
+        onClick={() => router.push("/dashboard/stores")}
+        className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Create Resource
-      </Link>
+        Back to Stores
+      </button>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Select Products to Import</h1>
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Select Products to Import</h1>
         <div className="flex items-center gap-2 text-muted-foreground">
           <span>From</span>
           <span className="font-medium text-foreground">{storeName}</span>
@@ -238,46 +238,50 @@ export default function ShopifyProductsPage() {
       ) : (
         <>
           {/* Search and Actions */}
-          <div className="flex gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-card border-border"
-              />
+          <div className="bg-card border border-border rounded-2xl p-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-background border-border rounded-xl"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  onClick={() =>
+                    setSelectedProducts(
+                      new Set(selectedProducts.size > 0 ? [] : products.map((p) => p.id))
+                    )
+                  }
+                  variant="outline"
+                  className="border-border rounded-xl"
+                >
+                  {selectedProducts.size > 0 ? "Deselect All" : "Select All"}
+                </Button>
+                <Button
+                  onClick={handleImport}
+                  disabled={importing || selectedProducts.size === 0}
+                  className="bg-sp-pink hover:bg-sp-pink/90 rounded-xl shadow-lg shadow-sp-pink/10 font-bold"
+                >
+                  {importing ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Import {selectedProducts.size} Product
+                      {selectedProducts.size !== 1 ? "s" : ""}
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
-            <Button
-              onClick={() =>
-                setSelectedProducts(
-                  new Set(selectedProducts.size > 0 ? [] : products.map((p) => p.id))
-                )
-              }
-              variant="outline"
-              className="border-border"
-            >
-              {selectedProducts.size > 0 ? "Deselect All" : "Select All"}
-            </Button>
-            <Button
-              onClick={handleImport}
-              disabled={importing || selectedProducts.size === 0}
-              className="bg-sp-pink hover:bg-sp-pink/90"
-            >
-              {importing ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Importing...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Import {selectedProducts.size} Product
-                  {selectedProducts.size !== 1 ? "s" : ""}
-                </>
-              )}
-            </Button>
           </div>
 
           {/* Error */}
@@ -301,60 +305,63 @@ export default function ShopifyProductsPage() {
               </p>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredProducts.map((product) => (
-                <Card
+                <div
                   key={product.id}
-                  className={`bg-card border transition-all cursor-pointer ${
+                  className={`bg-card border transition-all cursor-pointer rounded-2xl p-4 group ${
                     selectedProducts.has(product.id)
                       ? "border-sp-pink bg-sp-pink/5"
                       : "border-border hover:border-sp-pink/30"
                   }`}
                   onClick={() => toggleProduct(product.id)}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <Checkbox
-                        checked={selectedProducts.has(product.id)}
-                        onCheckedChange={() => toggleProduct(product.id)}
-                        className="mt-1"
-                      />
-                      <div className="w-16 h-16 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
-                        {product.imageUrl ? (
-                          <img
-                            src={product.imageUrl}
-                            alt={product.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              // Hide broken image and show fallback
-                              e.currentTarget.style.display = "none";
-                              const parent = e.currentTarget.parentElement;
-                              if (parent) {
-                                parent.innerHTML = '<svg class="h-8 w-8 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>';
-                              }
-                            }}
-                          />
-                        ) : (
-                          <Package className="h-8 w-8 text-muted-foreground" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-foreground truncate">
-                          {product.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {product.variants.length} variant
-                          {product.variants.length !== 1 ? "s" : ""}
-                        </p>
-                        {product.variants[0] && (
-                          <p className="text-sm text-sp-pink mt-1 font-medium">
-                            ${product.variants[0].price}
-                          </p>
-                        )}
-                      </div>
+                  <div className="flex items-start gap-3 mb-3">
+                    <Checkbox
+                      checked={selectedProducts.has(product.id)}
+                      onCheckedChange={() => toggleProduct(product.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-foreground text-sm line-clamp-2">
+                        {product.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {product.variants.length} variant
+                        {product.variants.length !== 1 ? "s" : ""}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                  <div className="aspect-square rounded-xl overflow-hidden mb-3 bg-muted">
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Package className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    {product.variants[0] && (
+                      <p className="text-lg font-bold text-sp-pink">
+                        ${product.variants[0].price}
+                      </p>
+                    )}
+                    {product.variants[0]?.inventoryQuantity !== undefined && (
+                      <p className="text-xs text-muted-foreground">
+                        {(product.variants[0].inventoryQuantity ?? 0) > 0 ? (
+                          <span className="text-sp-pink">{product.variants[0].inventoryQuantity} in stock</span>
+                        ) : (
+                          <span className="text-red-400">Out of stock</span>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           )}
