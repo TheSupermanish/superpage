@@ -1,0 +1,33 @@
+services:
+  superpage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${APP_URL:-https://superpa.ge}
+        NEXT_PUBLIC_X402_CHAIN: ${X402_CHAIN:-flow-testnet}
+        NEXT_PUBLIC_X402_CURRENCY: ${X402_CURRENCY:-USDC}
+        NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ${WALLETCONNECT_PROJECT_ID}
+    container_name: superpage-app
+    restart: always
+    ports:
+      - "1337:1337"
+      - "3000:3000"
+    env_file:
+      - .env.production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - superpage

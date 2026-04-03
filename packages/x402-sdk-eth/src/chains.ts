@@ -17,6 +17,8 @@ import {
   arbitrumSepolia,
   optimism,
   optimismSepolia,
+  flowMainnet,
+  flowTestnet,
 } from "viem/chains";
 
 // ============================================================
@@ -32,11 +34,12 @@ export type NetworkId =
   | "mantle-sepolia"
   | "cronos" | "cronos-testnet"
   | "bite-v2-sandbox"
+  | "flow" | "flow-testnet"
   | "initia-testnet";
 
-export type TokenSymbol = "ETH" | "USDC" | "USDT" | "DAI" | "CRO" | "MNT" | "sFUEL" | "INIT";
+export type TokenSymbol = "ETH" | "USDC" | "USDT" | "DAI" | "CRO" | "MNT" | "sFUEL" | "FLOW" | "INIT";
 
-export type NativeTokenSymbol = "ETH" | "CRO" | "MNT" | "sFUEL" | "INIT";
+export type NativeTokenSymbol = "ETH" | "CRO" | "MNT" | "sFUEL" | "FLOW" | "INIT";
 
 export interface TokenConfig {
   symbol: TokenSymbol;
@@ -369,6 +372,39 @@ export const CHAIN_REGISTRY: Record<NetworkId, ChainMetadata> = {
     displayCurrency: "devUSDC.e",
   },
 
+  // Flow
+  flow: {
+    id: "flow",
+    chainId: 747,
+    name: "Flow EVM Mainnet",
+    shortName: "FLOW",
+    isTestnet: false,
+    viemChain: flowMainnet,
+    rpcUrl: "https://mainnet.evm.nodes.onflow.org",
+    explorerUrl: "https://evm.flowscan.io",
+    nativeToken: { symbol: "FLOW", name: "Flow", decimals: 18 },
+    tokens: {
+      USDC: { symbol: "USDC", decimals: 6, address: "0xF1815bd50389c46847f0Bda824eC8da914045D14" },
+      USDT: { symbol: "USDT", decimals: 6, address: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8" },
+    },
+    defaultPaymentToken: "USDC",
+  },
+  "flow-testnet": {
+    id: "flow-testnet",
+    chainId: 545,
+    name: "Flow EVM Testnet",
+    shortName: "FLOWT",
+    isTestnet: true,
+    viemChain: flowTestnet,
+    rpcUrl: "https://testnet.evm.nodes.onflow.org",
+    explorerUrl: "https://evm-testnet.flowscan.io",
+    nativeToken: { symbol: "FLOW", name: "Flow", decimals: 18 },
+    tokens: {
+      USDC: { symbol: "USDC", decimals: 6, address: "0x291b030d596cf505f774426d8de7c946ce5af7a5" },
+    },
+    defaultPaymentToken: "USDC",
+  },
+
   // BITE V2 Sandbox 2 (SKALE)
   "bite-v2-sandbox": {
     id: "bite-v2-sandbox",
@@ -474,7 +510,7 @@ export function getTxExplorerUrl(networkId: NetworkId, txHash: string): string {
  * Check if token is a native token (ETH, CRO, MNT)
  */
 export function isNativeToken(symbol: TokenSymbol): symbol is NativeTokenSymbol {
-  return ["ETH", "CRO", "MNT", "sFUEL", "INIT"].includes(symbol);
+  return ["ETH", "CRO", "MNT", "sFUEL", "FLOW", "INIT"].includes(symbol);
 }
 
 /**
@@ -622,6 +658,7 @@ export const TOKEN_DECIMALS: Record<TokenSymbol, number> = {
   CRO: 18,
   MNT: 18,
   sFUEL: 18,
+  FLOW: 18,
   INIT: 18,
   USDC: 6,
   USDT: 6,

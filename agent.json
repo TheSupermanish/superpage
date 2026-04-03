@@ -1,0 +1,118 @@
+{
+  "name": "superpage-merchant-agent",
+  "description": "Autonomous merchant agent for the x402 payment protocol — enables AI agents and humans to discover, pay for, and access digital resources (APIs, files, articles, datasets) using on-chain USDC micro-payments on Flow EVM.",
+  "version": "1.0.0",
+  "url": "https://superpa.ge/a2a",
+  "protocols": ["A2A", "MCP", "x402", "AP2", "ERC-8004"],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": true,
+    "autonomousPayment": true,
+    "agentToAgentComms": true
+  },
+  "skills": [
+    {
+      "id": "resource-access",
+      "name": "Resource Access via x402",
+      "description": "Access payment-gated resources (APIs, files, articles) with USDC micro-payments. Agent receives HTTP 402, extracts payment requirements, executes on-chain transfer, and gains access.",
+      "tags": ["x402", "payment", "resources", "pay-per-use"],
+      "examples": [
+        "Access a premium weather API endpoint",
+        "Unlock a gated research article for 0.50 USDC",
+        "Download a dataset behind an x402 paywall"
+      ]
+    },
+    {
+      "id": "purchase",
+      "name": "Shopify Product Purchase",
+      "description": "Purchase physical and digital products from Shopify stores using on-chain USDC payments. Supports product browsing, cart creation, and checkout.",
+      "tags": ["shopping", "e-commerce", "shopify"],
+      "examples": [
+        "Buy a t-shirt from the x402 shop",
+        "Browse products and purchase with crypto"
+      ]
+    },
+    {
+      "id": "ap2-shopping",
+      "name": "AP2 Mandate-Based Shopping",
+      "description": "Full AP2 mandate flow: receive IntentMandate, return CartMandate with W3C PaymentRequest, verify PaymentMandate with x402 proof, issue PaymentReceipt.",
+      "tags": ["ap2", "mandates", "w3c-payment"],
+      "examples": [
+        "Send IntentMandate: 'I want a weather API under $1'",
+        "Submit PaymentMandate with on-chain tx hash"
+      ]
+    },
+    {
+      "id": "erc8004-trust",
+      "name": "On-Chain Trust & Reputation (ERC-8004)",
+      "description": "Register agent identity, query reputation scores, submit feedback, and verify trust via ERC-8004 Trustless Agents registries on Flow EVM.",
+      "tags": ["erc8004", "trust", "reputation", "identity", "flow"],
+      "examples": [
+        "Register this agent on-chain with ERC-8004",
+        "Check reputation score of agent #0",
+        "Submit feedback after a successful purchase"
+      ]
+    },
+    {
+      "id": "creator-marketplace",
+      "name": "Creator Marketplace",
+      "description": "Discover creators and their monetized resources. Search by keyword, browse catalogs, preview pricing before committing to payment.",
+      "tags": ["marketplace", "discovery", "creators"],
+      "examples": [
+        "Find all API resources under $2",
+        "List resources by creator 'weatherstack'",
+        "Search for blockchain research articles"
+      ]
+    }
+  ],
+  "chain": {
+    "network": "flow-testnet",
+    "chainId": 545,
+    "rpcUrl": "https://testnet.evm.nodes.onflow.org",
+    "explorer": "https://evm-testnet.flowscan.io",
+    "currency": "USDC",
+    "usdcContract": "0x291b030d596cf505f774426d8de7c946ce5af7a5"
+  },
+  "erc8004": {
+    "agentId": 0,
+    "chainId": 545,
+    "identityRegistry": "0xbdf0ae617ac3570795b9b18ece6fd85444c6a918",
+    "reputationRegistry": "0xf0aab3cfc4dc5e335faeb0b95a934af994073b95",
+    "validationRegistry": "0x0bfff9626f409639c8501c14813ddba6f30d5a99",
+    "registrationFile": "https://superpa.ge/.well-known/agent-registration.json"
+  },
+  "endpoints": {
+    "a2a": "https://superpa.ge/a2a",
+    "mcp": "https://superpa.ge/mcp/universal",
+    "mcpPayment": "https://superpa.ge/mcp-payment",
+    "agentCard": "https://superpa.ge/.well-known/agent.json",
+    "agentRegistration": "https://superpa.ge/.well-known/agent-registration.json",
+    "web": "https://superpa.ge"
+  },
+  "surfaces": [
+    {
+      "name": "Web App",
+      "url": "https://superpa.ge",
+      "description": "Next.js marketplace frontend for browsing creators, purchasing resources, and managing stores"
+    },
+    {
+      "name": "MCP Server (Claude Desktop)",
+      "endpoint": "https://superpa.ge/mcp/universal",
+      "description": "30+ tools for autonomous resource discovery, payment, and ERC-8004 trust operations"
+    },
+    {
+      "name": "Standalone AI Agent",
+      "package": "packages/ai-agent",
+      "description": "CLI agent supporting Anthropic, OpenAI, and Google LLMs for autonomous shopping"
+    },
+    {
+      "name": "Telegram Bot",
+      "description": "OpenClaw gateway for conversational resource access"
+    }
+  ],
+  "provider": {
+    "organization": "SuperPage",
+    "url": "https://superpa.ge"
+  }
+}

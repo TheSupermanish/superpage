@@ -24,6 +24,8 @@ import {
   arbitrumSepolia,
   optimism,
   optimismSepolia,
+  flowMainnet,
+  flowTestnet,
 } from "viem/chains";
 
 /**
@@ -174,6 +176,8 @@ export const CHAINS: Record<Network, Chain> = {
   cronos,
   "cronos-testnet": cronosTestnet,
   "bite-v2-sandbox": biteV2Sandbox,
+  flow: flowMainnet,
+  "flow-testnet": flowTestnet,
   "initia-testnet": defineChain({
     id: 3981013683081008,
     name: "SuperPage Rollup (Initia MiniEVM)",
@@ -201,6 +205,8 @@ export const CHAIN_IDS: Record<Network, number> = {
   cronos: 25,
   "cronos-testnet": 338,
   "bite-v2-sandbox": 103698795,
+  flow: 747,
+  "flow-testnet": 545,
   "initia-testnet": 3981013683081008,
 };
 
@@ -209,7 +215,7 @@ export const CHAIN_IDS: Record<Network, number> = {
  * Using official USDC addresses from Circle and other verified contracts
  * Note: ETH, CRO, and MNT are native tokens, not ERC20, so they're excluded
  */
-export const TOKEN_ADDRESSES: Record<Network, Record<Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL">, Address>> = {
+export const TOKEN_ADDRESSES: Record<Network, Record<Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL" | "FLOW">, Address>> = {
   mainnet: {
     USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     USDT: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -280,6 +286,16 @@ export const TOKEN_ADDRESSES: Record<Network, Record<Exclude<TokenType, "ETH" | 
     USDT: "0x0000000000000000000000000000000000000000" as Address,
     DAI: "0x0000000000000000000000000000000000000000" as Address,
   },
+  flow: {
+    USDC: "0xF1815bd50389c46847f0Bda824eC8da914045D14" as Address,
+    USDT: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8" as Address,
+    DAI: "0x0000000000000000000000000000000000000000" as Address,
+  },
+  "flow-testnet": {
+    USDC: "0x291b030d596cf505f774426d8de7c946ce5af7a5" as Address,
+    USDT: "0x0000000000000000000000000000000000000000" as Address,
+    DAI: "0x0000000000000000000000000000000000000000" as Address,
+  },
   "initia-testnet": {
     USDC: "0x06d1a12b351cab22727515c1f4fec2544f42d751" as Address,
     USDT: "0x0000000000000000000000000000000000000000" as Address,
@@ -295,6 +311,7 @@ export const TOKEN_DECIMALS: Record<TokenType, number> = {
   CRO: 18, // Cronos native token
   MNT: 18, // Mantle native token
   sFUEL: 18, // SKALE native token (zero gas fees)
+  FLOW: 18, // Flow native token
   USDC: 6,
   USDT: 6,
   DAI: 18,
@@ -352,8 +369,11 @@ export function getRpcEndpoint(network: Network, customEndpoint?: string): strin
     cronos: "https://evm.cronos.org",
     "cronos-testnet": "https://cronos-testnet.drpc.org",
     "bite-v2-sandbox": "https://base-sepolia-testnet.skalenodes.com/v1/bite-v2-sandbox",
+    flow: "https://mainnet.evm.nodes.onflow.org",
+    "flow-testnet": "https://testnet.evm.nodes.onflow.org",
+    "initia-testnet": process.env.INITIA_RPC_URL || "http://0.0.0.0:8545",
   };
-  
+
   return publicRpcs[network];
 }
 
@@ -486,10 +506,10 @@ export function createPaymentTransaction(
   const amount = BigInt(requirements.amount);
   
   // Native tokens (ETH on Ethereum, CRO on Cronos, MNT on Mantle, sFUEL on SKALE, etc.)
-  if (requirements.token === "ETH" || requirements.token === "CRO" || requirements.token === "MNT" || requirements.token === "sFUEL") {
+  if (requirements.token === "ETH" || requirements.token === "CRO" || requirements.token === "MNT" || requirements.token === "sFUEL" || requirements.token === "FLOW") {
     return createETHPaymentTransaction(recipient, amount);
   } else {
-    const tokenAddress = TOKEN_ADDRESSES[requirements.network][requirements.token as Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL">];
+    const tokenAddress = TOKEN_ADDRESSES[requirements.network][requirements.token as Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL" | "FLOW">];
     if (!tokenAddress || tokenAddress === "0x0000000000000000000000000000000000000000") {
       throw new TransactionFailedError(
         `Token ${requirements.token} is not supported on ${requirements.network}`
@@ -606,10 +626,10 @@ export async function sendPaymentTransaction(
   const amount = BigInt(requirements.amount);
   
   // Native tokens (ETH on Ethereum, CRO on Cronos, MNT on Mantle, sFUEL on SKALE, etc.)
-  if (requirements.token === "ETH" || requirements.token === "CRO" || requirements.token === "MNT" || requirements.token === "sFUEL") {
+  if (requirements.token === "ETH" || requirements.token === "CRO" || requirements.token === "MNT" || requirements.token === "sFUEL" || requirements.token === "FLOW") {
     return sendETHPayment(walletClient, recipient, amount);
   } else {
-    const tokenAddress = TOKEN_ADDRESSES[requirements.network][requirements.token as Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL">];
+    const tokenAddress = TOKEN_ADDRESSES[requirements.network][requirements.token as Exclude<TokenType, "ETH" | "CRO" | "MNT" | "sFUEL" | "FLOW">];
     if (!tokenAddress || tokenAddress === "0x0000000000000000000000000000000000000000") {
       throw new TransactionFailedError(
         `Token ${requirements.token} is not supported on ${requirements.network}`
@@ -744,7 +764,7 @@ export async function verifyPaymentTransaction(
     const expectedAmount = BigInt(requirements.amount);
     
     // Verify native token transfers (ETH, MNT, CRO, etc.)
-    if (requirements.token === "ETH" || requirements.token === "MNT" || requirements.token === "CRO" || requirements.token === "sFUEL") {
+    if (requirements.token === "ETH" || requirements.token === "MNT" || requirements.token === "CRO" || requirements.token === "sFUEL" || requirements.token === "FLOW") {
       console.log(`[verifyPaymentTransaction] Verifying native ${requirements.token} transfer`);
       console.log(`[verifyPaymentTransaction] tx.to: ${tx.to}, expected: ${recipient}`);
       console.log(`[verifyPaymentTransaction] tx.value: ${tx.value}, expected: ${expectedAmount}`);

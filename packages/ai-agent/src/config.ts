@@ -65,7 +65,7 @@ export function loadConfig(): AgentConfig {
       process.env.LLM_MODEL ||
       ({ anthropic: "claude-sonnet-4-20250514", openai: "gpt-4o", google: "gemini-2.0-flash" }[provider] ?? "claude-sonnet-4-20250514"),
     llmApiKey,
-    merchantUrl: process.env.MERCHANT_URL || "http://localhost:3001",
+    merchantUrl: process.env.MERCHANT_URL || "http://localhost:1337",
     walletPrivateKey: walletPrivateKey as `0x${string}`,
     network: process.env.X402_CHAIN || "initia-testnet",
     chainId: parseInt(process.env.CHAIN_ID || "3981013683081008", 10),

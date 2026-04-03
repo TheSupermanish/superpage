@@ -491,7 +491,7 @@
   <!-- SLIDE 1: Title -->
   <div class="slide active" id="slide-1">
     <img class="title-logo-img" src="packages/frontend/public/logo.png" alt="SuperPage Logo">
-    <div class="title-logo">SURGE × OpenClaw Hackathon 2026</div>
+    <div class="title-logo">PL Genesis Flow Hackathon 2026</div>
     <h1 style="font-size: 4rem;">
       <span class="gradient-text">SuperPage</span>
     </h1>
@@ -499,12 +499,15 @@
       The x402 Payment Skill for the Agent Internet
     </p>
     <p style="font-size: 1.15rem; color: var(--text-dim); max-width: 700px; margin-bottom: 40px;">
-      An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments on Base Sepolia.
+      An OpenClaw skill that lets autonomous AI agents discover, preview, confirm, and pay for digital resources and physical products using on-chain USDC micro-payments on Flow EVM.
     </p>
+    <div style="margin-bottom: 16px;">
+      <span class="tag" style="background:linear-gradient(135deg,#0052FF,#3B82F6);color:white;font-size:0.95rem;padding:8px 18px;">Coinbase x402 Track Winner</span>
+    </div>
     <div>
       <span class="tag tag-blue">x402 Protocol</span>
       <span class="tag tag-purple">OpenClaw</span>
-      <span class="tag tag-green">Base Sepolia</span>
+      <span class="tag tag-green">Flow EVM</span>
       <span class="tag tag-orange">MCP</span>
       <span class="tag tag-pink">A2A / AP2 / ERC-8004</span>
     </div>
@@ -600,7 +603,7 @@
         </div>
         <div class="arch-box">
           <div style="font-weight:600;">Marketplace</div>
-          <div style="font-size:0.8rem;color:var(--text-dim);">26+ resources + Shopify</div>
+          <div style="font-size:0.8rem;color:var(--text-dim);">43 resources + Shopify</div>
         </div>
         <div class="arch-box">
           <div style="font-weight:600;">A2A / AP2 Server</div>
@@ -610,8 +613,8 @@
       <div class="arch-arrow">↓</div>
       <!-- Blockchain -->
       <div class="arch-box" style="border-color: var(--green); background: rgba(34,197,94,0.05);">
-        <div style="font-weight:700;font-size:1.1rem;">Base Sepolia (L2)</div>
-        <div style="font-size:0.85rem;color:var(--text-dim);">USDC payments · Chain ID 84532 · ~2s blocks · On-chain receipts</div>
+        <div style="font-weight:700;font-size:1.1rem;">Flow EVM Testnet</div>
+        <div style="font-size:0.85rem;color:var(--text-dim);">USDC payments · Chain ID 545 · ~1s blocks · On-chain receipts</div>
       </div>
     </div>
   </div>
@@ -696,7 +699,7 @@ Here's the data: { temp: 72 }
           <div class="step-num" style="background:var(--green);">4</div>
           <div class="step-content">
             <h4>User Confirms → Agent Pays</h4>
-            <p>USDC transfer on Base Sepolia, ~2s confirmation</p>
+            <p>USDC transfer on Flow EVM Testnet, ~1s confirmation</p>
           </div>
         </div>
         <div class="demo-step">
@@ -717,7 +720,7 @@ Here's the data: { temp: 72 }
   <span class="string">"amount"</span>: <span class="string">"0.50"</span>,
   <span class="string">"currency"</span>: <span class="string">"USDC"</span>,
   <span class="string">"recipient"</span>: <span class="string">"0x..."</span>,
-  <span class="string">"chainId"</span>: <span class="number">84532</span>
+  <span class="string">"chainId": 545</span>
 }
 
 <span class="comment">// 3. Agent pays USDC on Base</span>
@@ -870,7 +873,7 @@ Here's the data: { temp: 72 }
       <div class="safety-item">
         <div class="safety-icon">⛓️</div>
         <h4>On-Chain Verification</h4>
-        <p>Every payment cryptographically verified against Base Sepolia before content is served.</p>
+        <p>Every payment cryptographically verified against Flow EVM Testnet before content is served.</p>
       </div>
       <div class="safety-item">
         <div class="safety-icon">⏱️</div>
@@ -890,7 +893,7 @@ Here's the data: { temp: 72 }
   <span class="string">"txHash"</span>:    <span class="string">"0x9eab1d..."</span>,
   <span class="string">"amount"</span>:    <span class="string">"0.50 USDC"</span>,
   <span class="string">"to"</span>:        <span class="string">"0x5163..."</span>,
-  <span class="string">"chainId"</span>:   <span class="number">84532</span>,
+  <span class="string">"chainId": 545</span>,
   <span class="string">"verified"</span>:  <span class="keyword">true</span>,
   <span class="string">"timestamp"</span>: <span class="number">1709312400</span>
 }
@@ -911,7 +914,7 @@ Here's the data: { temp: 72 }
           <tr><td style="color:var(--text);font-weight:500;">MCP Client</td><td>Node.js, viem, JSON-RPC</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">AI Agent</td><td>Vercel AI SDK (multi-LLM)</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">SDK</td><td>@super-x402/sdk (payment verification)</td></tr>
-          <tr><td style="color:var(--text);font-weight:500;">Blockchain</td><td>Base Sepolia, viem, USDC</td></tr>
+          <tr><td style="color:var(--text);font-weight:500;">Blockchain</td><td>Flow EVM, viem, USDC, ERC-8004</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">E-Commerce</td><td>Shopify Admin API</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">Identity</td><td>ERC-8004</td></tr>
           <tr><td style="color:var(--text);font-weight:500;">Wallet</td><td>RainbowKit, wagmi</td></tr>
@@ -951,33 +954,34 @@ superpage/
   <div class="slide" id="slide-11">
     <h3>Hackathon Tracks</h3>
     <h2>Track Alignment</h2>
-    <div style="margin-top: 24px;">
-      <div class="track-card primary">
-        <h4><span style="color:var(--accent);">Track 5:</span> Autonomous Payments & Monetized Skills</h4>
-        <p>x402-integrated OpenClaw skill charging USDC per resource. Preview + confirm flow, micro-payments ($0.01–$5), 12 MCP tools, direct creator revenue, reusable skill any OpenClaw agent can install.</p>
+    <div style="margin-top: 16px;">
+      <div class="track-card primary" style="border-color:var(--green);position:relative;">
+        <div style="position:absolute;top:8px;right:12px;font-size:0.75rem;background:var(--green);color:#000;padding:3px 10px;border-radius:8px;font-weight:700;">PREV. WINNER</div>
+        <h4><span style="color:var(--green);">Coinbase:</span> x402 Autonomous Payments Track</h4>
+        <p>Won the Coinbase x402 track at SURGE x OpenClaw Hackathon. Full x402 payment skill with 29 MCP tools, micro-payments, Shopify integration, and direct creator revenue.</p>
       </div>
       <div class="grid-3" style="margin-top: 12px;">
-        <div class="track-card">
-          <h4><span style="color:var(--accent2);">Track 1:</span> Agent Execution</h4>
-          <p>Autonomous Shopify shopping, wallet management, full checkout pipeline with shipping.</p>
+        <div class="track-card primary">
+          <h4><span style="color:var(--accent);">Flow:</span> Flow Track</h4>
+          <p>All contracts deployed on Flow EVM Testnet. MockUSDC + ERC-8004 identity/reputation registries. ~1s block time, sub-cent gas.</p>
         </div>
         <div class="track-card">
-          <h4><span style="color:var(--green);">Track 3:</span> Developer Infrastructure</h4>
-          <p>x402 SDK, MCP server, A2A protocol, AP2 implementation — reusable building blocks.</p>
+          <h4><span style="color:var(--accent2);">Flow:</span> Existing Code</h4>
+          <p>Production-grade monorepo: x402 SDK, MCP server, A2A protocol, Shopify checkout, 43 resources, 236 tests passing.</p>
         </div>
         <div class="track-card">
-          <h4><span style="color:var(--orange);">Track 4:</span> Agent-to-Agent</h4>
-          <p>A2A discovery, AP2 mandate-based shopping, ERC-8004 identity and reputation.</p>
+          <h4><span style="color:var(--orange);">Flow:</span> ERC-8004</h4>
+          <p>On-chain agent identity and reputation on Flow. Auto-registration at startup, feedback after purchases, trust-gated commerce.</p>
         </div>
       </div>
     </div>
-    <div style="margin-top: 32px;">
+    <div style="margin-top: 24px;">
       <h3 style="font-size: 1.1rem; color: var(--text);">What Makes Us Different</h3>
       <div class="grid-3" style="margin-top: 12px;">
         <div style="text-align:center;">
           <div style="font-size:2rem;margin-bottom:8px;">🏪</div>
           <div style="font-weight:600;margin-bottom:4px;">Full Platform</div>
-          <div style="font-size:0.85rem;color:var(--text-dim);">Not a demo — real marketplace with 26+ resources and Shopify integration</div>
+          <div style="font-size:0.85rem;color:var(--text-dim);">Not a demo — real marketplace with 43 resources, Shopify integration, and 17 confirmed orders</div>
         </div>
         <div style="text-align:center;">
           <div style="font-size:2rem;margin-bottom:8px;">🔌</div>
@@ -987,7 +991,7 @@ superpage/
         <div style="text-align:center;">
           <div style="font-size:2rem;margin-bottom:8px;">🤝</div>
           <div style="font-weight:600;margin-bottom:4px;">5 Protocols</div>
-          <div style="font-size:0.85rem;color:var(--text-dim);">x402, A2A, AP2, MCP, ERC-8004 — most comprehensive protocol stack</div>
+          <div style="font-size:0.85rem;color:var(--text-dim);">x402, A2A, AP2, MCP, ERC-8004 — most comprehensive agent commerce stack</div>
         </div>
       </div>
     </div>
@@ -1004,7 +1008,7 @@ superpage/
           <div class="step-num">1</div>
           <div class="step-content">
             <h4>"What resources are available?"</h4>
-            <p>Lists all 26+ resources with names, descriptions, prices</p>
+            <p>Lists all 43 resources with names, descriptions, prices</p>
           </div>
         </div>
         <div class="demo-step">
@@ -1056,10 +1060,10 @@ superpage/
         <div style="margin-top: 24px;">
           <h3 style="color:var(--text);font-size:1.15rem;">Network Details</h3>
           <table class="vs-table" style="margin-top:8px;">
-            <tr><td style="color:var(--text);">Network</td><td>Base Sepolia</td></tr>
-            <tr><td style="color:var(--text);">Chain ID</td><td>84532</td></tr>
+            <tr><td style="color:var(--text);">Network</td><td>Flow EVM Testnet</td></tr>
+            <tr><td style="color:var(--text);">Chain ID</td><td>545</td></tr>
             <tr><td style="color:var(--text);">Currency</td><td>USDC (6 decimals)</td></tr>
-            <tr><td style="color:var(--text);">Block Time</td><td>~2 seconds</td></tr>
+            <tr><td style="color:var(--text);">Block Time</td><td>~1 second</td></tr>
           </table>
         </div>
       </div>
@@ -1082,8 +1086,11 @@ superpage/
         <span class="tag tag-purple" style="font-size:1rem;padding:10px 20px;">@HeySuperioBot</span>
         <span class="tag tag-green" style="font-size:1rem;padding:10px 20px;">GitHub</span>
       </div>
-      <p style="color:var(--text-dim);font-size:1.1rem;margin-top:40px;">
-        Built for <strong style="color:var(--text);">SURGE × OpenClaw Hackathon</strong> — February 2026
+      <p style="color:var(--text-dim);font-size:1.1rem;margin-top:24px;">
+        <span style="background:linear-gradient(135deg,#0052FF,#3B82F6);color:white;padding:6px 16px;border-radius:8px;font-weight:700;font-size:0.9rem;">Coinbase x402 Track Winner — SURGE x OpenClaw 2026</span>
+      </p>
+      <p style="color:var(--text-dim);font-size:1rem;margin-top:16px;">
+        Now targeting <strong style="color:var(--text);">PL Genesis Flow Hackathon</strong> — Flow Track + Existing Code + ERC-8004
       </p>
       <div style="margin-top: 16px;">
         <span class="tag tag-blue">x402</span>

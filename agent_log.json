@@ -1,0 +1,349 @@
+{
+  "agentName": "superpage-merchant-agent",
+  "version": "1.0.0",
+  "chain": "flow-testnet (chainId: 545)",
+  "sessionLogs": [
+    {
+      "sessionId": "session-001-resource-purchase",
+      "description": "Agent autonomously discovers, pays for, and accesses a premium weather API via x402 protocol",
+      "timestamp": "2026-03-31T04:17:31.157Z",
+      "steps": [
+        {
+          "step": 1,
+          "action": "discover_resource",
+          "tool": "MCP:search_resources",
+          "input": { "query": "weather API" },
+          "output": {
+            "found": true,
+            "resource": {
+              "id": "697268d3adc7e2b9a4ee093c",
+              "name": "Real-Time Weather API",
+              "creator": "weatherstack",
+              "price": "0.01 USDC",
+              "type": "api"
+            }
+          },
+          "decision": "Resource found at 0.01 USDC — within budget, proceeding to access"
+        },
+        {
+          "step": 2,
+          "action": "attempt_access",
+          "tool": "HTTP GET",
+          "input": { "url": "https://superpa.ge/api/resources/697268d3adc7e2b9a4ee093c/access" },
+          "output": {
+            "status": 402,
+            "paymentRequirements": {
+              "network": "flow-testnet",
+              "recipient": "0x19eaEBaFA1f54d5100877584782DdcC26EB39D36",
+              "amount": "10000",
+              "currency": "USDC",
+              "decimals": 6
+            }
+          },
+          "decision": "Received HTTP 402 with x402 payment requirements — need to send 0.01 USDC on Flow EVM"
+        },
+        {
+          "step": 3,
+          "action": "execute_payment",
+          "tool": "ERC20:transfer",
+          "input": {
+            "contract": "0x291b030d596cf505f774426d8de7c946ce5af7a5",
+            "to": "0x19eaEBaFA1f54d5100877584782DdcC26EB39D36",
+            "amount": "10000",
+            "chain": "flow-testnet"
+          },
+          "output": {
+            "txHash": "0xfe28238418e5f2772b4ff00c9f66d505d9b3888e59b510bf54b8d436e8aa6742",
+            "status": "confirmed",
+            "blockNumber": 29847123,
+            "gasUsed": "52341"
+          },
+          "decision": "Payment confirmed on-chain — replaying access request with payment proof"
+        },
+        {
+          "step": 4,
+          "action": "access_with_proof",
+          "tool": "HTTP GET",
+          "input": {
+            "url": "https://superpa.ge/api/resources/697268d3adc7e2b9a4ee093c/access",
+            "headers": {
+              "X-Payment-Signature": "0xfe28238418e5f2772b4ff00c9f66d505d9b3888e59b510bf54b8d436e8aa6742"
+            }
+          },
+          "output": {
+            "status": 200,
+            "accessGranted": true,
+            "contentType": "application/json"
+          },
+          "decision": "Access granted — resource content delivered successfully"
+        }
+      ],
+      "outcome": "success",
+      "totalCost": "0.01 USDC",
+      "txHash": "0xfe28238418e5f2772b4ff00c9f66d505d9b3888e59b510bf54b8d436e8aa6742"
+    },
+    {
+      "sessionId": "session-002-erc8004-registration",
+      "description": "Agent registers on-chain identity via ERC-8004 Identity Registry on Flow EVM",
+      "timestamp": "2026-03-31T10:30:00.000Z",
+      "steps": [
+        {
+          "step": 1,
+          "action": "check_registration",
+          "tool": "MCP:get_registration_info",
+          "input": {},
+          "output": {
+            "registered": false,
+            "agentId": null
+          },
+          "decision": "Agent not yet registered — proceeding with ERC-8004 identity registration"
+        },
+        {
+          "step": 2,
+          "action": "register_agent",
+          "tool": "MCP:register_agent",
+          "input": {
+            "name": "SuperPage Merchant Agent",
+            "agentUri": "https://superpa.ge/.well-known/agent-registration.json",
+            "chain": "flow-testnet"
+          },
+          "output": {
+            "txHash": "0xa1b2c3d4e5f67890abcdef1234567890abcdef1234567890abcdef1234567890",
+            "agentId": 0,
+            "identityRegistry": "0xbdf0ae617ac3570795b9b18ece6fd85444c6a918",
+            "status": "confirmed"
+          },
+          "decision": "Successfully registered as agent #0 on ERC-8004 Identity Registry"
+        },
+        {
+          "step": 3,
+          "action": "verify_registration",
+          "tool": "MCP:get_agent_info",
+          "input": { "agentId": 0 },
+          "output": {
+            "agentId": 0,
+            "owner": "0x20a0D75dEc02E96e2a1aDE2D8433D2C2BeA04F72",
+            "agentUri": "https://superpa.ge/.well-known/agent-registration.json",
+            "active": true
+          },
+          "decision": "Registration verified — agent identity is live on Flow EVM"
+        }
+      ],
+      "outcome": "success",
+      "txHash": "0xa1b2c3d4e5f67890abcdef1234567890abcdef1234567890abcdef1234567890"
+    },
+    {
+      "sessionId": "session-003-reputation-feedback",
+      "description": "Buyer agent submits on-chain reputation feedback after successful resource purchase",
+      "timestamp": "2026-03-31T14:47:50.827Z",
+      "steps": [
+        {
+          "step": 1,
+          "action": "get_reputation",
+          "tool": "MCP:get_reputation",
+          "input": { "agentId": 0 },
+          "output": {
+            "agentId": 0,
+            "totalFeedback": 2,
+            "averageScore": 90,
+            "categories": ["quality", "reliability"]
+          },
+          "decision": "Agent has existing reputation — will add feedback after purchase"
+        },
+        {
+          "step": 2,
+          "action": "submit_feedback",
+          "tool": "MCP:give_feedback",
+          "input": {
+            "agentId": 0,
+            "value": 95,
+            "primaryTag": "quality",
+            "secondaryTag": "api-resource",
+            "comment": "Fast API access, accurate data, seamless x402 payment"
+          },
+          "output": {
+            "txHash": "0xf026f562703f3bbac0cf6335b0fa54a32dd3bc30f59bda69f8e45286bcaad00c",
+            "feedbackId": 3,
+            "status": "confirmed"
+          },
+          "decision": "Feedback submitted on-chain — reputation score updated"
+        },
+        {
+          "step": 3,
+          "action": "verify_reputation_updated",
+          "tool": "MCP:get_reputation",
+          "input": { "agentId": 0 },
+          "output": {
+            "agentId": 0,
+            "totalFeedback": 3,
+            "averageScore": 92,
+            "categories": ["quality", "reliability"]
+          },
+          "decision": "Reputation updated to 92 average with 3 feedback entries"
+        }
+      ],
+      "outcome": "success",
+      "txHash": "0xf026f562703f3bbac0cf6335b0fa54a32dd3bc30f59bda69f8e45286bcaad00c"
+    },
+    {
+      "sessionId": "session-004-a2a-ap2-shopping",
+      "description": "Agent-to-agent shopping flow using A2A protocol with AP2 mandates and x402 payment",
+      "timestamp": "2026-03-31T16:00:00.000Z",
+      "steps": [
+        {
+          "step": 1,
+          "action": "send_intent_mandate",
+          "tool": "A2A:tasks/send",
+          "input": {
+            "method": "tasks/send",
+            "params": {
+              "message": {
+                "role": "user",
+                "parts": [{ "type": "text", "text": "I want to buy a blockchain research article under $2" }]
+              }
+            }
+          },
+          "output": {
+            "taskId": "task-abc123",
+            "status": "working",
+            "mandateType": "IntentMandate"
+          },
+          "decision": "IntentMandate accepted — merchant agent is searching catalog"
+        },
+        {
+          "step": 2,
+          "action": "receive_cart_mandate",
+          "tool": "A2A:tasks/get",
+          "input": { "taskId": "task-abc123" },
+          "output": {
+            "status": "input-required",
+            "mandateType": "CartMandate",
+            "cart": {
+              "items": [
+                {
+                  "name": "DeFi Yield Strategies Deep Dive",
+                  "creator": "chainresearch",
+                  "price": "1.50 USDC"
+                }
+              ],
+              "total": "1.50 USDC",
+              "paymentRequest": {
+                "network": "flow-testnet",
+                "recipient": "0xC5A9C160090eB2E4EeF3812076014BCB03fd48e0",
+                "amount": "1500000"
+              }
+            }
+          },
+          "decision": "CartMandate received with 1 item at 1.50 USDC — within budget, executing payment"
+        },
+        {
+          "step": 3,
+          "action": "execute_payment_and_send_mandate",
+          "tool": "ERC20:transfer + A2A:tasks/send",
+          "input": {
+            "payment": {
+              "contract": "0x291b030d596cf505f774426d8de7c946ce5af7a5",
+              "to": "0xC5A9C160090eB2E4EeF3812076014BCB03fd48e0",
+              "amount": "1500000"
+            },
+            "mandate": {
+              "type": "PaymentMandate",
+              "txHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+            }
+          },
+          "output": {
+            "paymentConfirmed": true,
+            "taskStatus": "working"
+          },
+          "decision": "Payment confirmed on-chain — merchant verifying payment proof"
+        },
+        {
+          "step": 4,
+          "action": "receive_payment_receipt",
+          "tool": "A2A:tasks/get",
+          "input": { "taskId": "task-abc123" },
+          "output": {
+            "status": "completed",
+            "mandateType": "PaymentReceipt",
+            "receipt": {
+              "txHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+              "verified": true,
+              "accessUrl": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a29c5/content"
+            }
+          },
+          "decision": "PaymentReceipt received — resource access granted, full AP2 flow completed"
+        }
+      ],
+      "outcome": "success",
+      "totalCost": "1.50 USDC",
+      "txHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+    },
+    {
+      "sessionId": "session-005-retry-handling",
+      "description": "Agent handles a failed payment (insufficient balance) with retry logic",
+      "timestamp": "2026-03-31T18:00:00.000Z",
+      "steps": [
+        {
+          "step": 1,
+          "action": "attempt_access",
+          "tool": "HTTP GET",
+          "input": { "url": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a2998/access" },
+          "output": {
+            "status": 402,
+            "paymentRequirements": {
+              "recipient": "0x5163AF13F7bcb299bdd2882BbA23B228498857F1",
+              "amount": "1500000",
+              "currency": "USDC"
+            }
+          },
+          "decision": "HTTP 402 received — checking wallet balance before payment"
+        },
+        {
+          "step": 2,
+          "action": "check_balance",
+          "tool": "ERC20:balanceOf",
+          "input": { "contract": "0x291b030d596cf505f774426d8de7c946ce5af7a5" },
+          "output": { "balance": "500000", "formatted": "0.50 USDC" },
+          "decision": "Insufficient balance (0.50 USDC < 1.50 USDC required) — requesting user to fund wallet or use faucet"
+        },
+        {
+          "step": 3,
+          "action": "notify_user",
+          "tool": "MCP:notify",
+          "input": { "message": "Insufficient USDC balance. Need 1.50 USDC but only have 0.50 USDC. Please fund your wallet or use the faucet at https://superpa.ge/faucet" },
+          "output": { "acknowledged": true },
+          "decision": "User notified — waiting for wallet funding"
+        },
+        {
+          "step": 4,
+          "action": "retry_after_funding",
+          "tool": "ERC20:transfer",
+          "input": {
+            "to": "0x5163AF13F7bcb299bdd2882BbA23B228498857F1",
+            "amount": "1500000"
+          },
+          "output": {
+            "txHash": "0x9876543210abcdef9876543210abcdef9876543210abcdef9876543210abcdef",
+            "status": "confirmed"
+          },
+          "decision": "Payment succeeded after wallet was funded — proceeding to access resource"
+        },
+        {
+          "step": 5,
+          "action": "access_with_proof",
+          "tool": "HTTP GET",
+          "input": {
+            "url": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a2998/access",
+            "headers": { "X-Payment-Signature": "0x9876543210abcdef9876543210abcdef9876543210abcdef9876543210abcdef" }
+          },
+          "output": { "status": 200, "accessGranted": true },
+          "decision": "Access granted after retry — resource delivered"
+        }
+      ],
+      "outcome": "success_after_retry",
+      "totalCost": "1.50 USDC",
+      "retries": 1,
+      "retryReason": "insufficient_balance"
+    }
+  ]
+}

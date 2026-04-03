@@ -13,7 +13,7 @@ const NATIVE_TOKENS: Record<string, string> = {
 };
 
 export const CHAIN_IDS: Record<string, number> = {
-  "initia-testnet": 3981013683081008, // Will update after rollup launch
+  "initia-testnet": 3981013683081008,
 };
 
 export const EXPLORER_URLS: Record<string, string> = {

@@ -184,6 +184,8 @@ export async function handleVerifySignature(req: Request, res: Response) {
         socialLinks: creator.socialLinks,
         isPublic: creator.isPublic,
         showStats: creator.showStats,
+        isAgent: creator.isAgent || false,
+        erc8004AgentId: creator.erc8004AgentId || null,
       },
     });
   } catch (err: any) {
@@ -249,7 +251,9 @@ export async function handleUpdateMe(req: AuthenticatedRequest, res: Response) {
       displayName,
       socialLinks,
       isPublic,
-      showStats
+      showStats,
+      isAgent,
+      erc8004AgentId,
     } = req.body;
 
     // Validate URL fields start with http:// or https://
@@ -281,6 +285,8 @@ export async function handleUpdateMe(req: AuthenticatedRequest, res: Response) {
     if (socialLinks !== undefined) updateData.socialLinks = socialLinks;
     if (isPublic !== undefined) updateData.isPublic = isPublic;
     if (showStats !== undefined) updateData.showStats = showStats;
+    if (isAgent !== undefined) updateData.isAgent = isAgent;
+    if (erc8004AgentId !== undefined) updateData.erc8004AgentId = erc8004AgentId;
 
     const creator = await Creator.findByIdAndUpdate(
       req.creator.id,
@@ -305,6 +311,8 @@ export async function handleUpdateMe(req: AuthenticatedRequest, res: Response) {
         socialLinks: creator.socialLinks,
         isPublic: creator.isPublic,
         showStats: creator.showStats,
+        isAgent: creator.isAgent || false,
+        erc8004AgentId: creator.erc8004AgentId || null,
       },
     });
   } catch (err: any) {

@@ -105,19 +105,10 @@ function tryFileDownload(res: Response): ResourceResult | null {
   };
 }
 
-/** Trigger a browser file download from a Response */
-async function downloadResponse(res: Response, filename: string): Promise<string> {
+/** Create a blob URL from a Response (does NOT auto-download — modal shows download button) */
+async function prepareBlobUrl(res: Response): Promise<string> {
   const blob = await res.blob();
-  const blobUrl = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = blobUrl;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-  // Revoke after a short delay to allow the download to start
-  setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
-  return blobUrl;
+  return URL.createObjectURL(blob);
 }
 
 /** Read response body safely based on content-type (avoids body-already-read errors) */
@@ -208,6 +199,7 @@ export function useX402Payment() {
         functionName: "transfer",
         args: [requirements.recipient as `0x${string}`, BigInt(requirements.amount)],
         chainId: requirements.chainId || CURRENT_CHAIN_ID,
+        gas: 500_000n,
       });
 
       setTxHash(hash);
@@ -253,7 +245,7 @@ export function useX402Payment() {
           // Check if it's a file download
           const fileInfo = tryFileDownload(phase1);
           if (fileInfo) {
-            const blobUrl = await downloadResponse(phase1, fileInfo.downloaded!.filename);
+            const blobUrl = await prepareBlobUrl(phase1);
             setStatus("success");
             return { ...fileInfo, downloaded: { ...fileInfo.downloaded!, url: blobUrl } };
           }
@@ -287,7 +279,7 @@ export function useX402Payment() {
         // Check if this is a file download (Content-Disposition: attachment)
         const fileInfo = tryFileDownload(phase2);
         if (fileInfo) {
-          const blobUrl = await downloadResponse(phase2, fileInfo.downloaded!.filename);
+          const blobUrl = await prepareBlobUrl(phase2);
           setStatus("success");
           return { ...fileInfo, downloaded: { ...fileInfo.downloaded!, url: blobUrl } };
         }

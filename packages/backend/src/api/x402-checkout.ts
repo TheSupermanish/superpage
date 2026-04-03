@@ -153,18 +153,23 @@ export async function handleCheckout(req: Request, res: Response) {
 
       console.log(`[${requestId}] Found ${rows?.length || 0} products`);
 
-      const priceMap = new Map<string, { price: number; currency: string }>();
+      const priceMap = new Map<string, { priceCents: number; currency: string; inventory: number | null }>();
       for (const r of rows || []) {
-        const pNum = typeof r.price === "string" ? parseFloat(r.price) : Number(r.price);
+        // Convert price string to integer cents to avoid floating point errors
+        // Shopify stores prices as "19.99" strings
+        const priceStr = typeof r.price === "string" ? r.price : String(r.price);
+        const priceCents = Math.round(parseFloat(priceStr) * 100);
         priceMap.set(r.variantId, {
-          price: pNum,
+          priceCents,
           currency: r.currency || store.currency || "USD",
+          inventory: typeof r.inventory === "number" ? r.inventory : null,
         });
       }
 
-      // Validate all items present
+      // Validate all items present, check quantity and inventory
       for (const it of items) {
-        if (!priceMap.has(it.productId)) {
+        const product = priceMap.get(it.productId);
+        if (!product) {
           console.error(`[${requestId}] Product not found: ${it.productId}`);
           return res.status(400).json({
             error: `Product not found for store: ${it.productId}`,
@@ -176,18 +181,30 @@ export async function handleCheckout(req: Request, res: Response) {
             error: `Invalid quantity for ${it.productId}`,
           });
         }
+        // Inventory check — null means unknown/unlimited, 0 means out of stock
+        if (product.inventory !== null && product.inventory < Number(it.quantity)) {
+          console.error(`[${requestId}] Insufficient inventory for ${it.productId}: have ${product.inventory}, want ${it.quantity}`);
+          return res.status(400).json({
+            error: `Insufficient inventory for product ${it.productId}. Available: ${product.inventory}`,
+          });
+        }
       }
 
-      // Compute totals
-      let subtotalNum = 0;
+      // Compute totals using integer cents to avoid floating point errors
+      let subtotalCents = 0;
       for (const it of items) {
-        const { price } = priceMap.get(it.productId)!;
-        const itemTotal = price * Number(it.quantity);
-        subtotalNum += itemTotal;
+        const { priceCents } = priceMap.get(it.productId)!;
+        subtotalCents += priceCents * Number(it.quantity);
       }
-      const shippingNum = 0; // placeholder
-      const taxNum = 0; // placeholder
-      let totalNum = subtotalNum + shippingNum + taxNum;
+      const shippingCents = 0; // placeholder
+      const taxCents = 0; // placeholder
+      const totalCents = subtotalCents + shippingCents + taxCents;
+
+      // Convert cents back to decimal string (e.g. 1999 → "19.99")
+      const subtotalNum = subtotalCents / 100;
+      const shippingNum = shippingCents / 100;
+      const taxNum = taxCents / 100;
+      let totalNum = totalCents / 100;
 
       const currency = store.currency || (rows?.[0]?.currency ?? "USD");
       const amounts: Amounts = {
@@ -199,7 +216,7 @@ export async function handleCheckout(req: Request, res: Response) {
       };
 
       // Create orderIntent with 15-minute expiry
-      const id = `oi_${crypto.randomUUID().slice(0, 8)}`;
+      const id = `oi_${crypto.randomUUID().replace(/-/g, "").slice(0, 16)}`;
       const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
       // Create x402 payment requirements
@@ -288,28 +305,58 @@ export async function handleCheckout(req: Request, res: Response) {
       return res.status(400).json({ error: "Order intent expired" });
     }
 
-    // Check if already paid
-    if (intent.status === "paid") {
-      return res.status(400).json({
-        error: "Order intent already processed",
-      });
+    // Atomically claim the intent — prevents race condition where two requests
+    // finalize the same intent. Only the first one gets status: "pending".
+    const claimResult = await OrderIntent.findOneAndUpdate(
+      { id: orderIntentId, status: "pending" },
+      { status: "processing" },
+      { new: true }
+    );
+
+    if (!claimResult) {
+      // Either already paid/processing or doesn't exist
+      if (intent.status === "paid" || intent.status === "processing") {
+        return res.status(400).json({
+          error: "Order intent already processed",
+        });
+      }
+      return res.status(400).json({ error: "Order intent cannot be processed" });
     }
 
-    // Validate that items match intent (prevent cart tampering)
-    // Simple items validation - check that product IDs and quantities match
+    // Validate body hash — prevents cart tampering between Phase 1 and Phase 2
+    if (intent.bodyHash) {
+      const { orderIntentId: _oi, clientReferenceId: _cr, ...requestCore } = body;
+      const normalizedRequest = deepSortObject(requestCore);
+      const currentBodyHash = crypto
+        .createHash("sha256")
+        .update(JSON.stringify(normalizedRequest))
+        .digest("hex");
+
+      if (currentBodyHash !== intent.bodyHash) {
+        // Release the claim
+        await OrderIntent.updateOne({ id: orderIntentId }, { status: "pending" });
+        console.error(`[${requestId}] Body hash mismatch — cart was tampered`);
+        return res.status(400).json({
+          error: "Request body does not match original order intent. Items or shipping may have changed.",
+        });
+      }
+    }
+
+    // Also validate items match (belt and suspenders)
     const intentItems = (intent.items || []) as Array<{ productId: string; quantity: number }>;
     const bodyItems = items || [];
 
     if (intentItems.length !== bodyItems.length) {
+      await OrderIntent.updateOne({ id: orderIntentId }, { status: "pending" });
       return res.status(400).json({
         error: "Item count does not match original order intent",
       });
     }
 
-    // Check each item matches
     for (let i = 0; i < intentItems.length; i++) {
       if (intentItems[i].productId !== bodyItems[i].productId ||
           intentItems[i].quantity !== bodyItems[i].quantity) {
+        await OrderIntent.updateOne({ id: orderIntentId }, { status: "pending" });
         console.error(`[${requestId}] Item mismatch at index ${i}`);
         return res.status(400).json({
           error: "Items do not match original order intent",
@@ -355,7 +402,7 @@ export async function handleCheckout(req: Request, res: Response) {
         const lastName = nameParts.join(" ");
 
         const shopUrl = (store.url as string).replace(/\/$/, "");
-        const apiVersion = "2025-10";
+        const apiVersion = "2025-01";
         const endpoint = `${shopUrl}/admin/api/${apiVersion}/orders.json`;
 
         const lineItems = items.map((it) => {
@@ -412,9 +459,11 @@ export async function handleCheckout(req: Request, res: Response) {
 
         const shopifyText = await shopifyRes.text();
         if (!shopifyRes.ok) {
+          // Shopify failed — release the claim so user can retry
+          await OrderIntent.updateOne({ id: orderIntentId }, { status: "pending" });
           console.error(`[${requestId}] Shopify order creation failed: ${shopifyRes.status}`);
           return res.status(502).json({
-            error: "Failed to create Shopify order",
+            error: "Failed to create Shopify order. Your payment is still valid — please retry.",
             status: shopifyRes.status,
             details: shopifyText,
           });
@@ -432,8 +481,8 @@ export async function handleCheckout(req: Request, res: Response) {
           shopifyJson?.order?.admin_graphql_api_id ||
           String(shopifyJson?.order?.id || "");
 
-        // Mark intent as paid with verification details
-
+        // Shopify order created successfully — NOW mark intent as paid
+        // This ordering ensures we never have "paid but no order" state
         try {
           await OrderIntent.updateOne(
             { id: orderIntentId },
@@ -446,15 +495,12 @@ export async function handleCheckout(req: Request, res: Response) {
             }
           );
         } catch (updErr: any) {
-          console.error(`[${requestId}] Failed to mark order intent as paid:`, updErr.message);
-          return res.status(500).json({
-            error: "Failed to mark order intent paid",
-            details: updErr.message,
-          });
+          // Shopify order already created — log but don't fail the response
+          console.error(`[${requestId}] Warning: Failed to mark intent as paid (Shopify order exists):`, updErr.message);
         }
 
         // Create local order row with Shopify linkage
-        const orderId = `ord_${crypto.randomUUID().slice(0, 8)}`;
+        const orderId = `ord_${crypto.randomUUID().replace(/-/g, "").slice(0, 16)}`;
 
         try {
           await Order.create({
@@ -510,6 +556,8 @@ export async function handleCheckout(req: Request, res: Response) {
         });
       }
     } catch (verificationErr: any) {
+      // Release the claim so user can retry with valid payment
+      await OrderIntent.updateOne({ id: orderIntentId }, { status: "pending" }).catch(() => {});
       console.error(`[${requestId}] Payment verification error:`, verificationErr?.message);
       return res.status(402).json({
         orderIntentId,

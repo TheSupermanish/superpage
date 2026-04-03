@@ -54,6 +54,8 @@ export function getExplorerUrl(txHash) {
     'cronos-testnet': `https://explorer.cronos.org/testnet/tx/${txHash}`,
     'cronos': `https://explorer.cronos.org/tx/${txHash}`,
     'bite-v2-sandbox': `https://base-sepolia-testnet.explorer.skalenodes.com/tx/${txHash}`,
+    'flow': `https://evm.flowscan.io/tx/${txHash}`,
+    'flow-testnet': `https://evm-testnet.flowscan.io/tx/${txHash}`,
     'initia-testnet': `https://scan.testnet.initia.xyz/tx/${txHash}`,
   };
   return explorers[NETWORK] || `https://scan.testnet.initia.xyz/tx/${txHash}`;
@@ -113,6 +115,7 @@ export async function getWalletBalance() {
     const nativeCurrency = NETWORK.includes('mantle') ? 'MNT'
       : NETWORK.includes('bite') ? 'sFUEL'
       : NETWORK.includes('cronos') ? (NETWORK.includes('testnet') ? 'TCRO' : 'CRO')
+      : NETWORK.includes('flow') ? 'FLOW'
       : 'ETH';
 
     // Get native token balance (ETH/MNT)

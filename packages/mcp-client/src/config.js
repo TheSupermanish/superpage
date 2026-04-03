@@ -18,6 +18,8 @@ import {
   arbitrumSepolia,
   optimism,
   optimismSepolia,
+  flowMainnet,
+  flowTestnet,
 } from "viem/chains";
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -137,6 +139,8 @@ export const CHAINS = {
   "cronos-testnet": cronosTestnet,
   "cronos": cronosMainnet,
   "bite-v2-sandbox": biteV2Sandbox,
+  "flow": flowMainnet,
+  "flow-testnet": flowTestnet,
   "initia-testnet": defineChain({
     id: 3981013683081008,
     name: "SuperPage Rollup (Initia MiniEVM)",
@@ -184,6 +188,13 @@ export const TOKEN_ADDRESSES = {
   },
   "bite-v2-sandbox": {
     USDC: "0xc4083B1E81ceb461Ccef3FDa8A9F24F0d764B6D8",
+  },
+  flow: {
+    USDC: "0xF1815bd50389c46847f0Bda824eC8da914045D14",
+    USDT: "0x674843C06FF83502ddb4D37c2E09C01cdA38cbc8",
+  },
+  "flow-testnet": {
+    USDC: "0x291b030d596cf505f774426d8de7c946ce5af7a5",
   },
   "initia-testnet": {
     USDC: "0x06d1a12b351cab22727515c1f4fec2544f42d751",

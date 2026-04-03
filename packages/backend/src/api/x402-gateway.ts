@@ -68,15 +68,17 @@ export async function handleResourceAccess(req: Request, res: Response) {
     }
 
     // Check if wallet already paid for this resource
+    // APIs are pay-per-request — always require fresh payment
+    // Articles and files are buy-once — check prior payment
     const walletParam = (req.query.wallet as string)?.toLowerCase();
-    if (walletParam) {
+    if (walletParam && resource.type !== "api") {
       const existingAccess = await AccessLog.findOne({
         resourceId: resource._id,
         walletAddress: walletParam,
       }).lean();
 
       if (existingAccess) {
-        console.log(`[x402-gateway] Wallet ${walletParam} already paid for resource ${resourceId} — serving content`);
+        console.log(`[x402-gateway] Wallet ${walletParam} already paid for ${resource.type} ${resourceId} — serving content`);
         return await serveResource(resource, req, res);
       }
     }
@@ -311,10 +313,13 @@ async function serveApiProxy(resource: any, req: Request, res: Response) {
     const targetMethod = method || req.method;
     const url = new URL(upstream_url);
 
-    // Append query params from original request
+    // Append query params from original request (strip x402 internal params)
+    const INTERNAL_PARAMS = new Set(["wallet", "x402_chain", "x402_token", "x402_network"]);
     const originalUrl = new URL(req.url, `http://${req.headers.host}`);
     originalUrl.searchParams.forEach((value, key) => {
-      url.searchParams.set(key, value);
+      if (!INTERNAL_PARAMS.has(key.toLowerCase())) {
+        url.searchParams.set(key, value);
+      }
     });
 
     // Prepare headers
@@ -590,7 +595,7 @@ async function serveArticle(resource: any, req: Request, res: Response) {
  * Redirect to Shopify checkout
  */
 async function serveShopify(resource: any, _req: Request, res: Response) {
-  const { store_id } = resource.config;
+  const { store_id } = resource.config || {};
 
   if (!store_id) {
     return res.status(500).json({ error: "Shopify resource misconfigured: missing store_id" });

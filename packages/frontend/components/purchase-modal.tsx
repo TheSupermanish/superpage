@@ -35,6 +35,7 @@ import {
   ArrowRight,
   Package,
 } from "lucide-react";
+import { marked } from "marked";
 
 // ── Item types ──────────────────────────────────────
 
@@ -82,7 +83,7 @@ const TYPE_CONFIG: Record<string, { icon: typeof Code; color: string; label: str
 const STATUS_LABELS: Record<PaymentStatus, string> = {
   idle: "",
   "fetching-requirements": "Preparing payment...",
-  "switching-network": "Switching to SKALE network...",
+  "switching-network": "Switching network...",
   "awaiting-approval": "Approve transaction in your wallet",
   "confirming-tx": "Confirming transaction...",
   "verifying-payment": "Verifying payment...",
@@ -199,7 +200,7 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!isProcessing) onOpenChange(o); }}>
-      <DialogContent className="bg-card border-border text-foreground sm:max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-card border-border text-foreground sm:max-w-3xl w-[95vw] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
             {isResource && typeConfig && (
@@ -388,9 +389,9 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
             <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 flex items-center gap-3">
               <CheckCircle2 className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-sm font-medium text-foreground">File downloaded!</p>
+                <p className="text-sm font-medium text-foreground">Payment successful!</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {resourceResult.downloaded.filename}
+                  {resourceResult.downloaded.filename} is ready to download
                 </p>
               </div>
             </div>
@@ -408,10 +409,10 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
               <a
                 href={resourceResult.downloaded.url}
                 download={resourceResult.downloaded.filename}
-                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-muted border border-border text-sm text-primary hover:bg-muted/80 transition-colors"
+                className="flex items-center justify-center gap-2 w-full p-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors shadow-lg shadow-primary/10"
               >
-                <FileText className="h-4 w-4" />
-                Download again
+                <FileText className="h-5 w-5" />
+                Download {resourceResult.downloaded.filename}
               </a>
             )}
           </div>
@@ -434,14 +435,38 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
                 View transaction <ExternalLink className="h-3 w-3" />
               </a>
             )}
-            {/* Content preview */}
-            <div className="p-4 rounded-xl bg-muted border border-border max-h-48 overflow-y-auto">
-              <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words">
-                {typeof resourceResult.content === "string"
-                  ? resourceResult.content
-                  : JSON.stringify(resourceResult.content, null, 2)}
-              </pre>
-            </div>
+            {/* Content display */}
+            {(() => {
+              // Extract article content (may be nested in response object)
+              const raw = resourceResult.content as any;
+              const articleText = raw?.content || (typeof raw === "string" ? raw : null);
+              const isMarkdown = articleText && (
+                resourceResult.contentType?.includes("markdown") ||
+                raw?.contentType === "markdown" ||
+                articleText.startsWith("#")
+              );
+
+              if (isMarkdown || (articleText && typeof articleText === "string")) {
+                const htmlContent = marked.parse(articleText, { breaks: true }) as string;
+                return (
+                  <div className="p-6 rounded-xl bg-muted border border-border max-h-[50vh] overflow-y-auto">
+                    <article
+                      className="prose prose-sm prose-invert max-w-none prose-headings:text-foreground prose-headings:font-bold prose-h1:text-xl prose-h2:text-lg prose-h3:text-base prose-p:text-muted-foreground prose-p:leading-relaxed prose-a:text-primary prose-code:text-primary prose-code:bg-background prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-pre:bg-background prose-pre:border prose-pre:border-border prose-pre:rounded-lg prose-pre:p-4 prose-strong:text-foreground prose-li:text-muted-foreground prose-ul:list-disc prose-ol:list-decimal prose-blockquote:border-primary/30 prose-blockquote:text-muted-foreground"
+                      dangerouslySetInnerHTML={{ __html: htmlContent }}
+                    />
+                  </div>
+                );
+              }
+
+              // Fallback: JSON/raw content (APIs return JSON)
+              return (
+                <div className="p-4 rounded-xl bg-muted border border-border max-h-[50vh] overflow-y-auto">
+                  <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words font-mono leading-relaxed">
+                    {typeof raw === "string" ? raw : JSON.stringify(raw, null, 2)}
+                  </pre>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -492,7 +517,7 @@ export function PurchaseModal({ open, onOpenChange, item }: PurchaseModalProps) 
               onClick={handleBuy}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold py-6"
             >
-              Pay {price}
+              {isResource && item.data.type === "article" ? "Read for" : "Pay"} {price}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           )}

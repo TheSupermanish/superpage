@@ -3,7 +3,7 @@
   "chainId": 3981013683081008,
   "rpcUrl": "http://0.0.0.0:8545",
   "deployer": "0x7EF007CA81217e77a5eE6Da84724A6283ae7D67f",
-  "deployedAt": "2026-03-29T06:53:01.404Z",
+  "deployedAt": "2026-04-03T11:56:01.268Z",
   "contracts": {
     "mockUSDC": "0x06d1a12b351cab22727515c1f4fec2544f42d751",
     "identityRegistry": "0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d",
