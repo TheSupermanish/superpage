@@ -12,7 +12,7 @@ import { defineChain, type Chain } from "viem";
 
 export const initiaTestnet = defineChain({
   id: 3981013683081008, // local-rollup-1 MiniEVM chain ID (0xdfa56fe8bb7e)
-  name: "SuperPage Rollup (Initia MiniEVM)",
+  name: "Airaa Rollup (Initia MiniEVM)",
   nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
   rpcUrls: {
     default: { http: [process.env.NEXT_PUBLIC_INITIA_RPC_URL || "http://0.0.0.0:8545"] },

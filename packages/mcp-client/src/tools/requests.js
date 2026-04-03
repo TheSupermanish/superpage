@@ -1,5 +1,5 @@
 /**
- * Wallet and request tools for SuperPage x402.
+ * Wallet and request tools for Airaa x402.
  * Handles x402_request (universal paid API access), x402_wallet, and x402_send.
  */
 

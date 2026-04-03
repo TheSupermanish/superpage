@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SuperPage x402 — MCP Client for AI Agents
+ * Airaa x402 — MCP Client for AI Agents
  *
  * Entry point: assembles tools from all modules, provides CLI mode
  * and MCP STDIO protocol handler.
@@ -118,7 +118,7 @@ if (cliCommand && CLI_COMMANDS[cliCommand]) {
     }
   })();
 } else if (cliCommand === "help" || cliCommand === "--help") {
-  console.log(`SuperPage x402 CLI \u2014 AI Agent Marketplace
+  console.log(`Airaa x402 CLI \u2014 AI Agent Marketplace
 
 Usage: node superpage-x402.js <command> [json-args]
 
@@ -234,7 +234,7 @@ Environment:
   });
 
   log("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550");
-  log("  SUPERPAGE x402 MCP Client Ready \u26a1");
+  log("  AIRAA x402 MCP Client Ready \u26a1");
   log(`  Network: ${NETWORK} | Token: ${CURRENCY}`);
   log("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550");
 }

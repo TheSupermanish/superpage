@@ -1,7 +1,7 @@
 {
   "name": "@superpage/contracts",
   "version": "1.0.0",
-  "description": "Smart contracts for SuperPage x402 - MockUSDC and test tokens",
+  "description": "Smart contracts for Airaa x402 - MockUSDC and test tokens",
   "private": true,
   "type": "module",
   "scripts": {

@@ -41,7 +41,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* SuperPage brand colors from logo */
+  /* Airaa brand colors from logo */
   --color-sp-pink: #E8A0BF;
   --color-sp-blue: #5B8FB9;
   --color-sp-gold: #E5BA73;
@@ -52,7 +52,7 @@
 :root {
   --radius: 0.625rem;
 
-  /* SuperPage light theme — warm creative palette */
+  /* Airaa light theme — warm creative palette */
   --background: #FDFBF7;
   --foreground: #1a1a2e;
   --card: #ffffff;

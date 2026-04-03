@@ -1,5 +1,5 @@
 /**
- * Discovery and resource tools for SuperPage x402.
+ * Discovery and resource tools for Airaa x402.
  */
 
 import {

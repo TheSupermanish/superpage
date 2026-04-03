@@ -1,5 +1,5 @@
 /**
- * Payment execution logic for SuperPage x402.
+ * Payment execution logic for Airaa x402.
  * Handles both native token (ETH/MNT) and ERC20 token transfers.
  */
 

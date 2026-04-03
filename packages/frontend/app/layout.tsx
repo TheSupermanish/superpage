@@ -20,8 +20,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SuperPage - Agent Commerce on Initia",
-  description: "AI-native commerce platform where agents and humans buy, sell, and monetize digital resources on Initia. Powered by x402 and ERC-8004.",
+  title: "Airaa - AI-Native Commerce Platform",
+  description: "AI-native commerce platform where agents and humans buy, sell, and monetize digital resources on Initia. Powered by x402 and ERC-8004. The Era of AI Commerce.",
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },

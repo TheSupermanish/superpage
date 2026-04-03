@@ -1,8 +1,8 @@
 <div align="center">
 
-# SuperPage
+# Airaa
 
-### **Agent Commerce on Initia**
+### **AI-Native Commerce Platform — The Era of AI Commerce**
 
 *An AI-native commerce platform where autonomous agents and humans buy, sell, and monetize digital resources — running on its own Initia appchain with trustless on-chain payments.*
 
@@ -21,7 +21,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Project** | SuperPage |
+| **Project** | Airaa |
 | **Track** | AI & Tooling |
 | **Rollup Chain ID** | `superpage` |
 | **VM** | MiniEVM (Solidity) |
@@ -29,7 +29,7 @@
 | **Native Features** | Auto-signing (Session Keys), Interwoven Bridge, .init Usernames |
 | **Demo Video** | [TBD] |
 
-### Deployed Contracts (on SuperPage Rollup)
+### Deployed Contracts (on Airaa Rollup)
 
 | Contract | Address |
 |----------|---------|
@@ -46,9 +46,9 @@ AI agents can research, write, and plan — but they can't **buy** or **sell** a
 
 ## The Solution
 
-SuperPage is an **agent commerce chain** — a dedicated Initia appchain where AI agents and humans operate as both buyers and sellers in a trustless marketplace.
+Airaa is an **agent commerce chain** — a dedicated Initia appchain where AI agents and humans operate as both buyers and sellers in a trustless marketplace.
 
-**Why an appchain?** Every transaction on SuperPage generates revenue for the platform, not gas fees leaked to a shared chain. Session keys let agents transact autonomously without wallet popups. The Interwoven Bridge lets users deposit from any chain in the Initia ecosystem.
+**Why an appchain?** Every transaction on Airaa generates revenue for the platform, not gas fees leaked to a shared chain. Session keys let agents transact autonomously without wallet popups. The Interwoven Bridge lets users deposit from any chain in the Initia ecosystem.
 
 ### How It Works
 
@@ -56,7 +56,7 @@ SuperPage is an **agent commerce chain** — a dedicated Initia appchain where A
 1. Agent discovers a resource on the marketplace       → search / list-resources
 2. Agent previews the price (no payment)                → 402 Payment Required
 3. Agent confirms with user                             → "Buy Weather API for $0.50 USDC?"
-4. Agent pays USDC on the SuperPage appchain            → on-chain ERC-20 transfer
+4. Agent pays USDC on the Airaa appchain                 → on-chain ERC-20 transfer
 5. Server verifies payment and delivers content         → 200 OK + data
 6. Transaction recorded on-chain with receipt           → verifiable proof
 ```
@@ -72,9 +72,9 @@ SuperPage is an **agent commerce chain** — a dedicated Initia appchain where A
 
 ## Why Initia
 
-SuperPage leverages Initia's unique capabilities that aren't available on shared chains:
+Airaa leverages Initia's unique capabilities that aren't available on shared chains:
 
-| Feature | How SuperPage Uses It |
+| Feature | How Airaa Uses It |
 |---------|----------------------|
 | **Own Appchain** | Every marketplace transaction = platform revenue. No gas leakage to L1. |
 | **Session Keys (AutoSign)** | AI agents transact autonomously — sign once, trade freely. No wallet popup per purchase. |
@@ -119,7 +119,7 @@ SuperPage leverages Initia's unique capabilities that aren't available on shared
                           │
                           ▼
               ┌───────────────────────┐
-              │  SuperPage Appchain   │
+              │    Airaa Appchain     │
               │  (Initia MiniEVM)     │
               │                       │
               │  MockUSDC (ERC-20)    │
@@ -147,7 +147,7 @@ SuperPage leverages Initia's unique capabilities that aren't available on shared
 ## x402 Payment Flow
 
 ```
-Agent                     SuperPage                SuperPage Appchain
+Agent                     Airaa                    Airaa Appchain
   │                          │                           │
   │  GET /x402/resource/X    │                           │
   │─────────────────────────>│                           │
@@ -170,7 +170,7 @@ Agent                     SuperPage                SuperPage Appchain
 
 ## ERC-8004: Trustless Agent Identity
 
-SuperPage implements [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for on-chain agent identity and reputation:
+Airaa implements [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for on-chain agent identity and reputation:
 
 - **IdentityRegistry** — ERC-721 based agent NFTs with metadata, wallet binding, and URI storage
 - **ReputationRegistry** — On-chain feedback system with ratings, tags, and agent responses
@@ -212,7 +212,7 @@ Agents build verifiable reputation through on-chain transactions, not self-repor
 - **Explore** — Browse resources with type filters and pricing
 - **Creator Dashboard** — Manage resources, view orders, analytics
 - **Creator Profiles** — Public pages with .init username display and tipping
-- **Faucet** — Mint test USDC on the SuperPage appchain
+- **Faucet** — Mint test USDC on the Airaa appchain
 
 ---
 
@@ -337,7 +337,7 @@ This starts:
 
 **Revenue Model:**
 - Platform fee on every marketplace transaction (captured at the appchain level)
-- Zero gas leakage — every transaction on SuperPage generates protocol revenue
+- Zero gas leakage — every transaction on Airaa generates protocol revenue
 - Creator fees for premium listings and analytics
 
 ---

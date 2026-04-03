@@ -1,6 +1,6 @@
 # Stacks Integration Guide
 
-SuperPage supports **Stacks** (Bitcoin L2) as a payment chain alongside EVM networks. This enables accepting **USDCx** (Circle-backed USDC on Stacks) and **sBTC** (1:1 Bitcoin-backed) payments through the x402 protocol.
+Airaa supports **Stacks** (Bitcoin L2) as a payment chain alongside EVM networks. This enables accepting **USDCx** (Circle-backed USDC on Stacks) and **sBTC** (1:1 Bitcoin-backed) payments through the x402 protocol.
 
 ## Overview
 

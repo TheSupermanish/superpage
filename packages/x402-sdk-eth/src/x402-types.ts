@@ -6,7 +6,7 @@ import { z } from "zod";
  */
 
 // Payment scheme types
-// "spay" = SuperPage exact-amount scheme, "exact" = standard x402, "upto" = usage-based billing
+// "spay" = Airaa exact-amount scheme, "exact" = standard x402, "upto" = usage-based billing
 export const PaymentSchemeSchema = z.enum(["exact", "spay", "upto"]);
 export type PaymentScheme = z.infer<typeof PaymentSchemeSchema>;
 

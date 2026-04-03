@@ -12,7 +12,7 @@ export default function DocsPage() {
             Documentation Hub
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Learn how to build with SuperPage.
+            Learn how to build with Airaa.
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
             From your first payment-gated API to AI agent integration, we've got everything you need to monetize with HTTP 402 and USDC.
@@ -112,14 +112,14 @@ app.get('/api/premium',
       </article>
 
       <section className="border-t border-border pt-12">
-        <h2 className="text-2xl font-bold text-foreground mb-6">What is SuperPage?</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-6">What is Airaa?</h2>
         <div className="space-y-4 text-muted-foreground">
           <p>
-            SuperPage is an AI-native marketplace for creating payment-gated APIs and content using the HTTP 402 Payment Required status code.
+            Airaa is an AI-native marketplace for creating payment-gated APIs and content using the HTTP 402 Payment Required status code.
             It enables automatic, programmable payments for AI agents, APIs, and digital commerce.
           </p>
           <p>
-            Built on Base with <strong className="text-primary">USDC stablecoin</strong>, SuperPage makes it easy to:
+            Built on Base with <strong className="text-primary">USDC stablecoin</strong>, Airaa makes it easy to:
           </p>
           <ul className="list-disc list-inside space-y-2 ml-4">
             <li>Create payment-gated APIs and content</li>
@@ -190,9 +190,9 @@ app.get('/api/premium',
             <div className="size-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
               <span className="material-symbols-outlined text-[14px] leading-none">payments</span>
             </div>
-            <span className="font-bold text-foreground">SuperPage Docs</span>
+            <span className="font-bold text-foreground">Airaa Docs</span>
           </div>
-          <p className="text-xs text-muted-foreground">© 2025 SuperPage. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© 2025 Airaa. All rights reserved.</p>
         </div>
         <div className="flex gap-12">
           <div className="flex flex-col gap-3">

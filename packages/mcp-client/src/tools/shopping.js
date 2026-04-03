@@ -1,5 +1,5 @@
 /**
- * Shopping tools for SuperPage x402.
+ * Shopping tools for Airaa x402.
  */
 
 import {

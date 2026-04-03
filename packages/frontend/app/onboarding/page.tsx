@@ -117,7 +117,7 @@ export default function OnboardingPage() {
         <div className="flex justify-center mb-8">
           <div className="relative">
             <div className="size-20 rounded-2xl bg-primary/10 flex items-center justify-center shadow-lg shadow-primary/10">
-              <Image src="/logo.png" alt="SuperPage" width={48} height={48} className="h-12 w-auto" />
+              <Image src="/logo.png" alt="Airaa" width={48} height={48} className="h-12 w-auto" />
             </div>
             <div className="absolute -top-2 -right-2 size-8 bg-primary rounded-full flex items-center justify-center">
               <Sparkles className="text-primary-foreground" size={16} />
@@ -129,7 +129,7 @@ export default function OnboardingPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-3 text-foreground">
-              Welcome to SuperPage!
+              Welcome to Airaa!
             </h1>
             <p className="text-muted-foreground text-base">
               Let's set up your public profile so others can discover and purchase from you
@@ -173,7 +173,7 @@ export default function OnboardingPage() {
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                Your public profile will be at: superpa.ge/@{username || "yourname"}
+                Your public profile will be at: airaa.app/@{username || "yourname"}
               </p>
               {isAvailable === false && (
                 <p className="text-xs text-red-400 flex items-center gap-1">
@@ -250,7 +250,7 @@ export default function OnboardingPage() {
         {/* Footer decoration */}
         <div className="mt-6 flex items-center justify-center gap-2 text-muted-foreground text-xs">
           <div className="size-1.5 rounded-full bg-primary/50" />
-          <span>Powered by SuperPage</span>
+          <span>Powered by Airaa</span>
           <div className="size-1.5 rounded-full bg-primary/50" />
         </div>
       </div>

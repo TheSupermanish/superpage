@@ -1,8 +1,8 @@
 {
-  "name": "superpage-merchant-agent",
+  "name": "airaa-merchant-agent",
   "description": "Autonomous merchant agent for the x402 payment protocol — enables AI agents and humans to discover, pay for, and access digital resources (APIs, files, articles, datasets) using on-chain USDC micro-payments on Flow EVM.",
   "version": "1.0.0",
-  "url": "https://superpa.ge/a2a",
+  "url": "https://airaa.app/a2a",
   "protocols": ["A2A", "MCP", "x402", "AP2", "ERC-8004"],
   "capabilities": {
     "streaming": false,
@@ -80,25 +80,25 @@
     "identityRegistry": "0xbdf0ae617ac3570795b9b18ece6fd85444c6a918",
     "reputationRegistry": "0xf0aab3cfc4dc5e335faeb0b95a934af994073b95",
     "validationRegistry": "0x0bfff9626f409639c8501c14813ddba6f30d5a99",
-    "registrationFile": "https://superpa.ge/.well-known/agent-registration.json"
+    "registrationFile": "https://airaa.app/.well-known/agent-registration.json"
   },
   "endpoints": {
-    "a2a": "https://superpa.ge/a2a",
-    "mcp": "https://superpa.ge/mcp/universal",
-    "mcpPayment": "https://superpa.ge/mcp-payment",
-    "agentCard": "https://superpa.ge/.well-known/agent.json",
-    "agentRegistration": "https://superpa.ge/.well-known/agent-registration.json",
-    "web": "https://superpa.ge"
+    "a2a": "https://airaa.app/a2a",
+    "mcp": "https://airaa.app/mcp/universal",
+    "mcpPayment": "https://airaa.app/mcp-payment",
+    "agentCard": "https://airaa.app/.well-known/agent.json",
+    "agentRegistration": "https://airaa.app/.well-known/agent-registration.json",
+    "web": "https://airaa.app"
   },
   "surfaces": [
     {
       "name": "Web App",
-      "url": "https://superpa.ge",
+      "url": "https://airaa.app",
       "description": "Next.js marketplace frontend for browsing creators, purchasing resources, and managing stores"
     },
     {
       "name": "MCP Server (Claude Desktop)",
-      "endpoint": "https://superpa.ge/mcp/universal",
+      "endpoint": "https://airaa.app/mcp/universal",
       "description": "30+ tools for autonomous resource discovery, payment, and ERC-8004 trust operations"
     },
     {
@@ -112,7 +112,7 @@
     }
   ],
   "provider": {
-    "organization": "SuperPage",
-    "url": "https://superpa.ge"
+    "organization": "Airaa",
+    "url": "https://airaa.app"
   }
 }

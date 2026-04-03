@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────
-#  SuperPage Dev — starts all services
+#  Airaa Dev — starts all services
 # ──────────────────────────────────────────────
 set -e
 
@@ -21,7 +21,7 @@ fi
 
 echo ""
 echo "  ┌──────────────────────────────────────┐"
-echo "  │  SuperPage Dev                        │"
+echo "  │  Airaa Dev                             │"
 echo "  ├──────────────────────────────────────┤"
 echo "  │  Frontend        http://localhost:3000│"
 echo "  │  Backend API     http://localhost:3001│"

@@ -55,7 +55,7 @@ export default function LandingPage() {
           <div className="animate-fade-in-up animate-fade-in-up-1 flex justify-center">
             <img
               src="/logo.png"
-              alt="SuperPage"
+              alt="Airaa"
               className="h-28 md:h-36 w-auto drop-shadow-lg"
             />
           </div>
@@ -88,7 +88,7 @@ export default function LandingPage() {
               href="/explore"
               className="px-8 py-4 bg-card text-foreground border border-border rounded-full font-bold text-lg hover:border-primary/30 transition-all flex items-center gap-2 glow-border"
             >
-              Explore SuperPages
+              Explore Resources
             </Link>
           </div>
 
@@ -134,7 +134,7 @@ export default function LandingPage() {
                 <ExternalLink className="h-7 w-7" />
               </div>
               <h3 className="text-2xl font-bold mb-3">Share</h3>
-              <p className="text-muted-foreground leading-relaxed">Share your unique SuperPage link. Anyone — humans or AI agents — can pay and access.</p>
+              <p className="text-muted-foreground leading-relaxed">Share your unique Airaa link. Anyone — humans or AI agents — can pay and access.</p>
             </div>
 
             {/* Step 3: Earn */}
@@ -345,7 +345,7 @@ if (response.status === 402) {
             <div className="p-8 rounded-3xl bg-card border border-border glow-border relative flex flex-col">
               <Quote className="h-8 w-8 text-sp-blue/30 mb-4" />
               <p className="text-foreground leading-relaxed flex-1">
-                &ldquo;Moved my paid newsletter off Substack and onto SuperPage. My readers pay 50 cents per article in USDC. I keep 100%. No platform fees eating my margins.&rdquo;
+                &ldquo;Moved my paid newsletter off Substack and onto Airaa. My readers pay 50 cents per article in USDC. I keep 100%. No platform fees eating my margins.&rdquo;
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-border">
                 <div className="size-10 rounded-full bg-sp-pink/20 text-sp-pink flex items-center justify-center font-bold text-sm shrink-0">SK</div>
@@ -360,7 +360,7 @@ if (response.status === 402) {
             <div className="p-8 rounded-3xl bg-card border border-border glow-border relative flex flex-col">
               <Quote className="h-8 w-8 text-sp-gold/30 mb-4" />
               <p className="text-foreground leading-relaxed flex-1">
-                &ldquo;We sell design assets through Shopify + SuperPage. Crypto payments settled instantly. Our AI agent customers grew 10x once we added x402 support.&rdquo;
+                &ldquo;We sell design assets through Shopify + Airaa. Crypto payments settled instantly. Our AI agent customers grew 10x once we added x402 support.&rdquo;
               </p>
               <div className="flex items-center gap-3 mt-6 pt-6 border-t border-border">
                 <div className="size-10 rounded-full bg-sp-gold/20 text-sp-gold flex items-center justify-center font-bold text-sm shrink-0">JL</div>
@@ -452,7 +452,7 @@ if (response.status === 402) {
                 href="/dashboard/resources/new"
                 className="shimmer-btn px-10 py-5 text-white rounded-full font-bold text-lg flex items-center gap-2"
               >
-                Create Your First SuperPage <ArrowRight className="h-5 w-5" />
+                Create Your First Resource <ArrowRight className="h-5 w-5" />
               </Link>
             ) : (
               <WalletConnect />
@@ -469,8 +469,8 @@ if (response.status === 402) {
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div className="col-span-2 space-y-5">
               <div className="flex items-center gap-3">
-                <Image src="/logo.png" alt="SuperPage" width={40} height={40} className="h-10 w-auto" />
-                <span className="text-xl font-bold tracking-tight">SuperPage</span>
+                <Image src="/logo.png" alt="Airaa" width={40} height={40} className="h-10 w-auto" />
+                <span className="text-xl font-bold tracking-tight">Airaa</span>
               </div>
               <p className="text-muted-foreground max-w-sm leading-relaxed">
                 The web&apos;s native payment protocol. Monetize APIs, files, articles, and stores with HTTP 402 on Base.
@@ -498,7 +498,7 @@ if (response.status === 402) {
             </div>
           </div>
           <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-muted-foreground text-sm">&copy; 2025 SuperPage. All rights reserved.</p>
+            <p className="text-muted-foreground text-sm">&copy; 2025 Airaa. All rights reserved.</p>
             <p className="text-muted-foreground text-sm font-medium">HTTP 402 Payment Protocol</p>
           </div>
         </div>

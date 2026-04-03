@@ -1,5 +1,5 @@
 /**
- * Wallet setup and utilities for SuperPage x402.
+ * Wallet setup and utilities for Airaa x402.
  */
 
 import {
@@ -29,7 +29,7 @@ import { makePayment } from "./payment.js";
 
 // Simple logging to stderr (stdout is reserved for MCP protocol)
 export function log(message) {
-  console.error(`[superpage-x402] ${message}`);
+  console.error(`[airaa-x402] ${message}`);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

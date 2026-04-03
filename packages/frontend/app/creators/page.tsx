@@ -87,7 +87,7 @@ export default function CreatorsPage() {
         <div className="relative mx-auto max-w-6xl">
           <h1 className="text-4xl font-bold mb-2 text-foreground">Discover Creators</h1>
           <p className="text-muted-foreground max-w-2xl">
-            Explore creators monetizing their content with SuperPage. Find APIs, files, articles, and more.
+            Explore creators monetizing their content with Airaa. Find APIs, files, articles, and more.
           </p>
         </div>
       </section>

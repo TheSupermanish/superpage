@@ -1,4 +1,4 @@
-# SUPERPAGE x402 - MCP Client for AI Agents
+# AIRAA x402 - MCP Client for AI Agents
 
 An MCP (Model Context Protocol) client that enables AI agents like Claude to shop and pay using USDC stablecoin on Initia testnet.
 
@@ -42,7 +42,7 @@ Add to your `claude_desktop_config.json`:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `SUPERPAGE_SERVER` | SuperPage backend server URL | `http://localhost:3001` |
+| `SUPERPAGE_SERVER` | Airaa backend server URL | `http://localhost:3001` |
 | `WALLET_PRIVATE_KEY` | Ethereum private key (with 0x prefix) | Required for payments |
 | `X402_CHAIN` | Network (`initia-testnet`, `mainnet`, `sepolia`, etc.) | `initia-testnet` |
 | `X402_CURRENCY` | Payment currency (`USDC`, `USDT`, `DAI`) | `USDC` |

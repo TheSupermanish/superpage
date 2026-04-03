@@ -115,7 +115,7 @@ export default function FaucetPage() {
           </div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">USDC Faucet</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Get free test mUSDC tokens on {PAYMENT_CHAIN.name}. Mint as much as you need for testing SuperPage.
+            Get free test mUSDC tokens on {PAYMENT_CHAIN.name}. Mint as much as you need for testing Airaa.
           </p>
         </div>
 

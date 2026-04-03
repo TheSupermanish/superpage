@@ -1,6 +1,6 @@
-# Adding a New Chain to SuperPage
+# Adding a New Chain to Airaa
 
-This guide covers every file and configuration change required to add a new EVM-compatible chain to SuperPage.
+This guide covers every file and configuration change required to add a new EVM-compatible chain to Airaa.
 
 ## Overview
 

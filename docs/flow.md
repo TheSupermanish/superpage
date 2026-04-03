@@ -566,7 +566,7 @@ Flow is designed to ensure equitable access by resisting MEV. The pipelined mult
 
 ---
 
-## 11. SuperPage Integration Status
+## 11. Airaa Integration Status
 
 ### Chain Config Added
 

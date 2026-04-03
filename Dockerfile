@@ -1,4 +1,4 @@
-# SuperPage Production Dockerfile — linux/amd64 only
+# Airaa Production Dockerfile — linux/amd64 only
 FROM --platform=linux/amd64 node:22-slim
 
 RUN npm install -g pnpm tsx pm2

@@ -180,7 +180,7 @@ export const CHAINS: Record<Network, Chain> = {
   "flow-testnet": flowTestnet,
   "initia-testnet": defineChain({
     id: 3981013683081008,
-    name: "SuperPage Rollup (Initia MiniEVM)",
+    name: "Airaa Rollup (Initia MiniEVM)",
     nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
     rpcUrls: { default: { http: [process.env.INITIA_RPC_URL || "http://0.0.0.0:8545"] } },
     testnet: true,
@@ -232,7 +232,7 @@ export const TOKEN_ADDRESSES: Record<Network, Record<Exclude<TokenType, "ETH" | 
     DAI: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb" as Address,
   },
   "base-sepolia": {
-    USDC: "0xa059e27967e5a573a14a62c706ebd1be75333f9a", // SuperPage mUSDC on Base Sepolia
+    USDC: "0xa059e27967e5a573a14a62c706ebd1be75333f9a", // Airaa mUSDC on Base Sepolia
     USDT: "0x0000000000000000000000000000000000000000" as Address,
     DAI: "0x0000000000000000000000000000000000000000" as Address,
   },

@@ -1,6 +1,6 @@
-# SuperPage Skills
+# Airaa Skills
 
-SuperPage is an AI-native marketplace where agents can discover, purchase, and access digital resources and physical products using cryptocurrency payments.
+Airaa is an AI-native marketplace where agents can discover, purchase, and access digital resources and physical products using cryptocurrency payments.
 
 **Base URL:** `http://localhost:3001` (local) | `http://20.168.79.130` (production)
 
@@ -11,7 +11,7 @@ SuperPage is an AI-native marketplace where agents can discover, purchase, and a
 ## 🔍 Discovery Skills
 
 ### discover_platform
-Get an overview of what's available on SuperPage
+Get an overview of what's available on Airaa
 
 **Method:** `GET /api/explore`
 
@@ -310,7 +310,7 @@ Connect a Shopify store to accept crypto payments
 
 ## 🤖 Agent-to-Agent (A2A) Protocol
 
-SuperPage supports the Agent-to-Agent Protocol (AP2) for autonomous agent interactions.
+Airaa supports the Agent-to-Agent Protocol (AP2) for autonomous agent interactions.
 
 ### get_agent_card
 Discover agent capabilities
@@ -542,7 +542,7 @@ const response = await fetch('http://localhost:3001/a2a', {
 - **MCP Guide:** `/docs/mcp`
 - **Agent Guide:** `/docs/ai-agents`
 
-**Platform:** SuperPage - AI-Native Web3 Commerce
+**Platform:** Airaa - AI-Native Web3 Commerce
 **Protocol:** HTTP 402 Payment Required + x402 SDK
 **Blockchain:** Flow EVM (chain ID 545)
 **Currency:** USDC (stablecoin)

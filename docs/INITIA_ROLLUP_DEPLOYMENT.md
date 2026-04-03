@@ -144,7 +144,7 @@ weave rollup launch
 | Option | Description | Example |
 |--------|-------------|---------|
 | VM Type | EVM, MoveVM, or WasmVM | `minievm` |
-| Chain ID | Your rollup's unique chain ID | `superpage-1` |
+| Chain ID | Your rollup's unique chain ID | `airaa-1` |
 | Gas Token Denom | Default gas token denomination | `umin` |
 | DA Layer | Data Availability layer choice | Celestia |
 | Price Oracle | Enable/disable oracle price feeds | enable |

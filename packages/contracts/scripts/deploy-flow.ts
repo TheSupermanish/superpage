@@ -1,5 +1,5 @@
 /**
- * Deploy all SuperPage contracts to Flow EVM Testnet.
+ * Deploy all Airaa contracts to Flow EVM Testnet.
  * Deploys: MockUSDC, IdentityRegistry, ReputationRegistry, ValidationRegistry
  *
  * Usage: npx tsx scripts/deploy-flow.ts
@@ -32,7 +32,7 @@ function loadArtifact(contractPath: string) {
 }
 
 async function main() {
-  console.log("=== Deploying SuperPage Contracts to Flow EVM Testnet (chainId: 545) ===\n");
+  console.log("=== Deploying Airaa Contracts to Flow EVM Testnet (chainId: 545) ===\n");
 
   const account = privateKeyToAccount(PRIVATE_KEY);
   console.log("Deployer:", account.address);

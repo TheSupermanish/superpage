@@ -1,5 +1,5 @@
 {
-  "agentName": "superpage-merchant-agent",
+  "agentName": "airaa-merchant-agent",
   "version": "1.0.0",
   "chain": "flow-testnet (chainId: 545)",
   "sessionLogs": [
@@ -29,7 +29,7 @@
           "step": 2,
           "action": "attempt_access",
           "tool": "HTTP GET",
-          "input": { "url": "https://superpa.ge/api/resources/697268d3adc7e2b9a4ee093c/access" },
+          "input": { "url": "https://airaa.app/api/resources/697268d3adc7e2b9a4ee093c/access" },
           "output": {
             "status": 402,
             "paymentRequirements": {
@@ -65,7 +65,7 @@
           "action": "access_with_proof",
           "tool": "HTTP GET",
           "input": {
-            "url": "https://superpa.ge/api/resources/697268d3adc7e2b9a4ee093c/access",
+            "url": "https://airaa.app/api/resources/697268d3adc7e2b9a4ee093c/access",
             "headers": {
               "X-Payment-Signature": "0xfe28238418e5f2772b4ff00c9f66d505d9b3888e59b510bf54b8d436e8aa6742"
             }
@@ -103,8 +103,8 @@
           "action": "register_agent",
           "tool": "MCP:register_agent",
           "input": {
-            "name": "SuperPage Merchant Agent",
-            "agentUri": "https://superpa.ge/.well-known/agent-registration.json",
+            "name": "Airaa Merchant Agent",
+            "agentUri": "https://airaa.app/.well-known/agent-registration.json",
             "chain": "flow-testnet"
           },
           "output": {
@@ -123,7 +123,7 @@
           "output": {
             "agentId": 0,
             "owner": "0x20a0D75dEc02E96e2a1aDE2D8433D2C2BeA04F72",
-            "agentUri": "https://superpa.ge/.well-known/agent-registration.json",
+            "agentUri": "https://airaa.app/.well-known/agent-registration.json",
             "active": true
           },
           "decision": "Registration verified — agent identity is live on Flow EVM"
@@ -268,7 +268,7 @@
             "receipt": {
               "txHash": "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
               "verified": true,
-              "accessUrl": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a29c5/content"
+              "accessUrl": "https://airaa.app/api/resources/698f6e9d4cc90e4a476a29c5/content"
             }
           },
           "decision": "PaymentReceipt received — resource access granted, full AP2 flow completed"
@@ -287,7 +287,7 @@
           "step": 1,
           "action": "attempt_access",
           "tool": "HTTP GET",
-          "input": { "url": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a2998/access" },
+          "input": { "url": "https://airaa.app/api/resources/698f6e9d4cc90e4a476a2998/access" },
           "output": {
             "status": 402,
             "paymentRequirements": {
@@ -310,7 +310,7 @@
           "step": 3,
           "action": "notify_user",
           "tool": "MCP:notify",
-          "input": { "message": "Insufficient USDC balance. Need 1.50 USDC but only have 0.50 USDC. Please fund your wallet or use the faucet at https://superpa.ge/faucet" },
+          "input": { "message": "Insufficient USDC balance. Need 1.50 USDC but only have 0.50 USDC. Please fund your wallet or use the faucet at https://airaa.app/faucet" },
           "output": { "acknowledged": true },
           "decision": "User notified — waiting for wallet funding"
         },
@@ -333,7 +333,7 @@
           "action": "access_with_proof",
           "tool": "HTTP GET",
           "input": {
-            "url": "https://superpa.ge/api/resources/698f6e9d4cc90e4a476a2998/access",
+            "url": "https://airaa.app/api/resources/698f6e9d4cc90e4a476a2998/access",
             "headers": { "X-Payment-Signature": "0x9876543210abcdef9876543210abcdef9876543210abcdef9876543210abcdef" }
           },
           "output": { "status": 200, "accessGranted": true },

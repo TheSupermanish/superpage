@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: packages/backend/Dockerfile
-    image: superpage-backend:latest
+    image: airaa-backend:latest
     env_file: .env.production
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   backend-payment:
-    image: superpage-backend:latest
+    image: airaa-backend:latest
     depends_on:
       backend-api:
         condition: service_healthy

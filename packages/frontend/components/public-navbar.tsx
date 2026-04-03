@@ -59,9 +59,9 @@ export function PublicNavbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo + Wordmark */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <Image src="/logo.png" alt="SuperPage" width={32} height={32} className="h-8 w-auto" />
+              <Image src="/logo.png" alt="Airaa" width={32} height={32} className="h-8 w-auto" />
               <span className="text-lg font-bold tracking-tight">
-                Super<span className="text-primary">Page</span>
+                Air<span className="text-primary">aa</span>
               </span>
             </Link>
 

@@ -14,7 +14,7 @@ export default function SkillsPage() {
             AI Agent Skills
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            SuperPage Skills Reference
+            Airaa Skills Reference
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
             Complete reference for all AI agent skills. Agents can discover, purchase, and access digital resources and physical products using USDC payments.
@@ -74,7 +74,7 @@ export default function SkillsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              <code className="bg-muted px-2 py-0.5 rounded text-foreground">GET /api/explore</code> &mdash; Get an overview of everything available on SuperPage.
+              <code className="bg-muted px-2 py-0.5 rounded text-foreground">GET /api/explore</code> &mdash; Get an overview of everything available on Airaa.
             </p>
             <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">{`curl http://localhost:3001/api/explore
 
@@ -384,7 +384,7 @@ if (cheapest.priceUsdc <= MAX_AUTO_PAYMENT && balance >= cheapest.priceUsdc) {
           <CardTitle className="text-primary">Next Steps</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-foreground text-sm">Set up your agent with SuperPage:</p>
+          <p className="text-foreground text-sm">Set up your agent with Airaa:</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link href="/docs/openclaw">
               <Button variant="outline" className="w-full justify-start">

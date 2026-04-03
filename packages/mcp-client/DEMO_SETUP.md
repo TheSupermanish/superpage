@@ -1,4 +1,4 @@
-# SuperPage MCP Client - Demo Setup
+# Airaa MCP Client - Demo Setup
 
 ## Quick Setup for Claude Desktop (Localhost Demo)
 
@@ -19,7 +19,7 @@
 ~/.config/Claude/claude_desktop_config.json
 ```
 
-### 2. Add SuperPage MCP Server
+### 2. Add Airaa MCP Server
 
 Open `claude_desktop_config.json` and add:
 
@@ -54,15 +54,15 @@ Close and reopen Claude Desktop completely.
 In Claude Desktop, try these prompts:
 
 ```
-Can you show me what's available on SuperPage?
+Can you show me what's available on Airaa?
 ```
 
 ```
-List all resources on SuperPage
+List all resources on Airaa
 ```
 
 ```
-What stores are connected to SuperPage?
+What stores are connected to Airaa?
 ```
 
 ## Available MCP Tools
@@ -83,7 +83,7 @@ Once configured, Claude can use these tools:
 
 ### Example 1: Discover and Browse
 ```
-Agent: "Show me what's available on SuperPage"
+Agent: "Show me what's available on Airaa"
 (Uses x402_discover)
 
 Agent: "List all API resources under $1"

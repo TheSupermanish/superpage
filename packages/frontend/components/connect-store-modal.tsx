@@ -108,7 +108,7 @@ export function ConnectStoreModal({
                 Connect Your Shopify Store
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
-                Install the SuperPage app to enable AI agent commerce
+                Install the Airaa app to enable AI agent commerce
               </DialogDescription>
             </div>
           </div>

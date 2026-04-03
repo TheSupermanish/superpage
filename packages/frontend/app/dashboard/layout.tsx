@@ -75,7 +75,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-col gap-8">
           {/* Logo */}
           <div className="flex items-center gap-3 px-2">
-            <Image src="/logo.png" alt="SuperPage" width={40} height={40} className="h-10 w-auto" />
+            <Image src="/logo.png" alt="Airaa" width={40} height={40} className="h-10 w-auto" />
           </div>
 
           {/* Navigation */}
@@ -167,7 +167,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Mobile Header */}
         <header className="lg:hidden flex items-center justify-between p-4 bg-background sticky top-0 z-20 border-b border-border">
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="SuperPage" width={32} height={32} className="h-8 w-auto" />
+            <Image src="/logo.png" alt="Airaa" width={32} height={32} className="h-8 w-auto" />
           </div>
           <button
             className="p-2 rounded-lg bg-muted"
