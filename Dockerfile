@@ -37,6 +37,6 @@ RUN cd packages/frontend && NODE_OPTIONS="--max-old-space-size=3072" npx next bu
 EXPOSE 1337 3000
 
 # PM2 runtime config
-RUN echo '{"apps":[{"name":"backend","script":"packages/backend/src/index.ts","interpreter":"tsx","env":{"NODE_ENV":"production"}},{"name":"frontend","script":"node_modules/.bin/next","args":"start -p 3000","cwd":"packages/frontend","env":{"NODE_ENV":"production"}}]}' > ecosystem.config.json
+RUN echo '{"apps":[{"name":"backend","script":"packages/backend/src/index.ts","interpreter":"tsx","env":{"NODE_ENV":"production"}},{"name":"frontend","script":"npx","args":"next start -p 3000","cwd":"packages/frontend","env":{"NODE_ENV":"production"}}]}' > ecosystem.config.json
 
 CMD ["pm2-runtime", "ecosystem.config.json"]
