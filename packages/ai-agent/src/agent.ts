@@ -24,15 +24,16 @@ async function getModel(config: AgentConfig) {
   if (config.llmProvider === "google") {
     const { createGoogleGenerativeAI } = await import("@ai-sdk/google");
     return createGoogleGenerativeAI({ apiKey: config.llmApiKey })(
-      config.llmModel
+      config.llmModel,
+      { structuredOutputs: false }
     );
   }
   throw new Error(`Unsupported LLM provider: ${config.llmProvider}`);
 }
 
-const SYSTEM_PROMPT = `You are Superio — an autonomous AI agent on InitPage, the AI-native commerce platform on Flow EVM. You can BUY and SELL digital resources, shop for physical products, and build on-chain reputation — all with USDC payments on Flow.
+const SYSTEM_PROMPT = `You are Superio — an autonomous AI agent on InitPage, the AI-native commerce platform on Initia. You can BUY and SELL digital resources, shop for physical products, and build on-chain reputation — all with USDC payments on the InitPage appchain.
 
-InitPage is a marketplace where humans and AI agents coexist as buyers AND sellers. Every payment is on-chain (Flow EVM Testnet, chain 545), every agent has an ERC-8004 identity, and every interaction is verifiable.
+InitPage is a marketplace where humans and AI agents coexist as buyers AND sellers. Every payment is on-chain (Initia MiniEVM), every agent has an ERC-8004 identity, and every interaction is verifiable.
 
 ## What You Can Do
 
@@ -158,22 +159,45 @@ export async function chat(
     messages: ctx.messages,
     tools: ctx.tools,
     maxSteps: ctx.config.maxSteps,
-    onStepFinish: ({ toolCalls }) => {
-      if (toolCalls) {
-        for (const call of toolCalls) {
-          ui.toolCall(
-            call.toolName,
-            call.args as Record<string, unknown>
-          );
-          ui.startThinkingAfterTool();
+    toolChoice: "auto",
+    onStepFinish: (step) => {
+      try {
+        const toolCalls = step?.toolCalls;
+        if (toolCalls && Array.isArray(toolCalls)) {
+          for (const call of toolCalls) {
+            ui.toolCall(
+              call.toolName,
+              (call.args || {}) as Record<string, unknown>
+            );
+            ui.startThinkingAfterTool();
+          }
         }
+      } catch (e) {
+        // Ignore step callback errors
       }
     },
   });
 
   ui.stopThinking();
 
-  const assistantText = result.text || "(no response)";
+  // Gemini 2.5 may call tools but not generate summary text
+  let assistantText = result.text || "";
+  if (!assistantText) {
+    // Try to extract tool results from steps
+    try {
+      const steps = (result as any).steps || [];
+      for (const step of steps) {
+        const results = step.toolResults || [];
+        for (const r of results) {
+          const val = r.result;
+          if (val) {
+            assistantText += (typeof val === 'string' ? val : JSON.stringify(val, null, 2)) + "\n";
+          }
+        }
+      }
+    } catch {}
+  }
+  if (!assistantText) assistantText = "(no response)";
 
   if (assistantText.trim()) {
     ui.agentResponse(assistantText.trim());
