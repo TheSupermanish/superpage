@@ -46,9 +46,8 @@ export class Wallet {
 
     const chain = defineChain({
       id: config.chainId,
-      name: "BITE V2 Sandbox 2",
-      network: config.network,
-      nativeCurrency: { decimals: 18, name: "sFUEL", symbol: "sFUEL" },
+      name: "InitPage Rollup",
+      nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
       rpcUrls: {
         default: { http: [config.rpcUrl] },
       },
@@ -81,16 +80,14 @@ export class Wallet {
   async transferUsdc(to: Address, amountBaseUnits: string): Promise<Hash> {
     const amount = BigInt(amountBaseUnits);
 
-    // Simulate first for better error messages
-    const { request } = await this.publicClient.simulateContract({
+    return this.walletClient.writeContract({
       address: this.config.usdcAddress,
       abi: ERC20_ABI,
       functionName: "transfer",
       args: [to, amount],
       account: this.account,
+      gas: BigInt(500000),
     });
-
-    return this.walletClient.writeContract(request);
   }
 
   /** Wait for a transaction to be confirmed */
