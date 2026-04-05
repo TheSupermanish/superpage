@@ -1,6 +1,6 @@
 /**
  * ERC-8004 Client for the buyer agent.
- * Uses the Initia testnet chain for payments (chainId 3981013683081008).
+ * Uses the Initia testnet chain for payments.
  */
 import {
   createPublicClient,
@@ -34,7 +34,7 @@ const FLOW_RPC = "https://testnet.evm.nodes.onflow.org";
 const INITIA_RPC = "http://0.0.0.0:8545";
 
 const initiaTestnet = defineChain({
-  id: 3981013683081008,
+  id: 2314866461475837,
   name: "Initia Testnet",
   network: "initia-testnet",
   nativeCurrency: { decimals: 18, name: "INIT", symbol: "INIT" },

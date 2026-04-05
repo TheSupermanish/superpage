@@ -68,7 +68,7 @@ export function loadConfig(): AgentConfig {
     merchantUrl: process.env.MERCHANT_URL || "http://localhost:1337",
     walletPrivateKey: walletPrivateKey as `0x${string}`,
     network: process.env.X402_CHAIN || "initia-testnet",
-    chainId: parseInt(process.env.CHAIN_ID || "3981013683081008", 10),
+    chainId: parseInt(process.env.CHAIN_ID || "2314866461475837", 10),
     rpcUrl:
       process.env.RPC_URL || "http://0.0.0.0:8545",
     usdcAddress:

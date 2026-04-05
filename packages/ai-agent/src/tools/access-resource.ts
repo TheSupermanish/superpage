@@ -14,11 +14,21 @@ export function createAccessResourceTool(
     parameters: z.object({
       resourceId: z
         .string()
-        .describe("The exact resource slug from list_resources"),
+        .optional()
+        .describe("The resource slug from list_resources"),
+      slug: z
+        .string()
+        .optional()
+        .describe("Alternative name for resourceId — the 'slug' field from list_resources"),
     }),
-    execute: async ({ resourceId }) => {
+    execute: async ({ resourceId, slug }) => {
+      // Gemini maps list_resources.slug to either field
+      const resolvedId = resourceId || slug;
+      if (!resolvedId) {
+        return { success: false, error: "Missing resourceId or slug" };
+      }
       // Check if already purchased — return cached content
-      const cached = cache.get(resourceId);
+      const cached = cache.get(resolvedId);
       if (cached) {
         return {
           success: true,
@@ -32,9 +42,10 @@ export function createAccessResourceTool(
 
       let response;
       try {
+        console.log(`[access-resource] sending resourceId=${resolvedId}`);
         response = await client.sendMessage({
           action: "access-resource",
-          resourceId,
+          resourceId: resolvedId,
         });
       } catch (err) {
         return { success: false, error: `Network error: ${err instanceof Error ? err.message : String(err)}` };

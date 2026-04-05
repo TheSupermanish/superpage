@@ -4,8 +4,15 @@
 # ──────────────────────────────────────────────
 set -e
 
+# Raise file descriptor limit (prevents EMFILE errors with Turbopack)
+ulimit -n 65536 2>/dev/null || ulimit -n 10240 2>/dev/null || true
+
+# Reduce file watching pressure — prevents EMFILE on macOS
+export WATCHPACK_POLLING=true
+export CHOKIDAR_USEPOLLING=true
+
 # Kill any processes already using our ports
-for port in 3000 3001 3002; do
+for port in 3000 3001 3002 1337 1339; do
   pid=$(lsof -ti :"$port" 2>/dev/null || true)
   if [ -n "$pid" ]; then
     echo "  Killing process on port $port (pid $pid)"

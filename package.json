@@ -35,7 +35,7 @@
       "h3": "^1.15.9",
       "multer": "^2.0.1",
       "ai": "5.0.166",
-      "@ai-sdk/google": "2.0.74",
+      "@ai-sdk/google": "2.0.67",
       "@ai-sdk/anthropic": "2.0.74",
       "@ai-sdk/openai": "2.0.102"
     }

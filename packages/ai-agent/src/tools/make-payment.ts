@@ -2,10 +2,12 @@ import { tool } from "ai";
 import { z } from "zod";
 import { isAddress, type Address } from "viem";
 import type { Wallet } from "../wallet.js";
+import type { AgentConfig } from "../config.js";
 import * as ui from "../ui.js";
 
 export function createMakePaymentTool(
   wallet: Wallet,
+  config: AgentConfig,
   _opts: { autoApprove?: boolean } = {}
 ) {
   return tool({
@@ -14,11 +16,11 @@ export function createMakePaymentTool(
     parameters: z.object({
       payTo: z
         .string()
-        .describe("Recipient wallet address — use the 'recipient' value from paymentRequirements"),
+        .describe("Recipient wallet address — use the 'payTo' value from paymentRequirements"),
       recipient: z
         .string()
         .optional()
-        .describe("Alternative name for payTo — the recipient address from paymentRequirements"),
+        .describe("Alternative name for payTo — use paymentRequirements.payTo"),
       amount: z
         .string()
         .describe("Amount in base units (from paymentRequirements.amount)"),
@@ -83,8 +85,8 @@ export function createMakePaymentTool(
           amount: displayAmount,
           amountBaseUnits: amount,
           payTo: to,
-          network: "initia-testnet",
-          chainId: 2314866461475837,
+          network: config.network,
+          chainId: config.chainId,
           explorerUrl,
         };
       } catch (err: any) {

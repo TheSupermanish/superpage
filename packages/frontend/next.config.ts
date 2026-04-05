@@ -46,6 +46,9 @@ const nextConfig: NextConfig = {
     '@walletconnect/universal-provider',
     '@walletconnect/ethereum-provider',
   ],
+  turbopack: {
+    root: path.resolve(__dirname, '../../'),
+  },
 };
 
 export default nextConfig;

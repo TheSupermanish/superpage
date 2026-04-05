@@ -1,6 +1,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 import type { A2AClient } from "../a2a-client.js";
+import type { AgentConfig } from "../config.js";
 import type { A2ATask, Part } from "../types.js";
 
 const AP2_DATA_KEYS = {
@@ -8,7 +9,7 @@ const AP2_DATA_KEYS = {
   PAYMENT_MANDATE: "ap2.mandates.PaymentMandate",
 } as const;
 
-export function createAP2MandateTools(client: A2AClient) {
+export function createAP2MandateTools(client: A2AClient, config: AgentConfig) {
   const sendIntentMandate = tool({
     description:
       "Send an AP2 IntentMandate to the merchant agent for mandate-based shopping. Describe what you want to buy in natural language. The merchant returns a CartMandate with items and total price. Use this as an alternative to browsing+purchasing when you have a general description of what the user wants.",
@@ -109,7 +110,7 @@ export function createAP2MandateTools(client: A2AClient) {
       chainId: z
         .number()
         .optional()
-        .describe("Chain ID (default 3981013683081008)"),
+        .describe("Chain ID"),
     }),
     execute: async ({ taskId, transactionHash, network, chainId }) => {
       let response;
@@ -135,8 +136,8 @@ export function createAP2MandateTools(client: A2AClient) {
                         details: {
                           transactionHash,
                           network:
-                            network || "initia-testnet",
-                          chainId: chainId || 3981013683081008,
+                            network || config.network,
+                          chainId: chainId || config.chainId,
                           timestamp: Date.now(),
                         },
                       },

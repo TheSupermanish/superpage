@@ -57,6 +57,9 @@ const tasks = new Map<string, A2ATask>();
 // Store payment requirements alongside tasks
 const taskPaymentReqs = new Map<string, AP2PaymentRequirements>();
 
+// Store resource IDs for resource-access tasks (reliable lookup for content resolution)
+const taskResourceIds = new Map<string, string>();
+
 // Store cart mandates for AP2 payment mandate processing
 const taskCartMandates = new Map<string, CartMandate>();
 
@@ -230,8 +233,11 @@ export async function createResourceTask(
 
   tasks.set(taskId, task);
   taskPaymentReqs.set(taskId, ap2Reqs);
+  if (action.resourceId) {
+    taskResourceIds.set(taskId, action.resourceId);
+  }
 
-  console.log(`[A2A] Created resource task ${taskId} — ${amounts.total} ${ap2Reqs.asset}`);
+  console.log(`[A2A] Created resource task ${taskId} — ${amounts.total} ${ap2Reqs.asset}, resourceId=${action.resourceId}`);
 
   return { task, paymentRequirements: ap2Reqs };
 }
@@ -839,33 +845,44 @@ async function resolveResourceContent(
   task: A2ATask
 ): Promise<Record<string, unknown> | null> {
   const metadata = task.metadata as Record<string, unknown> | undefined;
-  if (metadata?.action !== "access-resource" || !metadata?.resourceId) {
+
+  // Try metadata first, then the dedicated map
+  let resourceId = (metadata?.resourceId as string | undefined) || taskResourceIds.get(task.id);
+  const action = metadata?.action as string | undefined;
+
+  if (action !== "access-resource" || !resourceId) {
+    console.log(`[resolveResourceContent] skipped: action=${action}, resourceId=${resourceId}`);
     return null;
   }
 
   try {
     const { Resource } = await import("../models/index.js");
-    const rid = metadata.resourceId as string;
+    console.log(`[resolveResourceContent] looking up resource: ${resourceId}`);
     const resource =
-      (await Resource.findById(rid).catch(() => null)) ||
-      (await Resource.findOne({ slug: rid })) ||
+      (await Resource.findById(resourceId).catch(() => null)) ||
+      (await Resource.findOne({ slug: resourceId })) ||
       // Fuzzy fallback: match slug containing the resourceId or vice versa
       (await Resource.findOne({
-        slug: { $regex: rid.replace(/[^a-z0-9]/gi, ".*"), $options: "i" },
+        slug: { $regex: resourceId.replace(/[^a-z0-9]/gi, ".*"), $options: "i" },
       }).catch(() => null));
 
-    if (!resource) return null;
+    if (!resource) {
+      console.log(`[resolveResourceContent] resource not found: ${resourceId}`);
+      return null;
+    }
 
     const config = resource.config as Record<string, unknown> | undefined;
+    console.log(`[resolveResourceContent] found: type=${resource.type}, hasContent=${!!config?.content}, hasUrl=${!!(config?.external_url || config?.upstream_url)}`);
     return {
-      resourceId: metadata.resourceId,
+      resourceId,
       type: resource.type,
       name: resource.name,
       description: resource.description || null,
       content: config?.content || null,
       url: (config?.external_url || config?.upstream_url || config?.blog_url || null) as string | null,
     };
-  } catch {
+  } catch (err) {
+    console.error(`[resolveResourceContent] error:`, err);
     return null;
   }
 }

@@ -121,6 +121,7 @@ async function handleMessageSend(
     }
 
     case "access-resource": {
+      console.log(`[A2A] access-resource action:`, JSON.stringify(action));
       const result = await createResourceTask(action as ResourceAccessAction);
       return successResponse(id, result.task);
     }

@@ -1,12 +1,14 @@
 import { tool } from "ai";
 import { z } from "zod";
 import type { A2AClient } from "../a2a-client.js";
+import type { AgentConfig } from "../config.js";
 import type { A2ATask, DataPart, Part } from "../types.js";
 import type { PurchaseCache } from "./index.js";
 
 export function createSubmitPaymentTool(
   client: A2AClient,
-  cache: PurchaseCache
+  cache: PurchaseCache,
+  config: AgentConfig
 ) {
   return tool({
     description:
@@ -27,7 +29,7 @@ export function createSubmitPaymentTool(
       chainId: z
         .number()
         .optional()
-        .describe("Chain ID (default 3981013683081008)"),
+        .describe("Chain ID"),
     }),
     execute: async ({ taskId, transactionHash, network, chainId }) => {
       let response;
@@ -37,8 +39,8 @@ export function createSubmitPaymentTool(
           taskId,
           payment: {
             transactionHash,
-            network: network || "initia-testnet",
-            chainId: chainId || 3981013683081008,
+            network: network || config.network,
+            chainId: chainId || config.chainId,
             timestamp: Date.now(),
           },
         });
@@ -55,6 +57,19 @@ export function createSubmitPaymentTool(
         return { success: false, error: "Invalid response from server" };
       }
       const task = result as A2ATask;
+
+      // Debug: log the raw task response
+      console.log(`[submit-payment] state=${task.status?.state}, artifacts=${task.artifacts?.length || 0}, parts=${task.status?.message?.parts?.length || 0}`);
+      if (task.artifacts) {
+        for (const a of task.artifacts) {
+          console.log(`[submit-payment] artifact: name=${a.name}, parts=${a.parts?.length}`);
+        }
+      }
+      if (task.status?.message?.parts) {
+        for (const p of task.status.message.parts) {
+          console.log(`[submit-payment] part: type=${p.type}, hasContent=${p.type === 'data' ? !!p.data?.content : 'n/a'}`);
+        }
+      }
 
       // Extract resource content from artifacts
       const resourceArtifact = task.artifacts?.find(
@@ -81,13 +96,20 @@ export function createSubmitPaymentTool(
       )?.data;
       const textPart = statusParts.find((p) => p.type === "text");
 
+      // Merge content from status parts and artifacts
+      const content = resourceContent || resourceData || null;
+
       return {
         success: task.status.state === "completed",
         taskId: task.id,
         state: task.status.state,
         message: textPart?.type === "text" ? textPart.text : undefined,
-        resourceContent: resourceContent || resourceData || null,
-        artifacts: task.artifacts,
+        // Surface article/file content directly so the LLM can present it
+        resourceContent: content,
+        inlineContent: content?.content || null,
+        resourceUrl: content?.url || null,
+        resourceType: content?.type || null,
+        resourceName: content?.name || null,
       };
     },
   });

@@ -38,7 +38,7 @@ export function createAllTools(
   const cache: PurchaseCache = opts.purchaseCache || new Map();
   const merchantState: MerchantState = opts.merchantState || {};
   const browse = createBrowseTools(client);
-  const ap2 = createAP2MandateTools(client);
+  const ap2 = createAP2MandateTools(client, opts.config);
   const erc8004 = new ERC8004Client(opts.config.walletPrivateKey);
   const erc8004Tools = createERC8004Tools(erc8004);
   const merchant = createMerchantTools(wallet, opts.config, merchantState);
@@ -50,10 +50,10 @@ export function createAllTools(
     list_resources: browse.listResources,
     purchase_product: createPurchaseTool(client),
     access_resource: createAccessResourceTool(client, cache),
-    make_onchain_payment: createMakePaymentTool(wallet, {
+    make_onchain_payment: createMakePaymentTool(wallet, opts.config, {
       autoApprove: opts.autoApprovePayments,
     }),
-    submit_payment_proof: createSubmitPaymentTool(client, cache),
+    submit_payment_proof: createSubmitPaymentTool(client, cache, opts.config),
     check_task_status: createCheckTaskTool(client),
     send_intent_mandate: ap2.sendIntentMandate,
     submit_payment_mandate: ap2.submitPaymentMandate,
