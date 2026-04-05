@@ -1,20 +1,12 @@
 {
   "project_name": "InitPage",
   "repo_url": "https://github.com/TheSupermanish/airaa",
-  "commit_sha": "",
+  "commit_sha": "3e1b7e3a0dfd064bb2361f6778dac44df0544888",
   "rollup_chain_id": "initpage",
   "deployed_address": "0x06d1a12b351cab22727515c1f4fec2544f42d751",
   "vm": "evm",
   "native_feature": "auto-signing",
-  "core_logic_path": "packages/contracts/contracts",
+  "core_logic_path": "packages/contracts/contracts/MockUSDC.sol",
   "native_feature_frontend_path": "packages/frontend/components/providers/ethereum-wallet-provider.tsx",
-  "demo_video_url": "",
-  "description": "AI-native commerce platform where autonomous agents and humans buy, sell, and monetize digital resources using on-chain micro-payments. Built as its own Initia appchain (MiniEVM), leveraging session keys for frictionless agent transactions, Interwoven Bridge for cross-chain deposits, and .init usernames for agent identity.",
-  "track": "AI & Tooling",
-  "contracts": {
-    "MockUSDC": "0x06d1a12b351cab22727515c1f4fec2544f42d751",
-    "IdentityRegistry": "0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d",
-    "ReputationRegistry": "0x0aa5c9ddda3d7d0d3f3415d31fa495a3a1f83847",
-    "ValidationRegistry": "0x1027c50cf44a931c41740fa2114c0c4f9719235e"
-  }
+  "demo_video_url": "PLACEHOLDER"
 }

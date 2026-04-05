@@ -19,24 +19,48 @@
 
 ## Initia Hackathon Submission
 
-| Field | Value |
-|-------|-------|
-| **Project** | InitPage |
-| **Track** | AI & Tooling |
-| **Rollup Chain ID** | `superpage` |
-| **VM** | MiniEVM (Solidity) |
-| **InterwovenKit** | `@initia/interwovenkit-react` v2.5.1 |
-| **Native Features** | Auto-signing (Session Keys), Interwoven Bridge, .init Usernames |
-| **Demo Video** | [TBD] |
+- **Project Name**: InitPage
+
+### Project Overview
+
+InitPage is an AI-native commerce platform where autonomous AI agents and humans buy, sell, and monetize digital resources using on-chain USDC micro-payments. It solves the problem that AI agents cannot transact autonomously — they can research and plan but can't purchase APIs, datasets, or digital content without human intervention. Built for AI developers and content creators, InitPage provides a trustless marketplace where every payment is verified on-chain, agents build reputation through ERC-8004 identity, and the entire platform runs on its own Initia appchain for maximum revenue capture.
+
+### Implementation Detail
+
+- **The Custom Implementation**: InitPage implements a complete agent commerce stack: x402 HTTP 402 payment-gated resources, ERC-8004 on-chain agent identity (IdentityRegistry, ReputationRegistry, ValidationRegistry), A2A agent-to-agent protocol, MCP integration with 12 autonomous tools for Claude Desktop, and a multi-LLM CLI agent (Anthropic/OpenAI/Google). Smart contracts are deployed on our MiniEVM rollup (MockUSDC + 3 ERC-8004 registries). The marketplace supports APIs (proxied with live data), articles (markdown), and file downloads — each with different access models (pay-per-request for APIs, buy-once for articles/files).
+
+- **The Native Feature**: InitPage uses **Auto-signing (Session Keys)** to enable frictionless agent transactions. When enabled, AI agents can purchase resources without requiring a wallet confirmation popup for each transaction — they sign once and trade freely. This is implemented via InterwovenKit's `enableAutoSign` configuration and exposed through a toggle in the wallet dropdown UI. The UX improvement is critical for autonomous agents: without session keys, every purchase would require human wallet approval, defeating the purpose of autonomous commerce.
+
+### How to Run Locally
+
+1. **Install dependencies and start the rollup:**
+   ```bash
+   brew install initia-labs/tap/weave
+   weave gas-station setup && weave rollup launch  # Select EVM, chain-id "initpage"
+   ```
+
+2. **Deploy contracts:**
+   ```bash
+   pnpm install
+   cd packages/contracts && pnpm compile && pnpm deploy:initia
+   ```
+
+3. **Start the application:**
+   ```bash
+   pnpm --filter backend dev   # Backend on http://localhost:1337
+   pnpm --filter frontend dev  # Frontend on http://localhost:3000
+   ```
+
+4. **Connect and test:** Open http://localhost:3000, connect via InterwovenKit (social login or MetaMask), and explore the marketplace.
 
 ### Deployed Contracts (on InitPage Rollup)
 
-| Contract | Address |
-|----------|---------|
-| MockUSDC | `0x06d1a12b351cab22727515c1f4fec2544f42d751` |
-| IdentityRegistry (ERC-8004) | `0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d` |
-| ReputationRegistry (ERC-8004) | `0x0aa5c9ddda3d7d0d3f3415d31fa495a3a1f83847` |
-| ValidationRegistry (ERC-8004) | `0x1027c50cf44a931c41740fa2114c0c4f9719235e` |
+| Contract | Address | Chain |
+|----------|---------|-------|
+| MockUSDC | `0x06d1a12b351cab22727515c1f4fec2544f42d751` | initpage |
+| IdentityRegistry (ERC-8004) | `0x4c40c94680ad6a137e033356a3fccd6eb1b2d02d` | initpage |
+| ReputationRegistry (ERC-8004) | `0x0aa5c9ddda3d7d0d3f3415d31fa495a3a1f83847` | initpage |
+| ValidationRegistry (ERC-8004) | `0x1027c50cf44a931c41740fa2114c0c4f9719235e` | initpage |
 
 ---
 
