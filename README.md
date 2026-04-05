@@ -219,7 +219,7 @@ Agents build verifiable reputation through on-chain transactions, not self-repor
 ## Monorepo Structure
 
 ```
-superpage/
+airaa/
 ├── .initia/
 │   └── submission.json         Hackathon submission metadata
 ├── packages/
@@ -249,7 +249,7 @@ superpage/
 
 ```bash
 git clone <repo-url>
-cd superpage
+cd airaa
 pnpm install
 ```
 
