@@ -370,7 +370,7 @@ async function serveApiProxy(resource: any, req: Request, res: Response) {
  * Serve file download (hosted or external link)
  */
 async function serveFile(resource: any, _req: Request, res: Response) {
-  const { storage_key, filename, external_url, mode } = resource.config;
+  const { storage_key, filename, external_url, mode } = resource.config || {};
 
   res.setHeader("X-402-Paid", "true");
 
@@ -423,6 +423,13 @@ async function serveFile(resource: any, _req: Request, res: Response) {
     }
 
     return res.sendFile(resolvedPath);
+  }
+
+  // If resource has inline content (created via API without file upload), serve it directly
+  if (resource.content) {
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="${downloadName}"`);
+    return res.send(Buffer.from(resource.content));
   }
 
   // Fallback: generate sample content so the demo works even with placeholder URLs
