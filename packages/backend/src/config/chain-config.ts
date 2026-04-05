@@ -293,7 +293,7 @@ export const CHAIN_REGISTRY: Record<NetworkId, ChainMetadata> = {
   },
   // Initia Testnet (MiniEVM)
   "initia-testnet": {
-    chainId: 3981013683081008, // local-rollup-1 MiniEVM (0xdfa56fe8bb7e)
+    chainId: 3120269331257541, // local-rollup-1 MiniEVM (0xdfa56fe8bb7e)
     name: "Initia Testnet (MiniEVM)",
     rpcUrl: process.env.INITIA_RPC_URL || "http://0.0.0.0:8545",
     explorerUrl: "https://scan.testnet.initia.xyz",

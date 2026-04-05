@@ -142,7 +142,7 @@ export const CHAINS = {
   "flow": flowMainnet,
   "flow-testnet": flowTestnet,
   "initia-testnet": defineChain({
-    id: 3981013683081008,
+    id: 3120269331257541,
     name: "Airaa Rollup (Initia MiniEVM)",
     nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
     rpcUrls: {

@@ -179,7 +179,7 @@ export const CHAINS: Record<Network, Chain> = {
   flow: flowMainnet,
   "flow-testnet": flowTestnet,
   "initia-testnet": defineChain({
-    id: 3981013683081008,
+    id: 3120269331257541,
     name: "Airaa Rollup (Initia MiniEVM)",
     nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
     rpcUrls: { default: { http: [process.env.INITIA_RPC_URL || "http://0.0.0.0:8545"] } },
@@ -207,7 +207,7 @@ export const CHAIN_IDS: Record<Network, number> = {
   "bite-v2-sandbox": 103698795,
   flow: 747,
   "flow-testnet": 545,
-  "initia-testnet": 3981013683081008,
+  "initia-testnet": 3120269331257541,
 };
 
 /**

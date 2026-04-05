@@ -11,7 +11,7 @@ import { defineChain, type Chain } from "viem";
 // ============================================================
 
 export const initiaTestnet = defineChain({
-  id: 3981013683081008, // local-rollup-1 MiniEVM chain ID (0xdfa56fe8bb7e)
+  id: 3120269331257541, // local-rollup-1 MiniEVM chain ID (0xdfa56fe8bb7e)
   name: "Airaa Rollup (Initia MiniEVM)",
   nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
   rpcUrls: {

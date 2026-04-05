@@ -29,7 +29,7 @@ if (!PRIVATE_KEY) {
 }
 
 const RPC_URL = process.env.INITIA_RPC_URL || "http://0.0.0.0:8545";
-const CHAIN_ID = parseInt(process.env.INITIA_CHAIN_ID || "3981013683081008");
+const CHAIN_ID = parseInt(process.env.INITIA_CHAIN_ID || "3120269331257541");
 const EXPLORER_URL = process.env.INITIA_EXPLORER_URL || "https://scan.testnet.initia.xyz";
 
 // Initia Testnet MiniEVM chain definition

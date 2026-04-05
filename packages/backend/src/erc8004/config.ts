@@ -5,7 +5,7 @@
  * registries deployed on Initia Testnet (MiniEVM).
  */
 
-export const ERC8004_CHAIN_ID = 3981013683081008; // local-rollup-1 MiniEVM
+export const ERC8004_CHAIN_ID = 3120269331257541; // local-rollup-1 MiniEVM
 export const ERC8004_NETWORK = "initia-testnet" as const;
 export const ERC8004_RPC_URL = process.env.INITIA_RPC_URL || "http://0.0.0.0:8545";
 export const ERC8004_EXPLORER_URL = "https://scan.testnet.initia.xyz";

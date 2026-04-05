@@ -133,7 +133,7 @@ export const biteV2Sandbox = defineChain({
 
 // Initia Testnet (MiniEVM rollup)
 export const initiaTestnet = defineChain({
-  id: 3981013683081008,
+  id: 3120269331257541,
   name: "Airaa Rollup (Initia MiniEVM)",
   nativeCurrency: { decimals: 18, name: "GAS", symbol: "GAS" },
   rpcUrls: {
@@ -426,7 +426,7 @@ export const CHAIN_REGISTRY: Record<NetworkId, ChainMetadata> = {
   // Initia Testnet (MiniEVM rollup)
   "initia-testnet": {
     id: "initia-testnet",
-    chainId: 3981013683081008,
+    chainId: 3120269331257541,
     name: "Airaa Rollup (Initia MiniEVM)",
     shortName: "INITIA",
     isTestnet: true,

@@ -2,7 +2,7 @@
   "project_name": "Airaa",
   "repo_url": "https://github.com/TheSupermanish/airaa",
   "commit_sha": "",
-  "rollup_chain_id": "superpage",
+  "rollup_chain_id": "airaa",
   "deployed_address": "0x06d1a12b351cab22727515c1f4fec2544f42d751",
   "vm": "evm",
   "native_feature": "auto-signing",
