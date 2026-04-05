@@ -66,11 +66,12 @@ export function getExplorerUrl(): string {
 }
 
 export function getTxUrl(txHash: string): string {
-  return `${getExplorerUrl()}/tx/${txHash}`;
+  // Custom rollups on Initia Scan use /initpage/txs/ path
+  return `${getExplorerUrl()}/initpage/txs/${txHash}`;
 }
 
 export function getAddressUrl(address: string): string {
-  return `${getExplorerUrl()}/address/${address}`;
+  return `${getExplorerUrl()}/initpage/accounts/${address}`;
 }
 
 export function getUsdcAddress(): `0x${string}` {
